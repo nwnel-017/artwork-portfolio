@@ -247,6 +247,26 @@ async function getArtworkCount(supabase: SupabaseClient<Database>) {
   return artworkCount || 0;
 }
 
+async function getSoldArtworkCount(supabase: SupabaseClient<Database>) {
+  const { count: artworkCount, error: artError } = await supabase
+    .from("artworks")
+    .select("id", { count: "exact", head: true })
+    .eq("sold", true);
+
+  if (artError) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Error",
+      data: {
+        message: "Failed to fetch total artwork count",
+        details: artError.message,
+      },
+    });
+  }
+
+  return artworkCount || 0;
+}
+
 async function getArtworks(supabase: SupabaseClient<Database>) {
   const { data: artworks, error } = await supabase.from("artworks").select("*");
 
@@ -337,5 +357,6 @@ export {
   updateArtwork,
   deleteArtwork,
   getArtworkCount,
+  getSoldArtworkCount,
   getArtworks,
 };
