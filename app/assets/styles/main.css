@@ -1,0 +1,22 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-color);
+  background-color: var(--theme-white);
+
+  color-scheme: light dark;
+  --theme-white: rgba(255, 255, 255, 0.87);
+  --theme-off-white: rgba(255, 255, 255, 0.438);
+  --theme-blue: #3b82f6;
+  --text-blue: rgba(113, 159, 245, 0.87);
+  --error-color: rgb(240, 90, 90);
+  --background-light: #323131;
+
+  --text-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
