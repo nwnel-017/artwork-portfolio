@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "#types/supabase/database";
 import type { ShippingDetail } from "@utils/validation/stripe";
+import { id } from "zod/locales";
 
 export async function getOrders(supabase: SupabaseClient<Database>) {
   if (!supabase) {
@@ -91,5 +92,36 @@ export async function createOrder(
   if (error) {
     console.log("Error inserting order: " + error?.message);
     throw new Error("Failed to create order!");
+  }
+}
+
+export async function updateOrderStatusById(
+  supabase: SupabaseClient<Database>,
+  orderId: string,
+  status: string
+) {
+  if (!supabase || !orderId || !status) {
+    throw new Error("Missing parameters");
+  }
+
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select("id")
+    .eq("id", orderId);
+  if (error || !order) {
+    console.log("Order not found in database");
+    throw new Error("No order found in database");
+  }
+
+  const { error: updateError } = await supabase
+    .from("orders")
+    .update({
+      status: status,
+    })
+    .eq("id", orderId);
+
+  if (updateError) {
+    console.log("Failed to update order: " + updateError.message);
+    throw new Error("Failed to update order!");
   }
 }
