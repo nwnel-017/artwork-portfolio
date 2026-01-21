@@ -37,6 +37,7 @@ export const artworkFormSchema = z
     title: z.string().min(1, { message: "Title is required" }),
     description: z.string().min(1, { message: "Description is required" }),
     price: priceSchema,
+    dimensions: z.string().min(1, { message: "Dimensions are required" }),
     image: z.custom<File>((v) => v instanceof FileType),
   })
   .strict()
@@ -48,6 +49,7 @@ export const existingArtworkFormSchema = z
     title: z.string().min(1, { message: "Title is required" }),
     description: z.string().min(1, { message: "Description is required" }),
     price: priceSchema,
+    dimensions: z.string().min(1, { message: "Dimensions are required" }),
     // publishDate: isoDateString,
     image: z.custom<File>((v) => v instanceof FileType),
   })
@@ -70,20 +72,22 @@ export const validateNewArtworkForm = async (form: MultiPartData[]) => {
     form.find((field) => field.name === "artist")?.data?.toString() || "";
   const price =
     form.find((field) => field.name === "price")?.data?.toString() || "";
+  const dimensions =
+    form.find((field) => field.name === "dimensions")?.data?.toString() || "";
   const imageField = form.find((field) => field.name === "image");
-  const publishDate =
-    form.find((field) => field.name === "publishDate")?.data?.toString() || "";
+  // const publishDate =
+  //   form.find((field) => field.name === "publishDate")?.data?.toString() || "";
 
   // Convert to File object
   const image = imageField
     ? new File(
         [new Uint8Array(imageField.data)],
         imageField.filename || "image",
-        { type: imageField.type }
+        { type: imageField.type },
       )
     : new File([], "");
 
-  const formData = { title, description, artist, price, publishDate, image };
+  const formData = { title, description, artist, price, dimensions, image };
   const parsed = artworkFormSchema.safeParse(formData);
 
   if (!parsed.success) {
@@ -124,6 +128,8 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
   const price =
     form.find((field) => field.name === "price")?.data?.toString() || "";
   const imageField = form.find((field) => field.name === "image");
+  const dimensions =
+    form.find((field) => field.name === "dimensions")?.data?.toString() || "";
   // const publishDate =
   //   form.find((field) => field.name === "publishDate")?.data?.toString() || "";
 
@@ -132,7 +138,7 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
     ? new File(
         [new Uint8Array(imageField.data)],
         imageField.filename || "image",
-        { type: imageField.type }
+        { type: imageField.type },
       )
     : new File([], "");
 
@@ -141,6 +147,7 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
     title,
     description,
     price,
+    dimensions,
     // publishDate,
     image,
   };

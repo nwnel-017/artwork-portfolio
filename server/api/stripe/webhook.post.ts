@@ -1,11 +1,16 @@
 import { stripe } from "@server/utils/stripe/stripe";
 import { Stripe } from "stripe";
 import { serverSupabaseClient } from "#supabase/server";
-import { createOrder } from "@server/services/orders.service";
+import {
+  createOrder,
+  updateOrderStatusById,
+  getOrderByPaymentIntentId,
+} from "@server/services/orders.service";
 import {
   ShippingDetail,
   validateShippingAddress,
 } from "@utils/validation/stripe";
+import { getStripeId } from "@utils/stripe/stripe";
 
 export default defineEventHandler(async (event) => {
   console.log("stripe webhook has been reached");
@@ -24,7 +29,7 @@ export default defineEventHandler(async (event) => {
     stripeEvent = stripe.webhooks.constructEvent(
       rawBody!,
       signature!,
-      stripeWebhookSecret
+      stripeWebhookSecret,
     );
   } catch (err) {
     console.log("An error occured reading the event: " + err);
@@ -37,15 +42,17 @@ export default defineEventHandler(async (event) => {
       const session = stripeEvent.data.object as Stripe.Checkout.Session;
 
       const artworkId = session.metadata?.artworkId;
-      // const amount = session.metadata?.price;
       const userEmail = session.customer_details?.email;
       const shipping = session.customer_details?.address;
       const price = session.metadata?.price;
+      const paymentIntentId = session.payment_intent as string;
+
+      console.log("Payment intent object: " + JSON.stringify(paymentIntentId));
 
       const validatedShippingAddress: ShippingDetail =
         validateShippingAddress(shipping);
 
-      if (!artworkId || !userEmail || !shipping || !price) {
+      if (!artworkId || !userEmail || !shipping || !price || !paymentIntentId) {
         throw new Error("Missing required parameters!");
       }
 
@@ -57,11 +64,49 @@ export default defineEventHandler(async (event) => {
           artworkId,
           userEmail,
           price,
-          validatedShippingAddress
+          validatedShippingAddress,
+          paymentIntentId,
         );
       } catch (err) {
         console.log("Something went wrong: " + err);
         throw new Error("Something went wrong!");
       }
+      break;
+    case "charge.refunded":
+    case "refund.created": {
+      console.log("Refund event received:", stripeEvent.type);
+
+      try {
+        const supabase = await serverSupabaseClient(event);
+
+        let paymentIntentId: string | null = null;
+
+        if (stripeEvent.type === "charge.refunded") {
+          const charge = stripeEvent.data.object as Stripe.Charge;
+          paymentIntentId = getStripeId(charge.payment_intent); // To Do: implement getStripeId
+        }
+
+        if (stripeEvent.type === "refund.created") {
+          const refund = stripeEvent.data.object as Stripe.Refund;
+          paymentIntentId = getStripeId(refund.payment_intent);
+        }
+
+        if (!paymentIntentId) {
+          throw new Error("Missing payment_intent on refund event");
+        }
+
+        const order = await getOrderByPaymentIntentId(
+          supabase,
+          paymentIntentId
+        );
+
+        await updateOrderStatusById(supabase, order.id, "REFUNDED");
+      } catch (err) {
+        console.error("Failed to process refund:", err);
+        throw err;
+      }
+
+      break;
+    }
   }
 });

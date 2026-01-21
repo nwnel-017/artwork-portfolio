@@ -3,11 +3,12 @@ export function useArtworks() {
     title: string,
     description: string,
     image: File | null,
-    price: string
+    dimensions: string,
+    price: string,
     // publishDate: string
   ) => {
     // Validation
-    if (!title || !description || !image || !price) {
+    if (!title || !description || !image || !price || !dimensions) {
       return {
         success: false,
         message: "Please enter all fields!",
@@ -19,6 +20,7 @@ export function useArtworks() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price);
+    formData.append("dimensions", dimensions);
     formData.append("image", image);
 
     try {

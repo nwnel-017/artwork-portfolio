@@ -1,5 +1,6 @@
 // import { getDashboardStats } from "../../utils/dashboard";
 import { getDashboardStats } from "@server/services/dashboard.service";
+import { getTotalFundsRaised } from "@server/services/orders.service";
 import { serverSupabaseClient } from "#supabase/server";
 import { createError } from "#imports";
 import { SupabaseClient } from "@supabase/supabase-js";
@@ -15,10 +16,17 @@ export default defineEventHandler(async (event) => {
   // const { supabase, user } = await requireAdmin(event);
   const adminUser = await requireAdmin(event);
 
-  const { artworkCount, orderCount } = await getDashboardStats(supabase);
+  const { artworkCount, soldArtworks, orderCount } = await getDashboardStats(supabase);
+
+  // Get total funds raised from orders table
+  const fundsRaised = await getTotalFundsRaised(supabase);
+
+  console.log("Sold artworks: " + soldArtworks); // correct
 
   return {
     artworks: artworkCount || 0,
+    soldArtworks: soldArtworks || 0,
     orders: orderCount || 0,
+    fundsRaised: fundsRaised || 0,
   };
 });

@@ -6,8 +6,9 @@ export function useDashboard() {
     useFetch<DashboardStats>("/api/dashboard/dashboard", {
       transform: (stats) => ({
         artworks: stats?.artworks ?? 0,
-        posts: stats?.posts ?? 0,
+        soldArtworks: stats?.soldArtworks ?? 0,
         orders: stats?.orders ?? 0,
+        fundsRaised: stats?.fundsRaised ?? 0,
       }),
       credentials: "include",
     });

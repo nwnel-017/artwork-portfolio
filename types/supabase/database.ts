@@ -18,30 +18,36 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          dimensions: string | null
           id: string
           image_path: string | null
           price: number | null
           publish_on: string | null
+          sold: boolean
           title: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          dimensions?: string | null
           id?: string
           image_path?: string | null
           price?: number | null
           publish_on?: string | null
+          sold?: boolean
           title?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          dimensions?: string | null
           id?: string
           image_path?: string | null
           price?: number | null
           publish_on?: string | null
+          sold?: boolean
           title?: string | null
           updated_at?: string
         }

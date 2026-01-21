@@ -1,7 +1,9 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "#types/supabase/database";
 import type { ShippingDetail } from "@utils/validation/stripe";
+import { markArtworkAsSold } from "./artworks.service";
 import { id } from "zod/locales";
+import { PaymentIntent } from "@stripe/stripe-js";
 
 export async function getOrders(supabase: SupabaseClient<Database>) {
   if (!supabase) {
@@ -11,7 +13,7 @@ export async function getOrders(supabase: SupabaseClient<Database>) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "id, artwork_id, amount, status, created_at, updated, address_line_1, buyer_email"
+      "id, artwork_id, amount, status, created_at, updated, address_line_1, buyer_email",
     );
 
   if (error || !data) {
@@ -46,7 +48,8 @@ export async function createOrder(
   artworkId: string,
   userEmail: string,
   price: string,
-  address: ShippingDetail
+  address: ShippingDetail,
+  paymentIntentId: string,
 ) {
   if (!supabase || !address || !artworkId || !price || !userEmail) {
     throw new Error("Missing Parameters!");
@@ -76,7 +79,10 @@ export async function createOrder(
 
   console.log("artwork id: " + artworkId); //artwork Id is email - this is why
   console.log("email: " + userEmail); // this is the artwork id????
-  // To Do: fix error - supabase is attempting to insert buyer_email to uuid column?
+  console.log("price: " + numericPrice);
+  console.log("payment intent id: " + paymentIntentId);
+  // To Do: verify order does not exist before inserting
+  // try {
   const { error } = await supabase.from("orders").insert({
     address_line_1: shippingLine1,
     address_line_2: address?.line2 || "",
@@ -87,18 +93,50 @@ export async function createOrder(
     amount: numericPrice,
     state: shippingState,
     postal_code: zip,
+    stripe_payment_intent_id: paymentIntentId,
   });
 
   if (error) {
-    console.log("Error inserting order: " + error?.message);
+    console.log("Failed to create order: " + error?.message);
+    throw new Error("Failed to create order!");
+  }
+
+  try {
+    // mark artwork as sold
+    await markArtworkAsSold(supabase, artworkId);
+  } catch (err) {
+    console.log("Something went wrong: " + err);
     throw new Error("Failed to create order!");
   }
 }
 
+export async function getOrderByPaymentIntentId(
+  supabase: SupabaseClient<Database>,
+  paymentIntentId: string,
+) {
+  if (!supabase || !paymentIntentId) {
+    throw new Error("Missing parameters");
+  }
+
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select("id")
+    .eq("stripe_payment_intent_id", paymentIntentId)
+    .single();
+
+  if (error || !order) {
+    console.log("Order not found for payment_intent: " + paymentIntentId);
+    throw new Error("Order not found for payment_intent");
+  }
+
+  return order;
+}
+
+// To Do: check if order status is already updated before updating
 export async function updateOrderStatusById(
   supabase: SupabaseClient<Database>,
   orderId: string,
-  status: string
+  status: string,
 ) {
   if (!supabase || !orderId || !status) {
     throw new Error("Missing parameters");
@@ -124,4 +162,29 @@ export async function updateOrderStatusById(
     console.log("Failed to update order: " + updateError.message);
     throw new Error("Failed to update order!");
   }
+}
+
+// Returns the sum of the amount field in all orders as a number
+export async function getTotalFundsRaised(
+  supabase: SupabaseClient<Database>,
+): Promise<number> {
+  if (!supabase) {
+    throw new Error("Missing supabase client");
+  }
+
+  const { data, error } = await supabase.from("orders").select("amount");
+
+  console.log("Order amounts data: ", data);
+
+  if (error || !data) {
+    console.log("Error getting order amounts from supabase: " + error?.message);
+    throw new Error("Failed to get order amounts!");
+  }
+
+  // sum up the amount field (ensure null/NaN amounts are handled)
+  return data.reduce((sum, order) => {
+    const val =
+      typeof order.amount === "number" ? order.amount : Number(order.amount);
+    return sum + (isNaN(val) ? 0 : val);
+  }, 0);
 }

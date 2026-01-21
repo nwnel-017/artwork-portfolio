@@ -12,7 +12,7 @@ import { uploadFile, deleteFile } from "./storage.service";
 // add form validation
 async function addArtwork(
   supabase: SupabaseClient<Database>,
-  artwork: ArtworkForm
+  artwork: ArtworkForm,
 ) {
   console.log("Adding new artwork");
 
@@ -30,7 +30,8 @@ async function addArtwork(
     !artwork.title ||
     !artwork.description ||
     !artwork.price ||
-    !artwork.image
+    !artwork.image ||
+    !artwork.dimensions
   ) {
     throw new Error("Missing artwork fields!");
   }
@@ -52,12 +53,13 @@ async function addArtwork(
   try {
     const path = await uploadFile(supabase, image, "artwork_images");
 
-    const imageUrl = typeof path === "string" ? path : path.path ?? "";
+    const imageUrl = typeof path === "string" ? path : (path.path ?? "");
 
     const { data, error } = await supabase.from("artworks").insert({
       title: artwork.title,
       description: artwork.description,
       price: artwork.price,
+      dimensions: artwork.dimensions,
       image_path: imageUrl,
     });
 
@@ -87,7 +89,7 @@ async function addArtwork(
 
 async function updateArtwork(
   supabase: SupabaseClient<Database>,
-  artwork: ExistingArtworkForm // doesnt contain id - we need a new type ExistingArtworkForm
+  artwork: ExistingArtworkForm, // doesnt contain id - we need a new type ExistingArtworkForm
 ) {
   if (!artwork) {
     throw createError({
@@ -198,7 +200,7 @@ async function deleteArtwork(supabase: SupabaseClient<Database>, id: string) {
 
 async function getArtworkDetails(
   supabase: SupabaseClient<Database>,
-  id: string
+  id: string,
 ) {
   console.log("getting artwork details!");
 
@@ -294,6 +296,26 @@ async function getArtworks(supabase: SupabaseClient<Database>) {
   return artworks;
 }
 
+async function markArtworkAsSold(
+  supabase: SupabaseClient<Database>,
+  artworkId: string,
+) {
+  if (!supabase || !artworkId) {
+    throw new Error("Missing parameters!");
+  }
+
+  const { error } = await supabase
+    .from("artworks")
+    .update({ sold: true })
+    .eq("id", artworkId);
+
+  if (error) {
+    throw new Error(
+      `Failed to mark artwork ${artworkId} as sold: ${error.message}`,
+    );
+  }
+}
+
 // async function getCurrentArtworks(supabase: SupabaseClient<Database>) {
 //   const { data: artworks, error } = await supabase
 //     .from("artworks")
@@ -359,4 +381,5 @@ export {
   getArtworkCount,
   getSoldArtworkCount,
   getArtworks,
+  markArtworkAsSold,
 };

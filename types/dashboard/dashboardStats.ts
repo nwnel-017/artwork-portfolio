@@ -1,5 +1,6 @@
 export type DashboardStats = {
   artworks: number;
-  posts: number;
+  soldArtworks: number,
   orders: number;
+  fundsRaised: number,
 };

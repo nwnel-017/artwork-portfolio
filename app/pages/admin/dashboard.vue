@@ -11,12 +11,15 @@ const { data: stats, pending, error } = await getStats();
 
 <template>
   <div class="verticalContent">
-    <h1>Hello Jamie</h1>
+    <h1>Welcome</h1>
     <div class="dashPanel">
       <div v-if="pending">Loading...</div>
+      <div v-if="error">Something Went Wrong</div>
       <div v-else>
-        <div class="panels">Artworks: {{ stats?.artworks }}</div>
+        <div class="panels">Total Artworks: {{ stats?.artworks }}</div>
+        <div class="panels">Sold Artworks: {{ stats?.soldArtworks }}</div>
         <div class="panels">Orders: {{ stats?.orders }}</div>
+        <div class="panels">Funds Raised: ${{ stats?.fundsRaised }}</div>
       </div>
     </div>
   </div>
@@ -26,6 +29,8 @@ const { data: stats, pending, error } = await getStats();
 .dashPanel {
   display: flex;
   justify-content: space-evenly;
+  flex-direction: row;
+  border: 2px solid black;
   gap: 1rem;
 }
 

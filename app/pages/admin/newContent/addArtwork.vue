@@ -17,12 +17,14 @@ const artwork = reactive<{
   description: string;
   price: string;
   publishDate: string;
+  dimensions: string;
   image: File | null;
 }>({
   title: "",
   description: "",
   price: "",
   publishDate: "",
+  dimensions: "",
   image: null,
 });
 
@@ -51,7 +53,8 @@ const submit = async () => {
     artwork.title,
     artwork.description,
     artwork.image,
-    artwork.price
+    artwork.dimensions,
+    artwork.price,
     // artwork.publishDate
   );
 
@@ -65,6 +68,8 @@ const submit = async () => {
   artwork.description = "";
   artwork.publishDate = "";
   artwork.image = null;
+  artwork.price = "";
+  artwork.dimensions = "";
 
   await navigateTo("/admin/artworks");
 };
@@ -80,6 +85,8 @@ const submit = async () => {
       <input type="text" v-model="artwork.description" />
       <label for="price">Price (USD)</label>
       <input type="text" v-model="artwork.price" inputmode="decimal" />
+      <label for="dimensions">Dimensions</label>
+      <input type="text" v-model="artwork.dimensions" />
       <label for="image">Artwork Image</label>
       <input @change="onFileChange" name="image" accept="image" type="file" />
       <!-- <label for="publishDate">Publish On</label>
