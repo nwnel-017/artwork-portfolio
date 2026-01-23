@@ -4,8 +4,8 @@
     <div class="linkItems">
       <NuxtLink to="/" class="dashLink">Home </NuxtLink>
       <NuxtLink to="/artworks/gallery" class="dashLink">Gallery</NuxtLink>
-      <NuxtLink to="/" class="dashLink">About</NuxtLink>
-      <NuxtLink to="/" class="dashLink">Contact</NuxtLink>
+      <NuxtLink to="/about" class="dashLink">About</NuxtLink>
+      <NuxtLink to="/contact" class="dashLink">Contact</NuxtLink>
     </div>
   </div>
 </template>

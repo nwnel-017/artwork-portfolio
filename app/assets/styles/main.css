@@ -26,10 +26,10 @@
   }
 
   @media (min-width: 768px) {
-    font-size: 1rem;
+    /* font-size: 1rem; */
   }
 
   @media (min-width: 1024px) {
-    font-size: 1.125rem;
+    /* font-size: 1.125rem; */
   }
 }
