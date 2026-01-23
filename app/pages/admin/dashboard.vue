@@ -30,7 +30,7 @@ const { data: stats, pending, error } = await getStats();
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   gap: 1rem;
 }
 

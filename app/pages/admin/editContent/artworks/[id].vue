@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
-// import type { Artist } from "#types/artists";
 
 definePageMeta({
   layout: "dashboard",
@@ -12,6 +11,7 @@ type EditedArtwork = {
   id: string;
   title: string;
   description: string;
+  dimensions: string;
   price: string;
   image: File | null;
   // published: string | "";
@@ -31,6 +31,7 @@ const editedArtwork = ref<EditedArtwork>({
   id: "",
   title: "",
   description: "",
+  dimensions: "",
   price: "",
   image: null,
   // published: "",
@@ -44,8 +45,8 @@ function startEdit() {
     id: artworkId.value,
     title: artwork.value?.title || "",
     description: artwork.value?.description || "",
+    dimensions: artwork.value?.dimensions || "",
     price: artwork.value?.price?.toString() || "",
-    // artist: artwork.value?.artist || "",
     image: null,
     // published: artwork.value?.publish_on || "",
   };
@@ -57,6 +58,7 @@ function stopEdit() {
     id: "",
     title: "",
     description: "",
+    dimensions: "",
     // artist: "",
     price: "",
     image: null,
@@ -76,7 +78,7 @@ async function save() {
   const newTitle = editedArtwork.value.title;
   const newDesc = editedArtwork.value.description;
   const newPrice = editedArtwork.value.price;
-  //   const newArtist = editedArtwork.value.artist;
+  const newDimensions = editedArtwork.value.dimensions;
   const newImage = editedArtwork.value.image;
   // const newPublishedDate = editedArtwork.value.published;
 
@@ -85,21 +87,22 @@ async function save() {
     !newDesc ||
     !newPrice ||
     // !newArtist ||
-    !newImage
+    !newImage ||
+    !newDimensions
     // !newPublishedDate
   ) {
     console.log("new title: " + newTitle);
     console.log("new desc: " + newDesc);
     console.log("new price: " + newPrice);
-    // console.log("new publish date: " + newPublishedDate);
-    alert("Missing required fields!");
+    console.log("new dimensions: " + newDimensions);
     return;
   }
 
   if (
     newTitle === artwork.value?.title &&
     newDesc === artwork.value?.description &&
-    newPrice === artwork.value?.price?.toString()
+    newPrice === artwork.value?.price?.toString() &&
+    newDimensions === artwork.value?.dimensions
     // newPublishedDate === artwork.value?.publish_on
   ) {
     alert("No changes have been made!");
@@ -110,6 +113,7 @@ async function save() {
   form.append("id", artworkId.value);
   form.append("title", newTitle);
   form.append("description", newDesc);
+  form.append("dimensions", newDimensions);
   form.append("price", newPrice);
   form.append("image", newImage);
   // form.append("publishDate", newPublishedDate);
@@ -153,8 +157,9 @@ async function deleteArtwork() {
         <img :src="artwork?.image_path ?? undefined" alt="" class="headShot" />
         <h1>Name: {{ artwork?.title }}</h1>
         <h2>{{ artwork?.description }}</h2>
-        <h2>{{ artwork?.price || `$${0}` }}</h2>
-        <h2>Available On: {{ artwork?.publish_on }}</h2>
+        <h2>Size: {{ artwork?.dimensions }}</h2>
+        <h2>${{ artwork?.price || `$${0}` }}</h2>
+        <!-- <h2>Available On: {{ artwork?.publish_on }}</h2> -->
         <!-- <h2>{{ artwork?.artist }}</h2> -->
       </div>
       <Button variant="primary" size="lg" @click="startEdit"
@@ -168,10 +173,11 @@ async function deleteArtwork() {
       <textarea v-model="editedArtwork.description" type="text"></textarea>
       <label for="price">Price</label>
       <textarea v-model="editedArtwork.price" type="text"></textarea>
+      <label for="dimensions">Size:</label>
+      <textarea v-model="editedArtwork.dimensions" type="text"></textarea>
       <label for="image">Artwork</label>
       <input type="file" @change="handleImageChange" />
       <label for="published">Available On:</label>
-      <!-- <input type="date" name="published" v-model="editedArtwork.published" /> -->
       <Button variant="primary" size="lg" @click="save">Save Changes</Button>
       <Button variant="secondary" size="lg" @click="stopEdit">Cancel</Button>
     </div>

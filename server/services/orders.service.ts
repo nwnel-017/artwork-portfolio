@@ -13,7 +13,7 @@ export async function getOrders(supabase: SupabaseClient<Database>) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "id, artwork_id, amount, status, created_at, updated, address_line_1, buyer_email",
+      "id, artwork_id, amount, status, created_at, updated_at, address_line_1, buyer_email",
     );
 
   if (error || !data) {
@@ -50,9 +50,30 @@ export async function createOrder(
   price: string,
   address: ShippingDetail,
   paymentIntentId: string,
+  checkoutSessionId: string,
 ) {
-  if (!supabase || !address || !artworkId || !price || !userEmail) {
+  if (
+    !supabase ||
+    !address ||
+    !artworkId ||
+    !price ||
+    !userEmail ||
+    !paymentIntentId ||
+    !checkoutSessionId
+  ) {
     throw new Error("Missing Parameters!");
+  }
+
+  // Check if order already exists for this payment intent (idempotency)
+  const { data: existingOrder } = await supabase
+    .from("orders")
+    .select("id")
+    .eq("stripe_payment_intent_id", paymentIntentId)
+    .single();
+
+  if (existingOrder) {
+    console.log("Order already exists for payment intent: " + paymentIntentId);
+    return;
   }
 
   const shippingCountry = address.country;
@@ -94,6 +115,7 @@ export async function createOrder(
     state: shippingState,
     postal_code: zip,
     stripe_payment_intent_id: paymentIntentId,
+    stripe_checkout_session_id: checkoutSessionId,
   });
 
   if (error) {
@@ -144,17 +166,26 @@ export async function updateOrderStatusById(
 
   const { data: order, error } = await supabase
     .from("orders")
-    .select("id")
-    .eq("id", orderId);
+    .select("id, status")
+    .eq("id", orderId)
+    .single();
+
   if (error || !order) {
     console.log("Order not found in database");
     throw new Error("No order found in database");
+  }
+
+  // If status is already the desired status, skip update (idempotent)
+  if (order.status === status) {
+    console.log(`Order ${orderId} already has status: ${status}`);
+    return;
   }
 
   const { error: updateError } = await supabase
     .from("orders")
     .update({
       status: status,
+      updated_at: new Date().toISOString(),
     })
     .eq("id", orderId);
 
@@ -172,7 +203,10 @@ export async function getTotalFundsRaised(
     throw new Error("Missing supabase client");
   }
 
-  const { data, error } = await supabase.from("orders").select("amount");
+  const { data, error } = await supabase
+    .from("orders")
+    .select("amount")
+    .neq("status", "REFUNDED");
 
   console.log("Order amounts data: ", data);
 

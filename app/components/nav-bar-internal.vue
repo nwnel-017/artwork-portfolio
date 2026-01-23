@@ -8,12 +8,11 @@
 </template>
 
 <style scoped>
-  
 .navBarInternal {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   gap: 1.5rem;
   height: 100vh;
   width: 10vw;

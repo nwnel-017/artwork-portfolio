@@ -14,9 +14,10 @@ const {
 } = await useFetch<ArtworkRow[]>("/api/artworks/artworks");
 
 const displayArtworkPopup = ref(false);
-const selectedArtwork = ref<any | null>(null);
+const selectedArtwork = ref<ArtworkRow | null>(null);
 
-function openPopup(artwork: any) {
+function openPopup(artwork: ArtworkRow) {
+  if (artwork?.sold) return;
   selectedArtwork.value = artwork;
   displayArtworkPopup.value = true;
 }
@@ -33,9 +34,9 @@ async function payWithStripe() {
       {
         method: "POST",
         body: {
-          artworkId: selectedArtwork.value,
+          artworkId: selectedArtwork.value?.id,
         },
-      }
+      },
     );
 
     if (url) {
@@ -43,7 +44,7 @@ async function payWithStripe() {
     }
   } catch (err) {
     console.log(
-      "There was an error retrieving Stripe checkout session: " + err
+      "There was an error retrieving Stripe checkout session: " + err,
     );
     throw new Error("Failed to retrieve stripe checkout session");
   }
@@ -54,34 +55,38 @@ async function payWithStripe() {
   <div class="verticalContent">
     <ArtworkDetails
       v-if="displayArtworkPopup && selectedArtwork"
-      :artwork="selectedArtwork.value"
+      :artwork="selectedArtwork"
       @close="closePopup"
       @checkout="payWithStripe"
     />
     <div>
       <h1>Artworks</h1>
-      <!-- <div class="trasparent"> -->
       <div v-if="pending">Loading Artworks...</div>
       <div v-else-if="error">Failed to get artworks: {{ error }}</div>
       <div v-else class="artworksGrid">
         <div
           v-for="artwork in artworks"
           :key="artwork.id"
-          @click="openPopup(artwork.id)"
+          @click="openPopup(artwork)"
+          :class="{ soldArtwork: artwork?.sold, clickable: !artwork?.sold }"
         >
           <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />
           <div>{{ artwork?.title }}</div>
           <div>{{ artwork?.description }}</div>
-          <div>{{ artwork?.price }}</div>
-          <!-- <div>{{ artwork.artist }}</div> -->
+          <div v-if="artwork?.sold">Sold</div>
+          <div v-if="!artwork?.sold">${{ artwork?.price }}</div>
         </div>
       </div>
     </div>
-    <!-- </div> -->
   </div>
 </template>
 
 <style scoped>
+.soldArtwork {
+  opacity: 0.6;
+  filter: grayscale(70%);
+}
+
 .artworksGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -92,10 +97,9 @@ async function payWithStripe() {
   max-width: 10vw;
   max-height: 10vw;
   border-radius: 8px;
-  cursor: pointer;
 }
 
-/* .transparent {
-    opacity: 0.5;
-  } */
+.clickable {
+  cursor: pointer;
+}
 </style>

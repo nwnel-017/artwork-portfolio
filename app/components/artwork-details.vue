@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import type { Database } from "#types/supabase/database";
+type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
+
 defineProps<{
-  artwork: any;
+  artwork: ArtworkRow;
 }>();
 
 const emit = defineEmits(["close", "checkout"]);
@@ -14,6 +17,11 @@ const emit = defineEmits(["close", "checkout"]);
   <div class="overlay" @click.self.stop="emit('close')">
     <div class="modal">
       <h1>Artwork Details</h1>
+      <div>{{ artwork?.title }}</div>
+      <div>{{ artwork?.description }}</div>
+      <div>Dimensions: {{ artwork?.dimensions }}</div>
+      <div>${{ artwork?.price }}</div>
+      <div>Created: {{ artwork?.created_at }}</div>
       <Button @click.self.stop="emit('checkout')">Buy Now</Button>
     </div>
   </div>

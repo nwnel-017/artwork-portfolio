@@ -7,7 +7,7 @@ import type { Database } from "#types/supabase/database";
 async function uploadFile(
   supabase: SupabaseClient<Database>,
   file: File,
-  bucket: string
+  bucket: string,
 ) {
   console.log("uploading file!");
   // RLS error here
@@ -51,14 +51,14 @@ async function uploadFile(
 async function deleteFile(
   supabase: SupabaseClient<Database>,
   filePath: string,
-  bucket: string
+  bucket: string,
 ) {
   if (!supabase || !filePath || !bucket) {
     throw new Error("Missing parameters for deleteFile");
   }
 
-  const { data, error: listError } = await supabase.storage.listBuckets();
-  console.log("listing public buckets: " + data);
+  // const { data, error: listError } = await supabase.storage.listBuckets();
+  // console.log("listing public buckets: " + data);
 
   console.log("deleting file:", filePath + " from bucket:", bucket);
   const { error, data: deleted } = await supabase.storage

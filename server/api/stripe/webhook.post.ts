@@ -47,12 +47,22 @@ export default defineEventHandler(async (event) => {
       const price = session.metadata?.price;
       const paymentIntentId = session.payment_intent as string;
 
+      const checkoutSessionId = session.id;
+      // const chargeId = paymentIntentId.charges.data[0].id
+
       console.log("Payment intent object: " + JSON.stringify(paymentIntentId));
 
       const validatedShippingAddress: ShippingDetail =
         validateShippingAddress(shipping);
 
-      if (!artworkId || !userEmail || !shipping || !price || !paymentIntentId) {
+      if (
+        !artworkId ||
+        !userEmail ||
+        !shipping ||
+        !price ||
+        !paymentIntentId ||
+        !checkoutSessionId
+      ) {
         throw new Error("Missing required parameters!");
       }
 
@@ -66,6 +76,7 @@ export default defineEventHandler(async (event) => {
           price,
           validatedShippingAddress,
           paymentIntentId,
+          checkoutSessionId,
         );
       } catch (err) {
         console.log("Something went wrong: " + err);
@@ -97,7 +108,7 @@ export default defineEventHandler(async (event) => {
 
         const order = await getOrderByPaymentIntentId(
           supabase,
-          paymentIntentId
+          paymentIntentId,
         );
 
         await updateOrderStatusById(supabase, order.id, "REFUNDED");

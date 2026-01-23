@@ -67,8 +67,9 @@ export type Database = {
           postal_code: string | null
           state: string | null
           status: string
+          stripe_checkout_session_id: string | null
           stripe_payment_intent_id: string | null
-          updated: string | null
+          updated_at: string | null
         }
         Insert: {
           address_line_1: string
@@ -83,8 +84,9 @@ export type Database = {
           postal_code?: string | null
           state?: string | null
           status?: string
+          stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
-          updated?: string | null
+          updated_at?: string | null
         }
         Update: {
           address_line_1?: string
@@ -99,8 +101,9 @@ export type Database = {
           postal_code?: string | null
           state?: string | null
           status?: string
+          stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
-          updated?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }

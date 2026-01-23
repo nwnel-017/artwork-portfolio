@@ -63,7 +63,7 @@ function cancelEditOrder() {
       v-if="showOrderOptions"
       @cancel="cancelStatusChange"
       @select="updateOrderStatus"
-      :items="['Paid', 'Shipped', 'Delivered']"
+      :items="['PAID', 'SHIPPED', 'DELIVERED']"
     />
     <h1>Orders</h1>
     <div v-if="pending">Loading orders</div>

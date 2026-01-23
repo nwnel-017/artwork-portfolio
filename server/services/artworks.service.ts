@@ -105,6 +105,7 @@ async function updateArtwork(
     !artwork.title ||
     !artwork.description ||
     !artwork.price ||
+    !artwork.dimensions ||
     !artwork.image
     // ||
     // !artwork.publishDate
@@ -144,6 +145,7 @@ async function updateArtwork(
         description: artwork.description,
         price: artwork.price,
         image_path: imagePath.path,
+        dimensions: artwork.dimensions,
         // publish_on: artwork.publishDate,
       })
       .eq("id", artwork.id);
@@ -230,6 +232,35 @@ async function getArtworkDetails(
   return { ...data, image_path: publicUrl };
 }
 
+async function getArtworkPrice(supabase: SupabaseClient<Database>, id: string) {
+  console.log("getting artwork price!");
+
+  if (!supabase || !id) {
+    throw new Error("Missing parameters!");
+  }
+
+  const { data, error } = await supabase
+    .from("artworks")
+    .select("price")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    console.log("failed to retrieve artwork price: " + error?.message);
+    throw new Error("Failed to retrieve artwork price!");
+  }
+
+  const price = data?.price;
+
+  if (!price) {
+    throw new Error("Artwork price is null or undefined!");
+  }
+
+  const amount = Math.round(Number(price) * 100); // Convert to cents
+
+  return amount;
+}
+
 async function getArtworkCount(supabase: SupabaseClient<Database>) {
   const { count: artworkCount, error: artError } = await supabase
     .from("artworks")
@@ -306,7 +337,7 @@ async function markArtworkAsSold(
 
   const { error } = await supabase
     .from("artworks")
-    .update({ sold: true })
+    .update({ sold: true, updated_at: new Date().toISOString() })
     .eq("id", artworkId);
 
   if (error) {
@@ -382,4 +413,5 @@ export {
   getSoldArtworkCount,
   getArtworks,
   markArtworkAsSold,
+  getArtworkPrice,
 };
