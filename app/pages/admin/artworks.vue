@@ -26,7 +26,7 @@ const editArtwork = (artworkId: string) => {
 
 <template>
   <div class="verticalContent fullWidth">
-    <div class="horizontalContent fullWidth banner">
+    <div class="horizontalContent banner">
       <h1>Artworks</h1>
       <Button @click="addArtwork">Add Artwork</Button>
     </div>
@@ -39,7 +39,7 @@ const editArtwork = (artworkId: string) => {
             <img
               :src="artwork?.image_path ?? undefined"
               alt=""
-              class="headShotSm"
+              class="artworkImg"
             />
             <div>{{ artwork?.title }}</div>
             <div>{{ artwork?.description }}</div>
@@ -59,7 +59,7 @@ const editArtwork = (artworkId: string) => {
 </template>
 
 <style scoped>
-.headShotSm {
+.artworkImg {
   max-width: 5vw;
   max-height: 5vw;
   border-radius: 8px;

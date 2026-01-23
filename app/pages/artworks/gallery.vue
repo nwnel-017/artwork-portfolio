@@ -52,54 +52,95 @@ async function payWithStripe() {
 </script>
 
 <template>
-  <div class="verticalContent">
+  <div class="verticalContent fullWidth">
     <ArtworkDetails
       v-if="displayArtworkPopup && selectedArtwork"
       :artwork="selectedArtwork"
       @close="closePopup"
       @checkout="payWithStripe"
     />
-    <div>
+    <!-- <div class="fullWidth"> -->
+    <div class="textBlock">
       <h1>Artworks</h1>
-      <div v-if="pending">Loading Artworks...</div>
-      <div v-else-if="error">Failed to get artworks: {{ error }}</div>
-      <div v-else class="artworksGrid">
-        <div
-          v-for="artwork in artworks"
-          :key="artwork.id"
-          @click="openPopup(artwork)"
-          :class="{ soldArtwork: artwork?.sold, clickable: !artwork?.sold }"
-        >
-          <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />
+      <!-- <div class="tinyText">Original artworks by Jamie Nelson</div> -->
+    </div>
+    <div v-if="pending">Loading Artworks...</div>
+    <div v-else-if="error">Failed to get artworks: {{ error }}</div>
+    <div v-else class="artworksGrid">
+      <div
+        v-for="artwork in artworks"
+        :key="artwork.id"
+        @click="openPopup(artwork)"
+        :class="{
+          soldArtwork: artwork?.sold,
+          clickable: !artwork?.sold,
+          artworkContainer: true,
+        }"
+      >
+        <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />
+        <div class="artDetails">
           <div>{{ artwork?.title }}</div>
-          <div>{{ artwork?.description }}</div>
+          <!-- <div>{{ artwork?.description }}</div> -->
           <div v-if="artwork?.sold">Sold</div>
           <div v-if="!artwork?.sold">${{ artwork?.price }}</div>
         </div>
       </div>
     </div>
   </div>
+  <!-- </div> -->
 </template>
 
 <style scoped>
+.artworkContainer {
+  padding: 0.5rem;
+  background-color: var(--theme-white);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.artDetails {
+  font-size: 0.9rem;
+  line-height: 1rem;
+}
 .soldArtwork {
-  opacity: 0.6;
+  opacity: 0.4;
   filter: grayscale(70%);
 }
 
 .artworksGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
 .artwork {
-  max-width: 10vw;
-  max-height: 10vw;
+  width: 5rem;
+  height: 5rem;
   border-radius: 8px;
+  object-fit: cover;
 }
 
 .clickable {
   cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .artworksGrid {
+    /* grid-template-columns: repeat(2, 1fr); */
+    width: 80%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .artworksGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 </style>

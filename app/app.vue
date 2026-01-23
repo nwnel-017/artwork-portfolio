@@ -18,6 +18,19 @@
   align-items: center;
 }
 
+.textBlock {
+  padding: 0;
+}
+
+.textBlock h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.centerContent h1 {
+  margin: 0.75rem 0;
+}
+
 .centerContainer {
   display: flex;
   justify-content: center;
@@ -52,6 +65,9 @@
 
 .banner {
   height: 1.5rem;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .contentCard {
