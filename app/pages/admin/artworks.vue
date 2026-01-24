@@ -29,7 +29,7 @@ const editArtwork = (artworkId: string) => {
   <div class="verticalContent fullWidth">
     <div class="horizontalContent banner padded">
       <h1>Artworks</h1>
-      <Button @click="addArtwork" size="sm">Add Artwork</Button>
+      <Button @click="addArtwork">Add Artwork</Button>
     </div>
     <div class="horizontalContent fullWidth padded">
       <div v-if="pending">Loading Artworks...</div>
@@ -54,12 +54,11 @@ const editArtwork = (artworkId: string) => {
             <div>{{ artwork?.title }}</div>
             <div class="cutoffText">${{ artwork.price ?? `$${0.0}` }}</div>
             <div>{{ formatDateShort(artwork?.created_at) ?? "" }}</div>
-            <Button
-              size="sm"
-              variant="secondary"
-              @click="editArtwork(artwork?.id)"
+            <!-- <div class="btnContainer"> -->
+            <Button variant="secondary" @click="editArtwork(artwork?.id)"
               >Edit</Button
             >
+            <!-- </div> -->
           </template>
         </div>
       </div>
@@ -80,15 +79,35 @@ const editArtwork = (artworkId: string) => {
   margin: auto;
   grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
+  /* border: 1px solid black; */
   /* box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.06),
     0 2px 6px rgba(0, 0, 0, 0.04); */
 }
 
+/* .internalArtGrid > * {
+  border: 1px solid black;
+} */
+
 .header {
   font-weight: bold;
 }
 
+.btnContainer {
+  display: flex;
+  justify-content: end;
+  /* align-items: center; */
+}
+
 @media (min-width: 768px) {
+  .internalArtGrid {
+    width: 90%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .internalArtGrid {
+    width: 60%;
+  }
 }
 </style>

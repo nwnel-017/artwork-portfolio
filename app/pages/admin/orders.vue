@@ -18,11 +18,6 @@ const selectedOrder = ref<any | null>(null);
 const showOrderDetails = ref(false);
 const showOrderOptions = ref(false);
 
-// async function editOrder(id: string) {
-//   selectedOrder.value = id;
-//   showOrderDetails.value = true;
-// }
-
 function changeOrderStatus(id: string) {
   selectedOrder.value = id;
   showOrderOptions.value = true;
@@ -71,19 +66,27 @@ function cancelEditOrder() {
     <div v-else>
       <div v-if="orders">
         <div v-for="order in orders" :key="order.id" class="contentCard">
-          <div class="closeHorContent">
+          <div class="closeHorContent orderGrid">
             <span>{{ order?.status }}</span>
             <span>${{ order?.amount }}</span>
             <span>{{ order?.buyer_email }}</span>
             <span class="cutoffText">{{ order?.address_line_1 }}</span>
-            <span>{{ order?.created_at }}</span>
+            <span>{{ formatDateShort(order?.created_at) ?? "" }}</span>
             <Button variant="secondary" @click="changeOrderStatus(order.id)"
               >Change Status</Button
             >
-            <!-- <DropDown label="Change Status" @select="changeOrderStatus" :items="['Shipped', 'Completed']" /> -->
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.orderGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  /* gap: 1rem; */
+  width: 100%;
+}
+</style>

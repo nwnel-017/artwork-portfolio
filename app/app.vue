@@ -101,4 +101,29 @@
   max-height: 10vw;
   border-radius: 8px;
 }
+
+/* .btn--sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+.btn--md {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+.btn--lg {
+  padding: 0.75rem 1.25rem;
+  font-size: 1.1rem;
+} */
+
+@media (min-width: 768px) {
+  .banner {
+    width: 90%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .banner {
+    width: 60%;
+  }
+}
 </style>
