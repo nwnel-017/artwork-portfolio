@@ -59,10 +59,8 @@ async function payWithStripe() {
       @close="closePopup"
       @checkout="payWithStripe"
     />
-    <!-- <div class="fullWidth"> -->
     <div class="textBlock">
       <h1>Artworks</h1>
-      <!-- <div class="tinyText">Original artworks by Jamie Nelson</div> -->
     </div>
     <div v-if="pending">Loading Artworks...</div>
     <div v-else-if="error">Failed to get artworks: {{ error }}</div>
@@ -80,14 +78,12 @@ async function payWithStripe() {
         <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />
         <div class="artDetails">
           <div>{{ artwork?.title }}</div>
-          <!-- <div>{{ artwork?.description }}</div> -->
           <div v-if="artwork?.sold">Sold</div>
           <div v-if="!artwork?.sold">${{ artwork?.price }}</div>
         </div>
       </div>
     </div>
   </div>
-  <!-- </div> -->
 </template>
 
 <style scoped>
@@ -133,7 +129,6 @@ async function payWithStripe() {
 
 @media (min-width: 768px) {
   .artworksGrid {
-    /* grid-template-columns: repeat(2, 1fr); */
     width: 80%;
   }
 }

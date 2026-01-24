@@ -301,7 +301,10 @@ async function getSoldArtworkCount(supabase: SupabaseClient<Database>) {
 }
 
 async function getArtworks(supabase: SupabaseClient<Database>) {
-  const { data: artworks, error } = await supabase.from("artworks").select("*");
+  const { data: artworks, error } = await supabase
+    .from("artworks")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error || !artworks) {
     throw createError({
@@ -325,6 +328,47 @@ async function getArtworks(supabase: SupabaseClient<Database>) {
   });
 
   return artworks;
+}
+
+async function getLatestArtwork(supabase: SupabaseClient<Database>) {
+  if (!supabase) {
+    throw new Error("Missing supabase client!");
+  }
+
+  const { data: artworks, error } = await supabase
+    .from("artworks")
+    .select("*")
+    .eq("sold", false)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (error || !artworks || artworks.length === 0) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Error",
+      data: {
+        message: "Failed to fetch latest artwork",
+        details: error?.message,
+      },
+    });
+  }
+
+  const artwork = artworks[0];
+
+  // Get public URL for the image
+  if (artwork.image_path) {
+    const { data: publicData } = supabase.storage
+      .from("artwork_images")
+      .getPublicUrl(artwork.image_path);
+    artwork.image_path = publicData?.publicUrl;
+
+    if (!publicData) {
+      console.log("Error fetching public URL: ");
+      throw new Error("Failed to fetch public URL for artwork image!");
+    }
+  }
+
+  return artwork;
 }
 
 async function markArtworkAsSold(
@@ -414,4 +458,5 @@ export {
   getArtworks,
   markArtworkAsSold,
   getArtworkPrice,
+  getLatestArtwork,
 };
