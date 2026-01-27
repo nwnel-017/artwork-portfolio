@@ -9,7 +9,10 @@
 <style>
 .page {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
 }
 
 .centerContent {
@@ -119,11 +122,19 @@
   .banner {
     width: 90%;
   }
+
+  .page {
+    padding: 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .banner {
     width: 60%;
+  }
+
+  .page {
+    padding: 3rem;
   }
 }
 </style>

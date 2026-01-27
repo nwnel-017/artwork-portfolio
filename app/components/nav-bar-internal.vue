@@ -78,6 +78,7 @@ const toggleNav = () => {
   background: none;
   border: none;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 @media (min-width: 768px) {

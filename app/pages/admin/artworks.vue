@@ -36,10 +36,10 @@ const editArtwork = (artworkId: string) => {
       <div v-else-if="error">No artworks</div>
       <div v-else class="fullWidth">
         <div class="internalArtGrid">
-          <div class="header">Image</div>
-          <div class="header">Title</div>
-          <div class="header">Price</div>
-          <div class="header">Created</div>
+          <div class="header image">Image</div>
+          <div class="header title">Title</div>
+          <div class="header price">Price</div>
+          <div class="header created">Created</div>
           <div class="header"></div>
           <template
             v-for="artwork in artworks"
@@ -51,14 +51,14 @@ const editArtwork = (artworkId: string) => {
               alt=""
               class="artworkImg"
             />
-            <div>{{ artwork?.title }}</div>
+            <div class="cutoffText">{{ artwork?.title }}</div>
             <div class="cutoffText">${{ artwork.price ?? `$${0.0}` }}</div>
-            <div>{{ formatDateShort(artwork?.created_at) ?? "" }}</div>
-            <!-- <div class="btnContainer"> -->
+            <div class="created">
+              {{ formatDateShort(artwork?.created_at) ?? "" }}
+            </div>
             <Button variant="secondary" @click="editArtwork(artwork?.id)"
               >Edit</Button
             >
-            <!-- </div> -->
           </template>
         </div>
       </div>
@@ -68,21 +68,24 @@ const editArtwork = (artworkId: string) => {
 
 <style scoped>
 .artworkImg {
-  max-width: 10vw;
-  max-height: 10vh;
+  /* max-width: 15vh; TO DO --- fix to make images appear correctly */
+  /* max-height: 15vh; */
+  width: 100%;
+  height: 100%;
+  max-width: 100px;
+  max-height: 100px;
   border-radius: 8px;
+  border: 1px solid black;
+  object-fit: cover;
 }
 
 .internalArtGrid {
   width: 100%;
   display: grid;
   margin: auto;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  /* border: 1px solid black; */
-  /* box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.06),
-    0 2px 6px rgba(0, 0, 0, 0.04); */
+  align-content: flex-start;
 }
 
 /* .internalArtGrid > * {
@@ -91,6 +94,10 @@ const editArtwork = (artworkId: string) => {
 
 .header {
   font-weight: bold;
+}
+
+.created {
+  display: none;
 }
 
 .btnContainer {
@@ -102,12 +109,17 @@ const editArtwork = (artworkId: string) => {
 @media (min-width: 768px) {
   .internalArtGrid {
     width: 90%;
+    /* align-content: flex-start; */
   }
 }
 
 @media (min-width: 1024px) {
   .internalArtGrid {
     width: 60%;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .created {
+    display: block;
   }
 }
 </style>
