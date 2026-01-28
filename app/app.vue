@@ -82,6 +82,10 @@
   width: 100%;
 }
 
+.header {
+  font-weight: bold;
+}
+
 .padded {
   padding-top: 1rem;
   padding-bottom: 1rem;

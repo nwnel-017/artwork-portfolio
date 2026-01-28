@@ -65,15 +65,23 @@ function cancelEditOrder() {
     <div v-else-if="error">Something went wrong</div>
     <div v-else>
       <div v-if="orders">
-        <div v-for="order in orders" :key="order.id" class="contentCard">
+        <div class="contentCard">
           <div class="closeHorContent orderGrid">
-            <span>{{ order?.status }}</span>
-            <span>${{ order?.amount }}</span>
-            <span>{{ order?.buyer_email }}</span>
-            <span class="cutoffText">{{ order?.address_line_1 }}</span>
-            <span>{{ formatDateShort(order?.created_at) ?? "" }}</span>
-            <Button variant="secondary" @click="changeOrderStatus(order.id)"
-              >Change Status</Button
+            <span class="header">Status</span>
+            <span class="header">Amount</span>
+            <span class="header">Buyer's Email</span>
+            <span class="header">Shipping Address</span>
+            <span class="header date">Date Created</span>
+            <span></span>
+            <template v-for="order in orders" :key="order.id">
+              <span>{{ order?.status }}</span>
+              <span>${{ order?.amount }}</span>
+              <span>{{ order?.buyer_email }}</span>
+              <span class="cutoffText">{{ order?.address_line_1 }}</span>
+              <span>{{ formatDateShort(order?.created_at) ?? "" }}</span>
+              <Button @click="changeOrderStatus(order.id)"
+                >Change Status</Button
+              ></template
             >
           </div>
         </div>
@@ -86,7 +94,15 @@ function cancelEditOrder() {
 .orderGrid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  /* border: 1px solid var(--text-color); */
+  border-radius: 10px;
+  /* padding: 1rem; */
+  background-color: var(--theme-white);
   /* gap: 1rem; */
   width: 100%;
 }
+
+/* .date {
+  display: none;
+} */
 </style>

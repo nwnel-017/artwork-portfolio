@@ -107,9 +107,9 @@ const editArtwork = (artworkId: string) => {
   /* box-shadow: 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
-.header {
+/* .header {
   font-weight: bold;
-}
+} */
 
 .buttonCol {
   width: 100px;
@@ -122,6 +122,7 @@ const editArtwork = (artworkId: string) => {
 .btnContainer {
   display: flex;
   justify-content: end;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
