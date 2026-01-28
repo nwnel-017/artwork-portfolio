@@ -29,7 +29,7 @@ const editArtwork = (artworkId: string) => {
   <div class="verticalContent fullWidth">
     <div class="horizontalContent banner padded">
       <h1>Artworks</h1>
-      <Button @click="addArtwork">Add Artwork</Button>
+      <Button class="buttonCol" @click="addArtwork">Add Artwork</Button>
     </div>
     <div class="horizontalContent fullWidth padded">
       <div v-if="pending">Loading Artworks...</div>
@@ -46,19 +46,28 @@ const editArtwork = (artworkId: string) => {
             :key="artwork?.id"
             class="contentCard"
           >
-            <img
-              :src="artwork?.image_path ?? undefined"
-              alt=""
-              class="artworkImg"
-            />
-            <div class="cutoffText">{{ artwork?.title }}</div>
-            <div class="cutoffText">${{ artwork.price ?? `$${0.0}` }}</div>
-            <div class="created">
+            <div class="imageCell">
+              <img
+                :src="artwork?.image_path ?? undefined"
+                alt=""
+                class="artworkImg"
+              />
+            </div>
+            <div class="cutoffText gridText">{{ artwork?.title }}</div>
+            <div class="cutoffText gridText">
+              ${{ artwork.price ?? `$${0.0}` }}
+            </div>
+            <div class="created gridText">
               {{ formatDateShort(artwork?.created_at) ?? "" }}
             </div>
-            <Button variant="secondary" @click="editArtwork(artwork?.id)"
-              >Edit</Button
-            >
+            <div class="btnContainer">
+              <Button
+                variant="secondary"
+                @click="editArtwork(artwork?.id)"
+                class="buttonCol"
+                >Edit</Button
+              >
+            </div>
           </template>
         </div>
       </div>
@@ -67,15 +76,24 @@ const editArtwork = (artworkId: string) => {
 </template>
 
 <style scoped>
+.gridText {
+  display: flex;
+  align-items: center;
+}
+
+.imageCell {
+  width: 45px;
+  height: 45px;
+}
+
 .artworkImg {
-  /* max-width: 15vh; TO DO --- fix to make images appear correctly */
-  /* max-height: 15vh; */
   width: 100%;
   height: 100%;
   max-width: 100px;
   max-height: 100px;
   border-radius: 8px;
-  border: 1px solid black;
+  border: 1px solid var(--text-color);
+  box-shadow: 2px 4px rgba(0, 0, 0, 0.1);
   object-fit: cover;
 }
 
@@ -86,14 +104,15 @@ const editArtwork = (artworkId: string) => {
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
   align-content: flex-start;
+  /* box-shadow: 2px 4px rgba(0, 0, 0, 0.1); */
 }
-
-/* .internalArtGrid > * {
-  border: 1px solid black;
-} */
 
 .header {
   font-weight: bold;
+}
+
+.buttonCol {
+  width: 100px;
 }
 
 .created {
@@ -103,13 +122,20 @@ const editArtwork = (artworkId: string) => {
 .btnContainer {
   display: flex;
   justify-content: end;
-  /* align-items: center; */
 }
 
 @media (min-width: 768px) {
   .internalArtGrid {
     width: 90%;
-    /* align-content: flex-start; */
+  }
+
+  .imageCell {
+    width: 60px;
+    height: 60px;
+  }
+
+  .buttonCol {
+    width: 120px;
   }
 }
 
@@ -119,7 +145,7 @@ const editArtwork = (artworkId: string) => {
     grid-template-columns: repeat(5, 1fr);
   }
   .created {
-    display: block;
+    display: flex;
   }
 }
 </style>

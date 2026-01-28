@@ -66,7 +66,6 @@ const toggleNav = () => {
   display: block;
   height: 1px;
   margin: 5px 0;
-  /* background-color: var(--text-color); */
   background: var(--text-color);
   border-radius: 1px;
 }
@@ -92,6 +91,11 @@ const toggleNav = () => {
   .navBarInternal {
     width: 15vw;
     padding-left: 2rem;
+    transform: translate(0%);
+  }
+
+  .exitBtn {
+    display: none;
   }
 }
 </style>
