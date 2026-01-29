@@ -14,7 +14,6 @@ type EditedArtwork = {
   dimensions: string;
   price: string;
   image: File | null;
-  // published: string | "";
 };
 
 const route = useRoute();
@@ -34,7 +33,6 @@ const editedArtwork = ref<EditedArtwork>({
   dimensions: "",
   price: "",
   image: null,
-  // published: "",
 });
 
 const isEditing = ref(false);
@@ -48,7 +46,6 @@ function startEdit() {
     dimensions: artwork.value?.dimensions || "",
     price: artwork.value?.price?.toString() || "",
     image: null,
-    // published: artwork.value?.publish_on || "",
   };
 }
 
@@ -59,10 +56,8 @@ function stopEdit() {
     title: "",
     description: "",
     dimensions: "",
-    // artist: "",
     price: "",
     image: null,
-    // published: "",
   };
 }
 
@@ -80,17 +75,8 @@ async function save() {
   const newPrice = editedArtwork.value.price;
   const newDimensions = editedArtwork.value.dimensions;
   const newImage = editedArtwork.value.image;
-  // const newPublishedDate = editedArtwork.value.published;
 
-  if (
-    !newTitle ||
-    !newDesc ||
-    !newPrice ||
-    // !newArtist ||
-    !newImage ||
-    !newDimensions
-    // !newPublishedDate
-  ) {
+  if (!newTitle || !newDesc || !newPrice || !newImage || !newDimensions) {
     console.log("new title: " + newTitle);
     console.log("new desc: " + newDesc);
     console.log("new price: " + newPrice);
@@ -103,7 +89,6 @@ async function save() {
     newDesc === artwork.value?.description &&
     newPrice === artwork.value?.price?.toString() &&
     newDimensions === artwork.value?.dimensions
-    // newPublishedDate === artwork.value?.publish_on
   ) {
     alert("No changes have been made!");
     return;
@@ -116,7 +101,6 @@ async function save() {
   form.append("dimensions", newDimensions);
   form.append("price", newPrice);
   form.append("image", newImage);
-  // form.append("publishDate", newPublishedDate);
 
   try {
     await $fetch(`/api/artworks/${artworkId.value}`, {
@@ -154,13 +138,19 @@ async function deleteArtwork() {
       <div v-if="pending">Loading details...</div>
       <div v-if="error">There was an error getting artwork details</div>
       <div v-else-if="artwork">
-        <img :src="artwork?.image_path ?? undefined" alt="" class="headShot" />
-        <h1>Name: {{ artwork?.title }}</h1>
-        <h2>{{ artwork?.description }}</h2>
-        <h2>Size: {{ artwork?.dimensions }}</h2>
-        <h2>${{ artwork?.price || `$${0}` }}</h2>
-        <!-- <h2>Available On: {{ artwork?.publish_on }}</h2> -->
-        <!-- <h2>{{ artwork?.artist }}</h2> -->
+        <div class="imgContainer">
+          <img
+            :src="artwork?.image_path ?? undefined"
+            alt=""
+            class="artworkFull"
+          />
+        </div>
+        <div class="artworkDetails">
+          <div><span>Title:</span> {{ artwork?.title }}</div>
+          <div><span>Description:</span> {{ artwork?.description }}</div>
+          <div><span>Dimensions:</span> {{ artwork?.dimensions }}</div>
+          <div><span>Price:</span> ${{ artwork?.price || `$${0}` }}</div>
+        </div>
       </div>
       <Button variant="primary" size="lg" @click="startEdit"
         >Click to Edit Artwork</Button
@@ -180,9 +170,33 @@ async function deleteArtwork() {
       <label for="published">Available On:</label>
       <Button variant="primary" size="lg" @click="save">Save Changes</Button>
       <Button variant="secondary" size="lg" @click="stopEdit">Cancel</Button>
+      <Button variant="danger" size="lg" @click="deleteArtwork"
+        >Click to Delete Artwork</Button
+      >
     </div>
-    <Button variant="danger" size="lg" @click="deleteArtwork"
-      >Click to Delete Artwork</Button
-    >
   </div>
 </template>
+
+<style scoped>
+.imgContainer {
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.artworkFull {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.artworkDetails {
+  padding: 0.5rem 0;
+  height: auto;
+  margin: 0.5rem 0;
+}
+
+.artworkDetails span {
+  font-weight: bold;
+}
+</style>

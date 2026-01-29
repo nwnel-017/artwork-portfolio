@@ -46,9 +46,15 @@ function cancelStatusChange() {
   showOrderOptions.value = false;
 }
 
-function cancelEditOrder() {
+function cancelViewOrder() {
   selectedOrder.value = null;
   showOrderDetails.value = false;
+}
+
+function viewOrder(id: string) {
+  if (!id) return;
+  selectedOrder.value = id;
+  showOrderDetails.value = true;
 }
 </script>
 
@@ -66,19 +72,27 @@ function cancelEditOrder() {
     <div v-else>
       <div v-if="orders">
         <div class="contentCard">
-          <div class="closeHorContent orderGrid">
+          <div class="orderGrid">
             <span class="header">Status</span>
             <span class="header">Amount</span>
-            <span class="header">Buyer's Email</span>
-            <span class="header">Shipping Address</span>
+            <span class="header email">Buyer's Email</span>
+            <span class="header">Address</span>
             <span class="header date">Date Created</span>
             <span></span>
-            <template v-for="order in orders" :key="order.id">
-              <span>{{ order?.status }}</span>
-              <span>${{ order?.amount }}</span>
-              <span>{{ order?.buyer_email }}</span>
-              <span class="cutoffText">{{ order?.address_line_1 }}</span>
-              <span>{{ formatDateShort(order?.created_at) ?? "" }}</span>
+            <template
+              v-for="order in orders"
+              :key="order.id"
+              @click="viewOrder(order.id)"
+            >
+              <span class="clickable">{{ order?.status }}</span>
+              <span class="clickable">${{ order?.amount }}</span>
+              <span class="email clickable">{{ order?.buyer_email }}</span>
+              <span class="cutoffText clickable">{{
+                order?.address_line_1
+              }}</span>
+              <span class="date clickable">{{
+                formatDateShort(order?.created_at) ?? ""
+              }}</span>
               <Button @click="changeOrderStatus(order.id)"
                 >Change Status</Button
               ></template
@@ -93,16 +107,44 @@ function cancelEditOrder() {
 <style scoped>
 .orderGrid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   /* border: 1px solid var(--text-color); */
   border-radius: 10px;
-  /* padding: 1rem; */
+  padding: 1rem;
   background-color: var(--theme-white);
-  /* gap: 1rem; */
+  gap: 1rem;
   width: 100%;
 }
 
-/* .date {
+.date {
   display: none;
+}
+
+.email {
+  display: none;
+}
+
+/* h1 {
+  font-size: 1em;
 } */
+
+@media (min-width: 768px) {
+  /* h1 {
+    font-size: 2em;
+  } */
+}
+
+@media (min-width: 1024px) {
+  .date {
+    display: block;
+  }
+
+  .email {
+    display: block;
+  }
+
+  .orderGrid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
 </style>

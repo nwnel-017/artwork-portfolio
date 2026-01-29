@@ -111,6 +111,10 @@
   border-radius: 8px;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 /* .btn--sm {
   padding: 0.35rem 0.75rem;
   font-size: 0.8rem;
