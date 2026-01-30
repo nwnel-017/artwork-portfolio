@@ -152,11 +152,16 @@ async function deleteArtwork() {
           <div><span>Price:</span> ${{ artwork?.price || `$${0}` }}</div>
         </div>
       </div>
-      <Button variant="primary" size="lg" @click="startEdit"
-        >Click to Edit Artwork</Button
-      >
+      <div class="btnContainer">
+        <Button variant="primary" size="lg" class="btn" @click="startEdit"
+          >Click to Edit Artwork</Button
+        >
+        <Button variant="danger" size="lg" @click="deleteArtwork" class="btn"
+          >Click to Delete Artwork</Button
+        >
+      </div>
     </div>
-    <div v-if="isEditing" class="verticalContent">
+    <div v-if="isEditing" class="verticalContent spaced">
       <label for="title">Title</label>
       <textarea v-model="editedArtwork.title" type="text"></textarea>
       <label for="description">Description</label>
@@ -166,18 +171,58 @@ async function deleteArtwork() {
       <label for="dimensions">Size:</label>
       <textarea v-model="editedArtwork.dimensions" type="text"></textarea>
       <label for="image">Artwork</label>
-      <input type="file" @change="handleImageChange" />
-      <label for="published">Available On:</label>
+      <input
+        type="file"
+        id="fileInput"
+        class="hiddenInput"
+        @change="handleImageChange"
+      />
+      <label for="fileInput" class="fileInput">{{
+        editedArtwork.image?.name || "Change image"
+      }}</label>
       <Button variant="primary" size="lg" @click="save">Save Changes</Button>
       <Button variant="secondary" size="lg" @click="stopEdit">Cancel</Button>
-      <Button variant="danger" size="lg" @click="deleteArtwork"
-        >Click to Delete Artwork</Button
-      >
     </div>
   </div>
 </template>
 
 <style scoped>
+.btn {
+  min-width: 170px;
+}
+
+.btnContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.fileInput {
+  cursor: pointer;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--theme-blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.75rem;
+  max-height: 2rem;
+  border-radius: 6px;
+  width: 170px;
+  color: white;
+}
+
+.fileInput:hover {
+  background: #2563eb;
+  opacity: 0.9;
+}
+
 .imgContainer {
   max-width: 400px;
   max-height: 400px;
@@ -198,5 +243,35 @@ async function deleteArtwork() {
 
 .artworkDetails span {
   font-weight: bold;
+}
+
+textarea {
+  border-radius: 8px;
+  border-color: var(--text-color);
+  width: 90%;
+  font-family: inherit;
+}
+
+@media (min-width: 768px) {
+  .btnContainer {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  textarea {
+    width: 25vw;
+    height: 5rem;
+  }
+
+  .btn {
+    width: 200px;
+  }
+
+  .fileInput {
+    width: 200px;
+  }
 }
 </style>

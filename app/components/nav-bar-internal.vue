@@ -15,10 +15,18 @@ const toggleNav = () => {
     </div>
     <div class="navBarInternal" :class="{ open: isOpen }">
       <button @click="toggleNav" class="exitBtn">x</button>
-      <NuxtLink to="/admin/dashboard" class="dashLink">Dashboard</NuxtLink>
-      <NuxtLink to="/admin/orders" class="dashLink">Orders</NuxtLink>
-      <NuxtLink to="/admin/artworks" class="dashLink">Artworks</NuxtLink>
-      <NuxtLink to="/admin/settings" class="dashLink">Settings</NuxtLink>
+      <NuxtLink to="/admin/dashboard" class="dashLink" @click="toggleNav"
+        >Dashboard</NuxtLink
+      >
+      <NuxtLink to="/admin/orders" class="dashLink" @click="toggleNav"
+        >Orders</NuxtLink
+      >
+      <NuxtLink to="/admin/artworks" class="dashLink" @click="toggleNav"
+        >Artworks</NuxtLink
+      >
+      <NuxtLink to="/admin/settings" class="dashLink" @click="toggleNav"
+        >Settings</NuxtLink
+      >
     </div>
   </div>
 </template>

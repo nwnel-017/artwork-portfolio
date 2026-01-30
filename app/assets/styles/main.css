@@ -15,6 +15,7 @@ body {
   color-scheme: light dark;
   --theme-white: rgba(255, 255, 255, 0.87);
   --theme-off-white: rgba(239, 229, 229, 0.267);
+  --theme-grey: #9c9393;
   --theme-blue: #3b82f6;
   --text-blue: rgba(113, 159, 245, 0.87);
   --error-color: rgb(240, 90, 90);

@@ -1,18 +1,17 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
 import type { Order } from "@stripe/stripe-js";
 definePageMeta({
   layout: "dashboard",
   middleware: "admin",
 });
 
-type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
+const { getOrders } = useOrders();
 
 const {
   data: orders,
   pending,
   error,
-} = await useFetch<OrderRow[]>("/api/orders/orders");
+} = await getOrders();
 
 const selectedOrder = ref<any | null>(null);
 const showOrderDetails = ref(false);
@@ -111,6 +110,7 @@ function viewOrder(id: string) {
   /* border: 1px solid var(--text-color); */
   border-radius: 10px;
   padding: 1rem;
+  margin: 0 auto;
   background-color: var(--theme-white);
   gap: 1rem;
   width: 100%;

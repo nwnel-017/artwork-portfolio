@@ -1,4 +1,12 @@
+import type { Database } from "#types/supabase/database";
+
+type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"];
+
 export function useArtworks() {
+  const getArtworks = () => {
+    return useFetch<ArtworkRow[]>("/api/artworks/artworks");
+  };
+
   const addArtwork = async (
     title: string,
     description: string,
@@ -53,5 +61,5 @@ export function useArtworks() {
     }
   };
 
-  return { addArtwork };
+  return { getArtworks, addArtwork };
 }

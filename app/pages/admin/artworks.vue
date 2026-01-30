@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
 import { formatDateShort } from "#imports";
 
 definePageMeta({
@@ -7,14 +6,13 @@ definePageMeta({
   middleware: "admin",
 });
 
+const { getArtworks } = useArtworks();
+
 const {
   data: artworks,
   error,
   pending,
-} = await useFetch<ArtworkRow[]>("/api/artworks/artworks");
-
-// why is this type now required??
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
+} = await getArtworks();
 
 const addArtwork = () => {
   navigateTo("/admin/newContent/addArtwork");

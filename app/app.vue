@@ -50,6 +50,10 @@
   align-items: center;
 }
 
+.spaced {
+  gap: 0.5rem;
+}
+
 .horizontalContent {
   display: flex;
   justify-content: space-between;
@@ -71,6 +75,10 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+.margin {
+  margin: 3rem auto;
 }
 
 .contentCard {
