@@ -102,8 +102,17 @@ const toggleNav = () => {
     transform: translate(0%);
   }
 
-  .exitBtn {
+  .hamburger span {
     display: none;
+  }
+
+  .hamburger {
+    display: none;
+  }
+
+  .navBarInternal {
+    display: flex;
+    justify-content: space-evenly;
   }
 }
 </style>

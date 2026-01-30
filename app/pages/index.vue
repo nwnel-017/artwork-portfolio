@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({
-  layout: false,
+  layout: "default",
 });
 
 type Artwork = {
@@ -21,36 +21,47 @@ const {
 </script>
 
 <template>
-  <div class="verticalContent fullWidth">
+  <div class="verticalContent fillPage">
     <div class="landingPad">
-      <h1>Welcome</h1>
-      <div>Bringing art to life</div>
-      <div v-if="pending">Loading...</div>
-      <div v-else-if="error">Failed to load artwork</div>
-      <img
-        v-else-if="artwork"
-        :src="artwork?.image_path ?? undefined"
-        alt="Artwork"
-        class="artworkLg"
-      />
-      <Button @click="navigateTo('/artworks/gallery')">View Gallery</Button>
-      <div class="imageContainer"></div>
-      <Button variant="secondary" @click="navigateTo('/about')"
-        >About the Artist</Button
-      >
-      <img src="" alt="" />
+      <div class="lndPadImgContainer">
+        <div v-if="pending">Loading...</div>
+        <div v-else-if="error">Failed to load content</div>
+        <img
+          v-else-if="artwork"
+          :src="artwork?.image_path ?? undefined"
+          alt="Artwork"
+          class="artworkLg"
+        />
+      </div>
+      <div>
+        <p>Jamie Nelson is an creative person. Very very creative.</p>
+        <p>
+          She makes lots of art. And it is very very good. She also knows how to
+          cook very well.
+        </p>
+        <p>
+          She enjoys lots of things. Everyday she does something, and not a
+          single day goes by where she does not do some kind of thing.
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .landingPad {
-  margin-top: 2rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
   align-items: center;
+}
+
+.lndPadImgContainer {
+  width: 100%;
+  height: 6rem;
+  overflow: hidden;
 }
 
 .landingPad h1 {
@@ -64,7 +75,28 @@ const {
 }
 
 .artworkLg {
-  max-width: 90%;
-  max-height: 60vh;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+p {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .lndPadImgContainer {
+    height: 20rem;
+  }
+
+  p {
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lndPadImgContainer {
+    height: 100vh;
+  }
 }
 </style>

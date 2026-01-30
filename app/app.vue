@@ -62,6 +62,11 @@
 
 .fullWidth {
   width: 100%;
+  /* width: 100vw; */
+}
+
+.fillPage {
+  width: 100vw;
 }
 
 .submissionForm {
