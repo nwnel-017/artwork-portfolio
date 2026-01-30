@@ -5,6 +5,7 @@ const isOpen = ref(false);
 
 const toggleNav = () => {
   isOpen.value = !isOpen.value;
+  console.log("Toggled nav to:", isOpen.value);
 };
 </script>
 
@@ -12,6 +13,17 @@ const toggleNav = () => {
   <div>
     <div class="navBar">
       <div class="navHeader">JAMIE NELSON ART</div>
+      <div class="linkItems" :class="{ expanded: isOpen }">
+        <div class="verticalSpaced">
+          <NuxtLink to="/" class="dashLink">HOME</NuxtLink>
+          <NuxtLink to="/artworks/gallery" class="dashLink"
+            >AVAILABLE ARTWORKS</NuxtLink
+          >
+          <NuxtLink to="/artworks/gallery" class="dashLink">PORTFOLIO</NuxtLink>
+          <NuxtLink to="/about" class="dashLink">ABOUT THE ARTIST</NuxtLink>
+          <NuxtLink to="/contact" class="dashLink">CONTACT</NuxtLink>
+        </div>
+      </div>
       <div
         @click="toggleNav"
         class="hamburger"
@@ -24,7 +36,7 @@ const toggleNav = () => {
         <span></span>
       </div>
     </div>
-    <div class="linkItems" :class="{ expanded: isOpen }">
+    <!-- <div class="linkItems" :class="{ expanded: isOpen }">
       <div class="verticalSpaced">
         <NuxtLink to="/" class="dashLink">HOME</NuxtLink>
         <NuxtLink to="/artworks/gallery" class="dashLink"
@@ -34,7 +46,7 @@ const toggleNav = () => {
         <NuxtLink to="/about" class="dashLink">ABOUT THE ARTIST</NuxtLink>
         <NuxtLink to="/contact" class="dashLink">CONTACT</NuxtLink>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -97,8 +109,6 @@ const toggleNav = () => {
   cursor: pointer;
   top: 1rem;
   left: 1rem;
-  /* position: fixed;
-  right: 0; */
   z-index: 1000;
 }
 
@@ -150,6 +160,31 @@ const toggleNav = () => {
 
   .linkItems {
     width: auto;
+    gap: 2rem;
+  }
+
+  /* .hamburger {
+    width: 50px;
+  } */
+}
+
+@media (min-width: 1024px) {
+  .hamburger {
+    display: none;
+  }
+
+  .linkItems {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    background: transparent;
+    padding: 0;
+    gap: 2rem;
+    min-height: auto;
+  }
+
+  .verticalSpaced {
+    flex-direction: row;
     gap: 2rem;
   }
 }
