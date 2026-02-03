@@ -31,7 +31,7 @@ const formattedDate = computed(() => formatDateShort(artwork?.created_at));
 </template>
 
 <style>
-.overlay {
+/* .overlay {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -41,10 +41,10 @@ const formattedDate = computed(() => formatDateShort(artwork?.created_at));
   position: fixed;
   background: rgba(0, 0, 0, 0.5);
   inset: 0; /* top:0 right:0 bottom:0 left:0 */
-  z-index: 1;
-}
+/* z-index: 1;
+} */
 
-.modal {
+/* .modal {
   max-width: 90%;
   background: white;
   display: flex;
@@ -53,8 +53,7 @@ const formattedDate = computed(() => formatDateShort(artwork?.created_at));
   padding: 1rem;
   border-radius: 8px;
   opacity: 1;
-}
-
+} */
 .artworkFull {
   max-width: 15rem;
   max-height: 15rem;

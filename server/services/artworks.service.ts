@@ -391,6 +391,49 @@ async function markArtworkAsSold(
   }
 }
 
+async function getGalleryImages(
+  supabase: SupabaseClient<Database>,
+  artworkId: string,
+) {
+  if (!supabase || !artworkId) {
+    throw new Error("Missing parameters!");
+  }
+
+  const { data: rows, error } = await supabase
+    .from("gallery_images")
+    .select("*")
+    .eq("artwork_id", artworkId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch gallery images:", error);
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Error",
+      data: {
+        message: "Failed to fetch gallery images",
+        details: error.message,
+      },
+    });
+  }
+
+  // Map image_path to public URLs
+  if (rows && Array.isArray(rows)) {
+    rows.map((row) => {
+      const imagePath = row.image_path;
+      if (imagePath) {
+        const { data: publicData } = supabase.storage
+          .from("artwork_images")
+          .getPublicUrl(imagePath);
+        // @ts-ignore assign back
+        row.image_path = publicData?.publicUrl ?? null;
+      }
+    });
+  }
+
+  return rows;
+}
+
 // async function getCurrentArtworks(supabase: SupabaseClient<Database>) {
 //   const { data: artworks, error } = await supabase
 //     .from("artworks")
@@ -459,4 +502,5 @@ export {
   markArtworkAsSold,
   getArtworkPrice,
   getLatestArtwork,
+  getGalleryImages,
 };

@@ -13,76 +13,47 @@ const {
   error,
 } = await useFetch<ArtworkRow[]>("/api/artworks/artworks");
 
-const displayArtworkPopup = ref(false);
-const selectedArtwork = ref<ArtworkRow | null>(null);
+// const displayArtworkPopup = ref(false);
+// const selectedArtwork = ref<ArtworkRow | null>(null);
 
-function openPopup(artwork: ArtworkRow) {
-  if (artwork?.sold) return;
-  selectedArtwork.value = artwork;
-  displayArtworkPopup.value = true;
-}
+// function openPopup(artwork: ArtworkRow) {
+//   if (artwork?.sold) return;
+//   selectedArtwork.value = artwork;
+//   displayArtworkPopup.value = true;
+// }
 
-function closePopup() {
-  selectedArtwork.value = null;
-  displayArtworkPopup.value = false;
-}
+// function closePopup() {
+//   selectedArtwork.value = null;
+//   displayArtworkPopup.value = false;
+// }
 
-async function payWithStripe() {
-  try {
-    const { url } = await $fetch<{ url: string }>(
-      "/api/stripe/create-checkout-session",
-      {
-        method: "POST",
-        body: {
-          artworkId: selectedArtwork.value?.id,
-        },
-      },
-    );
+// async function payWithStripe() {
+//   try {
+//     const { url } = await $fetch<{ url: string }>(
+//       "/api/stripe/create-checkout-session",
+//       {
+//         method: "POST",
+//         body: {
+//           artworkId: selectedArtwork.value?.id,
+//         },
+//       },
+//     );
 
-    if (url) {
-      window.location.href = url;
-    }
-  } catch (err) {
-    console.log(
-      "There was an error retrieving Stripe checkout session: " + err,
-    );
-    throw new Error("Failed to retrieve stripe checkout session");
-  }
-}
+//     if (url) {
+//       window.location.href = url;
+//     }
+//   } catch (err) {
+//     console.log(
+//       "There was an error retrieving Stripe checkout session: " + err,
+//     );
+//     throw new Error("Failed to retrieve stripe checkout session");
+//   }
+// }
 </script>
 
 <template>
   <div class="verticalContent fullWidth">
-    <ArtworkDetails
-      v-if="displayArtworkPopup && selectedArtwork"
-      :artwork="selectedArtwork"
-      @close="closePopup"
-      @checkout="payWithStripe"
-    />
-    <div class="textBlock">
-      <h1>Artworks</h1>
-    </div>
-    <div v-if="pending">Loading Artworks...</div>
-    <div v-else-if="error">Failed to get artworks: {{ error }}</div>
-    <div v-else class="artworksGrid">
-      <div
-        v-for="artwork in artworks"
-        :key="artwork.id"
-        @click="openPopup(artwork)"
-        :class="{
-          soldArtwork: artwork?.sold,
-          clickable: !artwork?.sold,
-          artworkContainer: true,
-        }"
-      >
-        <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />
-        <div class="artDetails">
-          <div>{{ artwork?.title }}</div>
-          <div v-if="artwork?.sold">Sold</div>
-          <div v-if="!artwork?.sold">${{ artwork?.price }}</div>
-        </div>
-      </div>
-    </div>
+    <ArtworkGallery :artworks="artworks || []" />
   </div>
 </template>
 

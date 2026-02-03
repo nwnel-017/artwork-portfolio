@@ -156,6 +156,13 @@ async function deleteArtwork() {
         <Button variant="primary" size="lg" class="btn" @click="startEdit"
           >Click to Edit Artwork</Button
         >
+        <Button
+          variant="primary"
+          size="lg"
+          class="btn"
+          @click="navigateTo('/admin/editContent/gallery/' + artwork?.id)"
+          >Click to Edit Gallery</Button
+        >
         <Button variant="danger" size="lg" @click="deleteArtwork" class="btn"
           >Click to Delete Artwork</Button
         >

@@ -112,7 +112,8 @@ const toggleNav = () => {
 
   .navBarInternal {
     display: flex;
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
+    gap: 2rem;
   }
 }
 </style>

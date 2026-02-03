@@ -15,13 +15,19 @@ const toggleNav = () => {
       <div class="navHeader">JAMIE NELSON ART</div>
       <div class="linkItems" :class="{ expanded: isOpen }">
         <div class="verticalSpaced">
-          <NuxtLink to="/" class="dashLink">HOME</NuxtLink>
-          <NuxtLink to="/artworks/gallery" class="dashLink"
+          <NuxtLink to="/" class="dashLink" @click="toggleNav">HOME</NuxtLink>
+          <NuxtLink to="/artworks/available" @click="toggleNav" class="dashLink"
             >AVAILABLE ARTWORKS</NuxtLink
           >
-          <NuxtLink to="/artworks/gallery" class="dashLink">PORTFOLIO</NuxtLink>
-          <NuxtLink to="/about" class="dashLink">ABOUT THE ARTIST</NuxtLink>
-          <NuxtLink to="/contact" class="dashLink">CONTACT</NuxtLink>
+          <NuxtLink to="/artworks/gallery" class="dashLink" @click="toggleNav"
+            >PORTFOLIO</NuxtLink
+          >
+          <NuxtLink to="/about" class="dashLink" @click="toggleNav"
+            >ABOUT THE ARTIST</NuxtLink
+          >
+          <NuxtLink to="/contact" class="dashLink" @click="toggleNav"
+            >CONTACT</NuxtLink
+          >
         </div>
       </div>
       <div
@@ -51,10 +57,14 @@ const toggleNav = () => {
 </template>
 
 <style>
+.border {
+  border: 5px solid black;
+}
+
 .navHeader {
   font-weight: bold;
   font-size: 1.5rem;
-  margin-bottom: 0.75rem;
+  /* margin-bottom: 0.75rem; */
 }
 
 .navBar {

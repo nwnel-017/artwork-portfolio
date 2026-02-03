@@ -53,6 +53,27 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_images: {
+        Row: {
+          artwork_id: string
+          created_at: string
+          id: number
+          image_path: string | null
+        }
+        Insert: {
+          artwork_id?: string
+          created_at?: string
+          id?: number
+          image_path?: string | null
+        }
+        Update: {
+          artwork_id?: string
+          created_at?: string
+          id?: number
+          image_path?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address_line_1: string

@@ -61,5 +61,36 @@ export function useArtworks() {
     }
   };
 
-  return { getArtworks, addArtwork };
+  const addArtworkImages = async (artworkId: string, images: File[]) => {
+    // Validation
+    if (!artworkId || images.length === 0) {
+      return {
+        success: false,
+        message: "Artwork ID and images are required!",
+      };
+    }
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append("artworkId", artworkId);
+    images.forEach((image, index) => {
+      formData.append(`images`, image);
+    });
+
+    try {
+      console.log("Submitting artwork images...");
+      await fetch("/api/artworks/gallery/gallery", {
+        method: "POST",
+        body: formData,
+      });
+    } catch (err) {
+      console.error(err);
+      return {
+        success: false,
+        message: "An error occurred while uploading images! Please try again!",
+      };
+    }
+  };
+
+  return { getArtworks, addArtwork, addArtworkImages };
 }

@@ -56,6 +56,12 @@ export const existingArtworkFormSchema = z
   .strict()
   .strip();
 
+export const galleryImageShema = z.object({
+  // To Do: define gallery image schema
+  // has artwork ID
+  // has image files
+});
+
 export type ArtworkForm = z.infer<typeof artworkFormSchema>;
 
 export type ExistingArtworkForm = z.infer<typeof existingArtworkFormSchema>;
@@ -148,7 +154,6 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
     description,
     price,
     dimensions,
-    // publishDate,
     image,
   };
   const parsed = existingArtworkFormSchema.safeParse(formData);
@@ -177,4 +182,10 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
   }
 
   return parsed;
+};
+
+export const validateGalleryImages = async (form: MultiPartData[]) => {
+  // To Do: implement gallery image validation
+  // should have artwork ID and image files - safe parse with galleryImageShema
+  // for each image file, run validateImageFile()
 };
