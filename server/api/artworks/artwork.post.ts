@@ -4,6 +4,9 @@ import { serverSupabaseClient } from "#supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "#types/supabase/database";
 import { requireAdmin } from "@server/utils/auth/requireAdmin";
+import { UploadInput } from "~~/server/services/storage.service";
+import type { ArtworkData } from "#types/artworks/artworks";
+import { fi } from "zod/locales";
 
 export default defineEventHandler(async (event) => {
   const adminUser = await requireAdmin(event);
@@ -21,7 +24,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const validatedForm = await validateNewArtworkForm(form); // expects object
+  // To Do: move logic to extractArtwork util function
+  const artworkForm: ArtworkData = {
+    title: form.find((field) => field.name === "title")?.data?.toString() || "",
+    description:
+      form.find((field) => field.name === "description")?.data?.toString() ||
+      "",
+    price: form.find((field) => field.name === "price")?.data?.toString() || "",
+    dimensions:
+      form.find((field) => field.name === "dimensions")?.data?.toString() || "",
+  };
+
+  const imageField = form.find((field) => field.name === "image");
+
+  const validatedForm = await validateNewArtworkForm(artworkForm); // expects object
   if (!validatedForm.success) {
     // invalid form
     console.log("Invalid form!");
@@ -30,16 +46,32 @@ export default defineEventHandler(async (event) => {
       statusMessage: "Bad Request",
       data: {
         message: "Invalid form!",
-        details: validatedForm.error.format(),
       },
     });
   }
 
+  const image: UploadInput = {
+    filename: imageField?.filename || "",
+    buffer: imageField?.data || Buffer.from([]),
+    size: imageField?.data ? imageField.data.length : 0,
+    contentType: imageField?.type || "application/octet-stream",
+  };
+
+  // To Do:  call image validation with validateImage()
+
   try {
     const supabase = (await serverSupabaseClient(
-      event
+      event,
     )) as SupabaseClient<Database>;
-    await addArtwork(supabase, validatedForm.data);
+
+    // const image: UploadInput = {
+    //   filename: validatedForm.data?.image.filename,
+    //   buffer: validatedForm.data?.image.data,
+    //   // size: validatedForm.data?.image.size,
+    //   // contentType: validatedForm.data?.image,
+    // };
+
+    await addArtwork(supabase, artworkForm, image);
   } catch (err) {
     console.log("error adding artwork: " + err);
     throw createError({

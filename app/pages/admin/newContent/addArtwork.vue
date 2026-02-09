@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // import DropDown from "~/components/drop-down.vue";
 // import type { Artist } from "#types/artists.ts";
+import type { ArtworkData } from "#types/artworks/artworks.ts";
 
 definePageMeta({
   layout: "dashboard",
@@ -12,26 +13,19 @@ const { addArtwork } = useArtworks();
 // const { data: artistsList } = await useFetch<Artist[]>("/api/artists/artists");
 // const typedArtistsList = artistsList as Ref<Artist[] | null>;
 
-const artwork = reactive<{
-  title: string;
-  description: string;
-  price: string;
-  publishDate: string;
-  dimensions: string;
-  image: File | null;
-}>({
+const image = ref<File | null>(null);
+
+const artwork = reactive<ArtworkData>({
   title: "",
   description: "",
   price: "",
-  publishDate: "",
   dimensions: "",
-  image: null,
 });
 
 const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const selected = target.files?.[0] || null;
-  artwork.image = selected;
+  image.value = selected;
 };
 
 // find artist and set artwork.artist to selected artist
@@ -49,13 +43,13 @@ const onFileChange = (event: Event) => {
 // };
 
 const submit = async () => {
+  // To Do: send ArtworkData object instead of fields
   const response = await addArtwork(
     artwork.title,
     artwork.description,
-    artwork.image,
+    image.value,
     artwork.dimensions,
     artwork.price,
-    // artwork.publishDate
   );
 
   if (!response.success) {
@@ -66,8 +60,7 @@ const submit = async () => {
   alert(response.message);
   artwork.title = "";
   artwork.description = "";
-  artwork.publishDate = "";
-  artwork.image = null;
+  image.value = null;
   artwork.price = "";
   artwork.dimensions = "";
 

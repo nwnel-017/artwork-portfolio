@@ -4,31 +4,59 @@ import type { Database } from "#types/supabase/database";
 // To Do - use validateImage instead of validating here
 // To Do - retrieve relative file path - not full public URL
 // first check - what does path return?
+export type UploadInput = {
+  filename: string;
+  buffer: Buffer;
+  // filename: string;
+  size?: number;
+  contentType?: string;
+};
+
 async function uploadFile(
   supabase: SupabaseClient<Database>,
-  file: File,
+  // file: File,
+  input: UploadInput,
   bucket: string,
 ) {
   console.log("uploading file!");
   // RLS error here
 
-  if (!supabase || !file || !bucket) {
+  if (!supabase || !input || !bucket) {
     throw createError({
       statusCode: 500,
       statusMessage: "Missing parameters",
     });
   }
 
-  const ext = (file.name && file.name.split(".").pop()) || "png";
-  const fileName = file.name;
+  const { buffer, filename, contentType } = input;
 
-  const arrayBuffer = await file.arrayBuffer();
-  const fileBuffer = new Uint8Array(arrayBuffer);
+  console.log(
+    "uploading file with name:",
+    filename,
+    " and content type:",
+    contentType,
+  );
+
+  const blob = new Blob([new Uint8Array(buffer)], {
+    type: contentType || "application/octet-stream",
+  });
+
+  // const ext = (input.filename && input.filename.split(".").pop()) || "png";
+  // const fileName = input.filename;
+
+  // const fileBuffer = input.buffer;
+
+  // const { data, error } = await supabase.storage
+  //   .from(bucket)
+  //   .upload(fileName, fileBuffer, {
+  //     contentType: input.contentType,
+  //     upsert: false,
+  //   });
 
   const { data, error } = await supabase.storage
     .from(bucket)
-    .upload(fileName, fileBuffer, {
-      contentType: file.type,
+    .upload(filename, blob, {
+      contentType: contentType,
       upsert: false,
     });
 
@@ -40,10 +68,10 @@ async function uploadFile(
   // Get public URL
   const { data: publicData } = supabase.storage
     .from(bucket)
-    .getPublicUrl(fileName);
+    .getPublicUrl(filename);
 
   return {
-    path: data?.path ?? fileName,
+    path: data?.path ?? filename,
     publicUrl: publicData?.publicUrl ?? null,
   };
 }

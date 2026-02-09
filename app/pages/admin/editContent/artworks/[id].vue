@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
+import type { ArtworkData } from "#types/artworks/artworks";
 
 definePageMeta({
   layout: "dashboard",
@@ -26,47 +27,53 @@ const {
   error,
 } = useFetch<ArtworkRow>(`/api/artworks/${artworkId.value}`); // why is artwork id an object?
 
-const editedArtwork = ref<EditedArtwork>({
-  id: "",
+const editedArtwork = ref<ArtworkData>({
+  // id: "",
   title: "",
   description: "",
   dimensions: "",
   price: "",
-  image: null,
+  // image: null,
 });
+
+const image = ref<File | null>(null);
 
 const isEditing = ref(false);
 
 function startEdit() {
   isEditing.value = true;
   editedArtwork.value = {
-    id: artworkId.value,
+    // id: artworkId.value,
     title: artwork.value?.title || "",
     description: artwork.value?.description || "",
     dimensions: artwork.value?.dimensions || "",
     price: artwork.value?.price?.toString() || "",
-    image: null,
+    // image: null,
   };
+  image.value = null;
 }
 
 function stopEdit() {
   isEditing.value = false;
   editedArtwork.value = {
-    id: "",
+    // id: "",
     title: "",
     description: "",
     dimensions: "",
     price: "",
-    image: null,
+    // image: null,
   };
+  image.value = null;
 }
 
 function handleImageChange(event: Event) {
   const target = event.target as HTMLInputElement;
   const file = target?.files ? target.files[0] : null;
-  editedArtwork.value.image = file || null;
+  // editedArtwork.value.image = file || null;
+  image.value = file || null;
 }
 
+// To Do: move to useArtworks composable
 async function save() {
   console.log("saving!");
   isEditing.value = false;
@@ -74,7 +81,7 @@ async function save() {
   const newDesc = editedArtwork.value.description;
   const newPrice = editedArtwork.value.price;
   const newDimensions = editedArtwork.value.dimensions;
-  const newImage = editedArtwork.value.image;
+  const newImage = image.value;
 
   if (!newTitle || !newDesc || !newPrice || !newImage || !newDimensions) {
     console.log("new title: " + newTitle);
@@ -185,7 +192,7 @@ async function deleteArtwork() {
         @change="handleImageChange"
       />
       <label for="fileInput" class="fileInput">{{
-        editedArtwork.image?.name || "Change image"
+        image?.name || "Change image"
       }}</label>
       <Button variant="primary" size="lg" @click="save">Save Changes</Button>
       <Button variant="secondary" size="lg" @click="stopEdit">Cancel</Button>

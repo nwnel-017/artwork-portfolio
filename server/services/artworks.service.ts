@@ -4,19 +4,32 @@ import { MultiPartData } from "h3";
 import {
   type ArtworkForm,
   type ExistingArtworkForm,
+  GalleryForm,
 } from "@utils/validation/form";
+import type { ArtworkData } from "#types/artworks/artworks";
+import type { UploadInput } from "./storage.service";
 import { validateImageFile } from "@utils/validation/image";
 import { uploadFile, deleteFile } from "./storage.service";
 
 // To Do:
 // add form validation
+// dont pass in a form - pass in fields directly
 async function addArtwork(
   supabase: SupabaseClient<Database>,
-  artwork: ArtworkForm,
+  artwork: ArtworkData,
+  image: UploadInput,
 ) {
-  console.log("Adding new artwork");
+  console.log("Adding new artwork"); // reached here - but throwing error
 
-  if (!artwork) {
+  if (
+    !artwork.title ||
+    !artwork.description ||
+    !artwork.price ||
+    !artwork.dimensions ||
+    !image
+  ) {
+    console.log("Missing artwork fields!");
+
     throw createError({
       statusCode: 500,
       statusMessage: "Internal Error",
@@ -26,39 +39,43 @@ async function addArtwork(
     });
   }
 
-  if (
-    !artwork.title ||
-    !artwork.description ||
-    !artwork.price ||
-    !artwork.image ||
-    !artwork.dimensions
-  ) {
-    throw new Error("Missing artwork fields!");
-  }
+  // if (
+  //   !artwork.title ||
+  //   !artwork.description ||
+  //   !artwork.price ||
+  //   !artwork.image ||
+  //   !artwork.dimensions
+  // ) {
+  //   throw new Error("Missing artwork fields!");
+  // }
   // validate image
-  const image: File | null = artwork.image;
+  // To Do: fix this
+  // const image: File | null = artwork.image;
 
-  try {
-    validateImageFile(image);
-  } catch (e) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Internal Error",
-      data: {
-        message: "Invalid artwork!",
-      },
-    });
-  }
+  // should be already validated
+  // try {
+  //   validateImageFile(image);
+  // } catch (e) {
+  //   throw createError({
+  //     statusCode: 500,
+  //     statusMessage: "Internal Error",
+  //     data: {
+  //       message: "Invalid artwork!",
+  //     },
+  //   });
+  // }
 
   try {
     const path = await uploadFile(supabase, image, "artwork_images");
 
     const imageUrl = typeof path === "string" ? path : (path.path ?? "");
 
+    const parsedPrice = Number(artwork.price);
+
     const { data, error } = await supabase.from("artworks").insert({
       title: artwork.title,
       description: artwork.description,
-      price: artwork.price,
+      price: parsedPrice,
       dimensions: artwork.dimensions,
       image_path: imageUrl,
     });
@@ -89,9 +106,11 @@ async function addArtwork(
 
 async function updateArtwork(
   supabase: SupabaseClient<Database>,
-  artwork: ExistingArtworkForm, // doesnt contain id - we need a new type ExistingArtworkForm
+  id: string,
+  artwork: ArtworkData,
+  image: UploadInput,
 ) {
-  if (!artwork) {
+  if (!id || !artwork || !supabase || !image) {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal Error",
@@ -105,24 +124,30 @@ async function updateArtwork(
     !artwork.title ||
     !artwork.description ||
     !artwork.price ||
-    !artwork.dimensions ||
-    !artwork.image
-    // ||
-    // !artwork.publishDate
+    !artwork.dimensions
   ) {
     throw new Error("Missing artwork fields!");
   }
 
-  const image: File | null = artwork.image;
+  // const image: File | null = artwork.image;
 
   // to do - use artist id to find image path
   // delete old image from storage - using delete file function
   // upload new image
   // to do - check if image actually needs to be updated first
+
+  let parsedPrice: number;
+  try {
+    parsedPrice = Number(artwork.price);
+  } catch (err) {
+    console.log("Error parsing price: " + err);
+    throw new Error("Invalid price value!");
+  }
+
   const { data, error } = await supabase
     .from("artworks")
     .select("image_path")
-    .eq("id", artwork.id)
+    .eq("id", id)
     .single();
   if (error || !data) {
     console.error("Error fetching existing artist data:", error);
@@ -137,18 +162,16 @@ async function updateArtwork(
     await deleteFile(supabase, existingImagePath, "artwork_images");
     const imagePath = await uploadFile(supabase, image, "artwork_images");
     console.log("image uploaded with public url:", imagePath.publicUrl);
-    // console.log("new published date: " + artwork.publishDate); // why is this the same date?
     await supabase
       .from("artworks")
       .update({
         title: artwork.title,
         description: artwork.description,
-        price: artwork.price,
+        price: parsedPrice,
         image_path: imagePath.path,
         dimensions: artwork.dimensions,
-        // publish_on: artwork.publishDate,
       })
-      .eq("id", artwork.id);
+      .eq("id", id);
   } catch (err) {
     console.log("failed to update artist:", err);
     throw createError({
@@ -434,62 +457,77 @@ async function getGalleryImages(
   return rows;
 }
 
-// async function getCurrentArtworks(supabase: SupabaseClient<Database>) {
-//   const { data: artworks, error } = await supabase
-//     .from("artworks")
-//     .select("*")
-//     .lte("publish_on", new Date().toISOString().slice(0, 10));
+// organize better later
+type Image = {
+  filename: string;
+  data: Buffer;
+  size: number;
+  contentType: string;
+};
 
-//   if (error || !artworks) {
-//     throw createError({
-//       statusCode: 500,
-//       statusMessage: "Internal Error",
-//       data: {
-//         message: "Failed to fetch artworks",
-//         details: error?.message,
-//       },
-//     });
-//   }
+async function addGalleryImages(
+  supabase: SupabaseClient<Database>,
+  artworkId: string,
+  // images: Image[],
+  images: UploadInput[],
+) {
+  console.log("Adding gallery images...");
 
-//   artworks.map((artwork) => {
-//     const imagePath = artwork.image_path;
-//     if (imagePath) {
-//       const { data: publicData } = supabase.storage
-//         .from("artwork_images")
-//         .getPublicUrl(imagePath);
-//       artwork.image_path = publicData?.publicUrl;
-//     }
-//   });
+  if (!supabase || !artworkId || !images) {
+    throw new Error("Missing parameters!");
+  }
 
-//   return artworks;
-// }
+  // const artworkId = galleryForm.artworkId;
+  // const images: File[] | null = galleryForm.images; // To Do: figure out this type error
+  console.log("artwork id: " + artworkId);
 
-// async function getUpcomingArtworks(supabase: SupabaseClient<Database>) {
-//   if (!supabase) throw new Error("Missing supabase client!");
-//   const { data: artworks, error } = await supabase
-//     .from("artworks")
-//     .select("*")
-//     .gt("publish_on", new Date().toISOString().slice(0, 10));
+  if (!artworkId || !images || images.length === 0) {
+    throw new Error("Invalid gallery form data!");
+  }
 
-//   if (error || !artworks) {
-//     console.log(
-//       "error retrieving upcoming gallery from supabase: " + error?.message
-//     );
-//     throw new Error("Failed to retrieve upcoming gallery!");
-//   }
+  // To Do:
+  // 1.) validate artwork ID exists
+  const { data: existingArtwork, error: fetchError } = await supabase
+    .from("artworks")
+    .select("id")
+    .eq("id", artworkId)
+    .single();
 
-//   artworks.map((artwork) => {
-//     const imagePath = artwork.image_path;
-//     if (imagePath) {
-//       const { data: publicData } = supabase.storage
-//         .from("artwork_images")
-//         .getPublicUrl(imagePath);
-//       artwork.image_path = publicData?.publicUrl;
-//     }
-//   });
+  if (fetchError || !existingArtwork) {
+    console.log("Failed to fetch artwork:", fetchError);
+    throw new Error("Artwork does not exist!");
+  }
 
-//   return artworks;
-// }
+  // 2.) upload each image to get the path
+  for (const image of images) {
+    // RLS error here
+    try {
+      const imagePath = await uploadFile(
+        supabase,
+        image, // how to change to file?
+        "gallery_images",
+      );
+
+      // 3.) insert each gallery image record with path into gallery_images table
+      if (!imagePath) {
+        throw new Error("Failed to get image path for gallery image!");
+      }
+      const { error } = await supabase.from("gallery_images").insert({
+        artwork_id: artworkId,
+        image_path: imagePath.path,
+      });
+
+      if (error) {
+        throw new Error(
+          `Failed to insert gallery image record: ${error.message}`,
+        );
+      }
+    } catch (err) {
+      console.log("Failed to upload gallery image:", err);
+      throw new Error("Failed to upload gallery image!");
+    }
+  }
+}
 
 export {
   addArtwork,
@@ -503,4 +541,5 @@ export {
   getArtworkPrice,
   getLatestArtwork,
   getGalleryImages,
+  addGalleryImages,
 };

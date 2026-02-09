@@ -13,7 +13,6 @@ export function useArtworks() {
     image: File | null,
     dimensions: string,
     price: string,
-    // publishDate: string
   ) => {
     // Validation
     if (!title || !description || !image || !price || !dimensions) {
