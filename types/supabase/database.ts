@@ -57,19 +57,19 @@ export type Database = {
         Row: {
           artwork_id: string
           created_at: string
-          id: number
+          id: string
           image_path: string | null
         }
         Insert: {
           artwork_id?: string
           created_at?: string
-          id?: number
+          id?: string
           image_path?: string | null
         }
         Update: {
           artwork_id?: string
           created_at?: string
-          id?: number
+          id?: string
           image_path?: string | null
         }
         Relationships: []

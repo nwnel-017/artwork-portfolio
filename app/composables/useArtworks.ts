@@ -73,15 +73,29 @@ export function useArtworks() {
     const formData = new FormData();
     formData.append("artworkId", artworkId);
     images.forEach((image, index) => {
-      formData.append(`images`, image);
+      formData.append(`image`, image);
     });
 
     try {
       console.log("Submitting artwork images...");
-      await fetch("/api/artworks/gallery/gallery", {
+      const response = await fetch("/api/artworks/gallery/gallery", {
         method: "POST",
         body: formData,
       });
+
+      const result = await response.json();
+
+      if (!result.ok) {
+        return {
+          success: false,
+          message: result?.message || "Something went wrong!",
+        };
+      }
+
+      return {
+        success: true,
+        message: result.message || "Successfully submitted photos!",
+      };
     } catch (err) {
       console.error(err);
       return {

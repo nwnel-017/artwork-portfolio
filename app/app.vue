@@ -82,6 +82,12 @@
   justify-content: space-between;
 }
 
+.flexBetween {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .margin {
   margin: 3rem auto;
 }
@@ -126,6 +132,18 @@
 
 .clickable {
   cursor: pointer;
+}
+
+.imgContainer {
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.artworkFull {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .overlay {

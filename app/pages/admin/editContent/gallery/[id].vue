@@ -2,6 +2,7 @@
 import type { Database } from "#types/supabase/database";
 
 // To Do: implement edit gallery functionality
+// To Do: refactor - this is basically a copy of ArtworkGallery component
 
 definePageMeta({
   layout: "dashboard",
@@ -12,34 +13,47 @@ type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
 
 const route = useRoute();
 
-const artworkId = computed(() => route.params.id as string);
+// To Do: fix - id will be undefined on first render
+const artworkId = computed(() => route.params.id as string); // Issue
 
 const { addArtworkImages } = useArtworks();
 
 const viewFileUpload = ref(false);
 
+const offset = ref(0);
+// const limit = 1;
+
+function nextImage() {
+  if (!gallery?.value) return;
+  if (offset.value < gallery.value.length - 1) offset.value++;
+}
+
+function prevImage() {
+  if (offset.value > 0) {
+    offset.value--;
+  }
+}
+
 function toggleFileUpload() {
-  // Functionality to add images to the gallery will be implemented here
   viewFileUpload.value = !viewFileUpload.value;
 }
 
 async function uploadFiles(files: File[]) {
-  // Functionality to handle file uploads will be implemented here
   console.log("Files to upload:", files);
   toggleFileUpload();
   const result = await addArtworkImages(artworkId.value, files);
-  if (!result?.success) {
-    alert("Failed to upload images!");
-  } else {
-    alert("Images uploaded successfully!");
-  }
+  alert(result?.message || "");
+}
+
+async function removePhoto(id: string) {
+  console.log("removing photo!");
 }
 
 const {
   data: gallery,
   pending,
   error,
-} = useFetch<GalleryRow>(`/api/galleries/${artworkId.value}`);
+} = useFetch<GalleryRow[]>(`/api/artworks/gallery/${artworkId.value}`);
 </script>
 
 <template>
@@ -52,10 +66,80 @@ const {
     @upload="uploadFiles"
   />
   <div v-if="gallery">
-    <div v-for="image in gallery" :key="gallery.id" class="gallery-image">
-      <img :src="gallery?.image_path ?? undefined" alt="Gallery Image" />
+    <!-- To Do: use this UI for public UI in artwork details
+    <div class="imgContainer flexBetween">
+      <ArrowButton direction="left" size="sm" @click="nextImage"></ArrowButton>
+      <img
+        :src="gallery[offset]?.image_path ?? undefined"
+        alt="Gallery Image"
+        class="artworkFull"
+      />
+      <ArrowButton direction="right" @click="prevImage"></ArrowButton>
+    </div> -->
+    <div class="textBlock">
+      <h1>Artworks</h1>
+    </div>
+    <div class="artworksGrid">
+      <div v-for="g in gallery" :key="g.id" class="artworkContainer clickable">
+        <img :src="g?.image_path ?? undefined" alt="" class="artwork" />
+        <Button variant="danger" @click="removePhoto(g.id)">Remove</Button>
+      </div>
     </div>
   </div>
   <div v-else>No gallery images available.</div>
   <Button variant="primary" @click="toggleFileUpload">Add Photos</Button>
 </template>
+
+<style>
+.artworkContainer {
+  padding: 0.5rem;
+  background-color: var(--theme-white);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.artDetails {
+  font-size: 0.9rem;
+  line-height: 1rem;
+}
+.soldArtwork {
+  opacity: 0.4;
+  filter: grayscale(70%);
+}
+
+.artworksGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.artwork {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .artworksGrid {
+    width: 80%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .artworksGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>

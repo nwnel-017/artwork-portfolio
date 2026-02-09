@@ -237,7 +237,7 @@ async function deleteArtwork() {
   opacity: 0.9;
 }
 
-.imgContainer {
+/* .imgContainer {
   max-width: 400px;
   max-height: 400px;
 }
@@ -247,7 +247,7 @@ async function deleteArtwork() {
   height: auto;
   object-fit: cover;
   border-radius: 8px;
-}
+} */
 
 .artworkDetails {
   padding: 0.5rem 0;

@@ -1,7 +1,8 @@
 import { file, z } from "zod";
 import type { MultiPartData, createError } from "h3";
 import { validateImageFile } from "./image";
-import { ArtworkData } from "#types/artworks/artworks";
+import type { ArtworkData } from "#types/artworks/artworks";
+import type { UploadInput } from "~~/server/services/storage.service";
 
 // To Do: organize a little better
 // Refactor validation logic
@@ -268,51 +269,55 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
   return parsed;
 };
 
-export const validateGalleryImages = async (form: MultiPartData[]) => {
+// To Do: remove this - all we need is image validation
+export const validateGalleryImages = async (
+  artworkId: string,
+  images: UploadInput[],
+) => {
   // To Do: implement gallery image validation
   // should have artwork ID and image files - safe parse with galleryImageShema
   // for each image file, run validateImageFile()
-  if (!form || form.length === 0) {
+  if (!artworkId || !images || images.length === 0) {
     throw new Error("No form data provided");
   }
 
-  const artworkId = form
-    .find((field) => field.name === "artworkId")
-    ?.data?.toString();
-  const images = form.filter((field) => field.name === "images");
+  // const artworkId = form
+  //   .find((field) => field.name === "artworkId")
+  //   ?.data?.toString();
+  // const images = form.filter((field) => field.name === "images");
 
-  const parsed = gallerySchema.safeParse({
-    artworkId: artworkId || "",
-    images: images,
-  });
+  // const parsed = gallerySchema.safeParse({
+  //   artworkId: artworkId || "",
+  //   images: images,
+  // });
 
-  if (!parsed.success) {
-    throw new Error("Gallery form validation failed");
-  }
+  // if (!parsed.success) {
+  //   throw new Error("Gallery form validation failed");
+  // }
 
-  const validatedImages = [];
+  // const validatedImages = [];
 
-  for (const imageField of images) {
-    const buffer = imageField.data;
-    const name = imageField.filename || "image";
-    const image = new File( // file object
-      [new Uint8Array(imageField.data)],
-      imageField.filename || "image",
-      { type: imageField.type },
-    );
-    try {
-      validateImageFile(image);
-      validatedImages.push({
-        filename: name,
-        data: buffer,
-        size: buffer.length,
-        contentType: imageField.type,
-      });
-    } catch (error) {
-      console.log("Gallery image validation failed:", error);
-      throw error;
-    }
-  }
+  // for (const imageField of images) {
+  //   const buffer = imageField.data;
+  //   const name = imageField.filename || "image";
+  //   const image = new File( // file object
+  //     [new Uint8Array(imageField.data)],
+  //     imageField.filename || "image",
+  //     { type: imageField.type },
+  //   );
+  //   try {
+  //     validateImageFile(image);
+  //     validatedImages.push({
+  //       filename: name,
+  //       data: buffer,
+  //       size: buffer.length,
+  //       contentType: imageField.type,
+  //     });
+  //   } catch (error) {
+  //     console.log("Gallery image validation failed:", error);
+  //     throw error;
+  //   }
+  // }
 
-  return { artworkId: parsed.data.artworkId, images: validatedImages };
+  // return { artworkId: parsed.data.artworkId, images: validatedImages };
 };

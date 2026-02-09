@@ -446,7 +446,7 @@ async function getGalleryImages(
       const imagePath = row.image_path;
       if (imagePath) {
         const { data: publicData } = supabase.storage
-          .from("artwork_images")
+          .from("gallery_images")
           .getPublicUrl(imagePath);
         // @ts-ignore assign back
         row.image_path = publicData?.publicUrl ?? null;
@@ -468,7 +468,6 @@ type Image = {
 async function addGalleryImages(
   supabase: SupabaseClient<Database>,
   artworkId: string,
-  // images: Image[],
   images: UploadInput[],
 ) {
   console.log("Adding gallery images...");
