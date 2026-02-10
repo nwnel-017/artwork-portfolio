@@ -17,6 +17,7 @@ const route = useRoute();
 const artworkId = computed(() => route.params.id as string); // Issue
 
 const { addArtworkImages } = useArtworks();
+const { deleteImage } = useGallery();
 
 const viewFileUpload = ref(false);
 
@@ -47,6 +48,8 @@ async function uploadFiles(files: File[]) {
 
 async function removePhoto(id: string) {
   console.log("removing photo!");
+  const res = await deleteImage(id);
+  alert(res.message);
 }
 
 const {

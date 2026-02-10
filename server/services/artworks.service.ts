@@ -457,6 +457,43 @@ async function getGalleryImages(
   return rows;
 }
 
+async function deleteGalleryImage(
+  supabase: SupabaseClient<Database>,
+  id: string,
+) {
+  if (!supabase || !id) {
+    throw new Error("Missing parameters!");
+  }
+
+  // Verify image exists
+  const { data: existingImage, error } = await supabase
+    .from("gallery_images")
+    .select("id, image_path")
+    .eq("id", id)
+    .single();
+
+  if (
+    error ||
+    !existingImage ||
+    !existingImage.image_path ||
+    !existingImage.id
+  ) {
+    console.log("Error - image doesnt exist");
+    throw new Error("Gallery image doesn't exist!");
+  }
+
+  const imagePath = existingImage?.image_path;
+
+  try {
+    await deleteFile(supabase, imagePath, "gallery_images");
+    console.log("File deleted!");
+    await supabase.from("gallery_images").delete().eq("id", existingImage.id);
+  } catch (err) {
+    console.log("Failed to delete file: " + err);
+    throw new Error("Failed to delete the image!");
+  }
+}
+
 // organize better later
 type Image = {
   filename: string;
@@ -541,4 +578,5 @@ export {
   getLatestArtwork,
   getGalleryImages,
   addGalleryImages,
+  deleteGalleryImage,
 };
