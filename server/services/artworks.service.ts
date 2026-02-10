@@ -212,7 +212,7 @@ async function deleteArtwork(supabase: SupabaseClient<Database>, id: string) {
     throw new Error("Failed to delete artist");
   }
 
-  // delete artist from artists table
+  // delete artwork from artists table
   const { error: deleteError } = await supabase
     .from("artworks")
     .delete()
@@ -220,6 +220,31 @@ async function deleteArtwork(supabase: SupabaseClient<Database>, id: string) {
   if (deleteError) {
     console.log("failed to delete artwork: " + deleteError);
     throw new Error("Failed to delete artwork!");
+  }
+
+  // delete gallery images if they exist
+  const { data: gallery, error: galleryError } = await supabase
+    .from("gallery_images")
+    .select("id, image_path")
+    .eq("artwork_id", id);
+
+  if (!gallery) {
+    console.log("No gallery images to delete!");
+    return;
+  }
+  try {
+    for (const image of gallery) {
+      const path = image.image_path;
+      const id = image.id;
+      if (!path) {
+        throw new Error("Missing path");
+      }
+      await deleteFile(supabase, path, "gallery_images");
+      await supabase.from("gallery_images").delete().eq("id", id);
+    }
+  } catch (err) {
+    console.log("Failed to delete gallery images: " + err);
+    throw new Error("Failed to delete images from storage!");
   }
 }
 
