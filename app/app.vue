@@ -15,6 +15,10 @@
   /* padding: 1rem; */
 }
 
+.spaceBetween {
+  justify-content: space-between;
+}
+
 .centerContent {
   display: flex;
   justify-content: center;

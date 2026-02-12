@@ -1,12 +1,15 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="verticalContent">
-    <div class="page">
-      <NavBar />
-      <div class="centerContent">
-        <slot />
+  <div class="verticalContent fillPage">
+    <div class="page spaceBetween">
+      <div>
+        <NavBar />
+        <div class="centerContent">
+          <slot />
+        </div>
       </div>
+      <Footer />
     </div>
   </div>
 </template>

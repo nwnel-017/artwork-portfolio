@@ -42,17 +42,6 @@ const toggleNav = () => {
         <span></span>
       </div>
     </div>
-    <!-- <div class="linkItems" :class="{ expanded: isOpen }">
-      <div class="verticalSpaced">
-        <NuxtLink to="/" class="dashLink">HOME</NuxtLink>
-        <NuxtLink to="/artworks/gallery" class="dashLink"
-          >AVAILABLE ARTWORKS</NuxtLink
-        >
-        <NuxtLink to="/artworks/gallery" class="dashLink">PORTFOLIO</NuxtLink>
-        <NuxtLink to="/about" class="dashLink">ABOUT THE ARTIST</NuxtLink>
-        <NuxtLink to="/contact" class="dashLink">CONTACT</NuxtLink>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -196,6 +185,10 @@ const toggleNav = () => {
   .verticalSpaced {
     flex-direction: row;
     gap: 2rem;
+  }
+
+  .dashLink:hover {
+    transform: scale(1.1);
   }
 }
 </style>
