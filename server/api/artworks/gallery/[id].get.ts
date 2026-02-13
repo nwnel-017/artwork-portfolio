@@ -6,7 +6,7 @@ import { Database } from "#types/supabase/database";
 
 export default defineEventHandler(async (event) => {
   console.log("hit gallery GET api route");
-  const user = await requireAdmin(event);
+  // const user = await requireAdmin(event);
 
   const id = event.context.params?.id as string;
 

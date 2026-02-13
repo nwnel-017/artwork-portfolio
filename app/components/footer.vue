@@ -5,25 +5,21 @@
       <div>San Juan, Puerto Rico</div>
     </div>
     <div>
-      <div>WEB DESIGN</div>
+      <div>WEBSITE DESIGN</div>
       <div>Nathan Nelson</div>
     </div>
     <div>
       <div>CONTACT</div>
-      <div>jamiestambolie@gmail.com</div>
-      <div>IG LINK HERE</div>
+      <div>jamiestambolie@gmail.com | IG</div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .footer {
-  /* position: absolute; */
-  /* bottom: 0; */
   font-size: 0.5rem;
   height: 10vh;
   width: 100%;
-  /* border: 1px solid black; */
   display: flex;
   justify-content: space-evenly;
   align-items: center;

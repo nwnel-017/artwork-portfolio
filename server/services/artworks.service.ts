@@ -66,19 +66,23 @@ async function addArtwork(
   // }
 
   try {
+    // To Do: insert artwork image into gallery_photos with order 1
     const path = await uploadFile(supabase, image, "artwork_images");
 
     const imageUrl = typeof path === "string" ? path : (path.path ?? "");
 
     const parsedPrice = Number(artwork.price);
 
-    const { data, error } = await supabase.from("artworks").insert({
-      title: artwork.title,
-      description: artwork.description,
-      price: parsedPrice,
-      dimensions: artwork.dimensions,
-      image_path: imageUrl,
-    });
+    const { data, error } = await supabase
+      .from("artworks")
+      .insert({
+        title: artwork.title,
+        description: artwork.description,
+        price: parsedPrice,
+        dimensions: artwork.dimensions,
+        image_path: imageUrl,
+      })
+      .select("id");
 
     if (error) {
       console.error("Error inserting artwork into database:", error); // error is null?
@@ -91,6 +95,11 @@ async function addArtwork(
         },
       });
     }
+
+    const id = data[0].id;
+
+    await addGalleryImage(supabase, id, image);
+
     return data;
   } catch (err) {
     console.log("Error: " + err);
@@ -520,12 +529,12 @@ async function deleteGalleryImage(
 }
 
 // organize better later
-type Image = {
-  filename: string;
-  data: Buffer;
-  size: number;
-  contentType: string;
-};
+// type Image = {
+//   filename: string;
+//   data: Buffer;
+//   size: number;
+//   contentType: string;
+// };
 
 async function addGalleryImages(
   supabase: SupabaseClient<Database>,
@@ -568,7 +577,15 @@ async function addGalleryImages(
         image, // how to change to file?
         "gallery_images",
       );
+      const { data: lastImage } = await supabase
+        .from("gallery_images")
+        .select("order")
+        .eq("artwork_id", artworkId)
+        .order("order", { ascending: false })
+        .limit(1)
+        .single();
 
+      const nextOrder = lastImage ? lastImage.order + 1 : 1;
       // 3.) insert each gallery image record with path into gallery_images table
       if (!imagePath) {
         throw new Error("Failed to get image path for gallery image!");
@@ -576,6 +593,7 @@ async function addGalleryImages(
       const { error } = await supabase.from("gallery_images").insert({
         artwork_id: artworkId,
         image_path: imagePath.path,
+        order: nextOrder,
       });
 
       if (error) {
@@ -587,6 +605,74 @@ async function addGalleryImages(
       console.log("Failed to upload gallery image:", err);
       throw new Error("Failed to upload gallery image!");
     }
+  }
+}
+
+async function addGalleryImage(
+  supabase: SupabaseClient<Database>,
+  artworkId: string,
+  image: UploadInput,
+) {
+  console.log("Adding gallery images...");
+
+  if (!supabase || !artworkId || !image) {
+    throw new Error("Missing parameters!");
+  }
+
+  // const artworkId = galleryForm.artworkId;
+  // const images: File[] | null = galleryForm.images; // To Do: figure out this type error
+  console.log("artwork id: " + artworkId);
+
+  if (!artworkId || !image) {
+    throw new Error("Invalid gallery form data!");
+  }
+
+  // To Do:
+  // 1.) validate artwork ID exists
+  const { data: existingArtwork, error: fetchError } = await supabase
+    .from("artworks")
+    .select("id")
+    .eq("id", artworkId)
+    .single();
+
+  if (fetchError || !existingArtwork) {
+    console.log("Failed to fetch artwork:", fetchError);
+    throw new Error("Artwork does not exist!");
+  }
+  // RLS error here
+  try {
+    const imagePath = await uploadFile(
+      supabase,
+      image, // how to change to file?
+      "gallery_images",
+    );
+    const { data: lastImage } = await supabase
+      .from("gallery_images")
+      .select("order")
+      .eq("artwork_id", artworkId)
+      .order("order", { ascending: false })
+      .limit(1)
+      .single();
+
+    const nextOrder = lastImage ? lastImage.order + 1 : 1;
+    // 3.) insert each gallery image record with path into gallery_images table
+    if (!imagePath) {
+      throw new Error("Failed to get image path for gallery image!");
+    }
+    const { error } = await supabase.from("gallery_images").insert({
+      artwork_id: artworkId,
+      image_path: imagePath.path,
+      order: nextOrder,
+    });
+
+    if (error) {
+      throw new Error(
+        `Failed to insert gallery image record: ${error.message}`,
+      );
+    }
+  } catch (err) {
+    console.log("Failed to upload gallery image:", err);
+    throw new Error("Failed to upload gallery image!");
   }
 }
 

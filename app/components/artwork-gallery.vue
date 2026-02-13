@@ -20,6 +20,13 @@ function closePopup() {
   displayArtworkPopup.value = false;
 }
 
+async function viewArtwork(id: string) {
+  console.log("viewing: " + id);
+
+  // Doing a full page reload - preference for a clean UX
+  await navigateTo(`/artworks/${id}`, { external: true });
+}
+
 async function payWithStripe() {
   try {
     const { url } = await $fetch<{ url: string }>(
@@ -58,7 +65,7 @@ async function payWithStripe() {
     <div
       v-for="artwork in artworks"
       :key="artwork.id"
-      @click="openPopup(artwork)"
+      @click="viewArtwork(artwork.id)"
       class="artworkContainer clickable"
     >
       <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />

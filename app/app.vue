@@ -92,6 +92,23 @@
   align-items: center;
 }
 
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clmGap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.clmGap h1 {
+  margin-bottom: 0;
+}
+
 .margin {
   margin: 3rem auto;
 }
@@ -139,8 +156,17 @@
 }
 
 .imgContainer {
-  max-width: 400px;
-  max-height: 400px;
+  width: 90vw;
+  max-width: 90vw;
+  height: 35vh;
+  background-color: white;
+}
+
+.imgLarge {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .artworkFull {

@@ -1,4 +1,9 @@
+import type { Database } from "#types/supabase/database";
+import { success } from "zod";
+
 export function useGallery() {
+  type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
+
   const deleteImage = async (id: string) => {
     if (!id) {
       alert("Missing ID");
@@ -15,5 +20,10 @@ export function useGallery() {
     return { success: true, message: "Successfully removed image" };
   };
 
-  return { deleteImage };
+  const getGalleryImages = async (id: string): Promise<GalleryRow[]> => {
+    console.log("Fetching gallery images");
+    return await $fetch<GalleryRow[]>(`/api/artworks/gallery/${id}`);
+  };
+
+  return { getGalleryImages, deleteImage };
 }
