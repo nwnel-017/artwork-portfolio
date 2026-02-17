@@ -131,6 +131,10 @@
   padding-bottom: 1rem;
 }
 
+.paddedSides {
+  padding: 0 0.5rem;
+}
+
 .cutoffText {
   white-space: nowrap;
   overflow: hidden;
@@ -155,11 +159,28 @@
   cursor: pointer;
 }
 
+.buttonCol {
+  width: 100px;
+}
+
+/* .btn {
+  width
+} */
+
+.border {
+  border: 2px solid black;
+}
+
 .imgContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 90vw;
   max-width: 90vw;
-  height: 35vh;
+  height: 50vh;
   background-color: white;
+  align-content: center;
 }
 
 .imgLarge {
@@ -221,6 +242,11 @@
   .page {
     padding: 2rem;
   }
+
+  .imgContainer {
+    width: 70vw;
+    max-width: 70vw;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -229,8 +255,11 @@
   }
 
   .page {
-    /* padding: 3rem; */
     padding: 0;
+  }
+
+  .imgContainer {
+    height: 70vh;
   }
 }
 </style>

@@ -69,16 +69,6 @@ const {
     @upload="uploadFiles"
   />
   <div v-if="gallery">
-    <!-- To Do: use this UI for public UI in artwork details
-    <div class="imgContainer flexBetween">
-      <ArrowButton direction="left" size="sm" @click="nextImage"></ArrowButton>
-      <img
-        :src="gallery[offset]?.image_path ?? undefined"
-        alt="Gallery Image"
-        class="artworkFull"
-      />
-      <ArrowButton direction="right" @click="prevImage"></ArrowButton>
-    </div> -->
     <div class="textBlock">
       <h1>Artworks</h1>
     </div>

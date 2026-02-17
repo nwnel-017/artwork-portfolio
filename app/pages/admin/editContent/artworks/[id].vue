@@ -237,19 +237,13 @@ async function deleteArtwork() {
   opacity: 0.9;
 }
 
-/* .imgContainer {
-  max-width: 400px;
-  max-height: 400px;
-}
-
 .artworkFull {
   width: 100%;
   height: auto;
   object-fit: cover;
   border-radius: 8px;
-} */
-
-.artworkDetails {
+}
+*/ .artworkDetails {
   padding: 0.5rem 0;
   height: auto;
   margin: 0.5rem 0;

@@ -13,40 +13,49 @@ const props = withDefaults(
 );
 
 const rotationMap: Record<Direction, string> = {
-  right: "180deg",
+  right: "0deg",
   down: "90deg",
-  left: "0deg",
+  left: "180deg",
   up: "-90deg",
 };
 </script>
 
 <template>
   <svg
-    viewBox="0 0 24 24"
-    fill="none"
+    height="800px"
+    width="800px"
+    version="1.1"
+    id="XMLID_287_"
     xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 24 24"
+    xml:space="preserve"
     class="icon"
     :style="{
       transform: `rotate(${rotationMap[direction]})`,
       fontSize: size,
     }"
   >
-    <path
-      d="M4 12H20M4 12L8 8M4 12L8 16"
-      stroke="#000000"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
+    <g id="next">
+      <g>
+        <polygon
+          fill="currentColor"
+          points="6.8,23.7 5.4,22.3 15.7,12 5.4,1.7 6.8,0.3 18.5,12 		"
+        />
+      </g>
+    </g>
   </svg>
 </template>
 
 <style scoped>
 .icon {
-  height: 2rem;
-  width: 2rem;
-  border: 1px solid var(--text-color);
+  height: 1.5rem;
+  width: 1.5rem;
+  color: var(--theme-grey);
+  background-color: white;
+  border: 1px solid var(--theme-grey);
   border-radius: 5px;
+  padding: 0.1em;
   cursor: pointer;
 }
 </style>

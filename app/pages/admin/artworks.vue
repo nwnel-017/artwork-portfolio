@@ -105,9 +105,9 @@ const editArtwork = (artworkId: string) => {
   font-weight: bold;
 } */
 
-.buttonCol {
+/* .buttonCol {
   width: 100px;
-}
+} */
 
 .created {
   display: none;

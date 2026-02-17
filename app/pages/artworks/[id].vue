@@ -71,7 +71,7 @@ async function payWithStripe() {
     <div v-if="pending">Loading</div>
     <div v-else-if="error">Something went wrong</div>
     <div v-else-if="artwork" class="verticalContent">
-      <div class="imgContainer flexBetween">
+      <div class="imgContainer">
         <ArrowButton direction="left" @click="prevImage" />
         <img
           :src="currentImage?.image_path ?? undefined"
@@ -80,7 +80,7 @@ async function payWithStripe() {
         />
         <ArrowButton @click="nextImage" />
       </div>
-      <div class="clmGap">
+      <div class="clmGap paddedSides">
         <h1>{{ artwork?.title }}</h1>
         <div>${{ artwork?.price }}</div>
         <div>{{ artwork?.dimensions }}</div>
@@ -89,13 +89,10 @@ async function payWithStripe() {
           <strong>Created On:</strong>
           {{ formatDateShort(artwork?.created_at) }}
         </div>
-        <Button @click="payWithStripe">Buy Now</Button>
+        <Button class="buttonCol" @click="payWithStripe">Buy Now</Button>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* .imgContainer {
-} */
-</style>
+<!-- <style scoped></style> -->
