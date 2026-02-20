@@ -13,9 +13,17 @@ export function useArtworks() {
     image: File | null,
     dimensions: string,
     price: string,
+    collection: string,
   ) => {
     // Validation
-    if (!title || !description || !image || !price || !dimensions) {
+    if (
+      !title ||
+      !description ||
+      !image ||
+      !price ||
+      !dimensions ||
+      !collection
+    ) {
       return {
         success: false,
         message: "Please enter all fields!",
@@ -29,6 +37,7 @@ export function useArtworks() {
     formData.append("price", price);
     formData.append("dimensions", dimensions);
     formData.append("image", image);
+    formData.append("collection", collection);
 
     try {
       console.log("Submitting artwork...");

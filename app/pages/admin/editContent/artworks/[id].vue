@@ -33,7 +33,7 @@ const editedArtwork = ref<ArtworkData>({
   description: "",
   dimensions: "",
   price: "",
-  // image: null,
+  collection: artwork.value?.collection_id || "",
 });
 
 const image = ref<File | null>(null);
@@ -48,6 +48,7 @@ function startEdit() {
     description: artwork.value?.description || "",
     dimensions: artwork.value?.dimensions || "",
     price: artwork.value?.price?.toString() || "",
+    collection: artwork.value?.collection_id || "",
     // image: null,
   };
   image.value = null;
@@ -56,12 +57,11 @@ function startEdit() {
 function stopEdit() {
   isEditing.value = false;
   editedArtwork.value = {
-    // id: "",
     title: "",
     description: "",
     dimensions: "",
     price: "",
-    // image: null,
+    collection: artwork.value?.collection_id || "",
   };
   image.value = null;
 }
@@ -243,7 +243,7 @@ async function deleteArtwork() {
   object-fit: cover;
   border-radius: 8px;
 }
-*/ .artworkDetails {
+.artworkDetails {
   padding: 0.5rem 0;
   height: auto;
   margin: 0.5rem 0;

@@ -3,4 +3,5 @@ export type ArtworkData = {
   description: string;
   price: string;
   dimensions: string;
+  collection: string;
 };

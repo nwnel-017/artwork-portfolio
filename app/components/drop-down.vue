@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-defineProps<{ label: string; items: string[] }>();
+import type { DropDown } from "#types/dropdown/dropdown";
+
+defineProps<{ label: string; items: DropDown[] }>();
 
 const isOpen = ref(false);
 
@@ -11,9 +13,9 @@ const closeOptions = () => {
   isOpen.value = false;
 };
 
-const emit = defineEmits<{ (e: "select", item: string): void }>();
+const emit = defineEmits<{ (e: "select", item: DropDown): void }>();
 
-const selectItem = (item: string) => {
+const selectItem = (item: DropDown) => {
   emit("select", item);
   closeOptions();
 };
@@ -29,7 +31,7 @@ const selectItem = (item: string) => {
         class="dropdownItem"
         @click="selectItem(item)"
       >
-        {{ item }}
+        {{ item.label }}
       </li>
     </ul>
   </div>

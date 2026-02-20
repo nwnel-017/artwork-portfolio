@@ -2,6 +2,10 @@
 // import DropDown from "~/components/drop-down.vue";
 // import type { Artist } from "#types/artists.ts";
 import type { ArtworkData } from "#types/artworks/artworks.ts";
+import type { Database } from "#types/supabase/database";
+import type { DropDown } from "#types/dropdown/dropdown";
+
+type CollectionRow = Database["public"]["Tables"]["collections"]["Row"];
 
 definePageMeta({
   layout: "dashboard",
@@ -9,9 +13,7 @@ definePageMeta({
 });
 
 const { addArtwork } = useArtworks();
-
-// const { data: artistsList } = await useFetch<Artist[]>("/api/artists/artists");
-// const typedArtistsList = artistsList as Ref<Artist[] | null>;
+const { getCollections } = useCollections();
 
 const image = ref<File | null>(null);
 
@@ -20,27 +22,35 @@ const artwork = reactive<ArtworkData>({
   description: "",
   price: "",
   dimensions: "",
+  collection: "",
 });
+
+// To Do: research which is better - this way or using async data in artworks/id.vue
+const {
+  data: collections,
+  pending: loadingCollections,
+  error: collectionError,
+} = await getCollections();
+
+const collectionItems = computed<DropDown[]>(
+  () =>
+    collections.value?.map((c) => ({
+      label: c.collection_name ?? "",
+      value: c.id ?? "",
+    })) ?? [{ label: "", value: "" }],
+);
+
+function selectCollection(collection: DropDown) {
+  if (!collection) return;
+  artwork.collection = collection.value;
+  console.log("selected collection: " + artwork.collection);
+}
 
 const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const selected = target.files?.[0] || null;
   image.value = selected;
 };
-
-// find artist and set artwork.artist to selected artist
-// const selectArtist = (artistName: string) => {
-//   console.log("Selected artist: " + artistName);
-//   const selectedArtist = artistsList?.value?.find(
-//     (artist) => artist.name === artistName
-//   );
-
-//   if (selectedArtist) {
-//     artwork.artist = selectedArtist.id.toString();
-//   } else {
-//     artwork.artist = "";
-//   }
-// };
 
 const submit = async () => {
   // To Do: send ArtworkData object instead of fields
@@ -50,6 +60,7 @@ const submit = async () => {
     image.value,
     artwork.dimensions,
     artwork.price,
+    artwork.collection,
   );
 
   if (!response.success) {
@@ -82,13 +93,11 @@ const submit = async () => {
       <input type="text" v-model="artwork.dimensions" />
       <label for="image">Artwork Image</label>
       <input @change="onFileChange" name="image" accept="image" type="file" />
-      <!-- <label for="publishDate">Publish On</label>
-      <input type="date" name="publishDate" v-model="artwork.publishDate" /> -->
-      <!-- <DropDown
-            label="Artist"
-            @select="selectArtist"
-            :items="artistsList?.map((artist) => artist.name) || []"
-          /> -->
+      <DropDown
+        label="Collection"
+        :items="collectionItems ?? []"
+        @select="selectCollection"
+      />
       <button variant="primary" type="submit" size="sm">Submit</button>
     </form>
   </div>

@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       artworks: {
         Row: {
+          collection_id: string
           created_at: string
           description: string | null
           dimensions: string | null
@@ -28,6 +29,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          collection_id?: string
           created_at?: string
           description?: string | null
           dimensions?: string | null
@@ -40,6 +42,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          collection_id?: string
           created_at?: string
           description?: string | null
           dimensions?: string | null
@@ -50,6 +53,32 @@ export type Database = {
           sold?: boolean
           title?: string | null
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artworks_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          collection_name: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          collection_name: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          collection_name?: string
+          created_at?: string
+          id?: string
         }
         Relationships: []
       }
@@ -75,7 +104,15 @@ export type Database = {
           image_path?: string | null
           order?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "gallery_images_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       orders: {
         Row: {

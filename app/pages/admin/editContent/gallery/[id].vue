@@ -84,7 +84,7 @@ const {
 </template>
 
 <style>
-.artworkContainer {
+/* .artworkContainer {
   padding: 0.5rem;
   background-color: var(--theme-white);
   box-shadow:
@@ -134,5 +134,5 @@ const {
   .artworksGrid {
     grid-template-columns: repeat(4, 1fr);
   }
-}
+} */
 </style>

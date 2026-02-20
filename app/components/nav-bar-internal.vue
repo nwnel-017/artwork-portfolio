@@ -4,6 +4,11 @@ const isOpen = ref(false);
 const toggleNav = () => {
   isOpen.value = !isOpen.value;
 };
+
+const logout = async () => {
+  // TO DO: implement
+  return;
+};
 </script>
 
 <template>
@@ -24,9 +29,16 @@ const toggleNav = () => {
       <NuxtLink to="/admin/artworks" class="dashLink" @click="toggleNav"
         >Artworks</NuxtLink
       >
+      <NuxtLink
+        to="/admin/collections/collections"
+        class="dashLink"
+        @click="toggleNav"
+        >Collections</NuxtLink
+      >
       <NuxtLink to="/admin/settings" class="dashLink" @click="toggleNav"
         >Settings</NuxtLink
       >
+      <NuxtLink class="dashLink" @click="logout">Logout</NuxtLink>
     </div>
   </div>
 </template>

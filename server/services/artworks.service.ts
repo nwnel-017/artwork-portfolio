@@ -26,6 +26,7 @@ async function addArtwork(
     !artwork.description ||
     !artwork.price ||
     !artwork.dimensions ||
+    !artwork.collection ||
     !image
   ) {
     console.log("Missing artwork fields!");
@@ -39,31 +40,7 @@ async function addArtwork(
     });
   }
 
-  // if (
-  //   !artwork.title ||
-  //   !artwork.description ||
-  //   !artwork.price ||
-  //   !artwork.image ||
-  //   !artwork.dimensions
-  // ) {
-  //   throw new Error("Missing artwork fields!");
-  // }
-  // validate image
-  // To Do: fix this
-  // const image: File | null = artwork.image;
-
-  // should be already validated
-  // try {
-  //   validateImageFile(image);
-  // } catch (e) {
-  //   throw createError({
-  //     statusCode: 500,
-  //     statusMessage: "Internal Error",
-  //     data: {
-  //       message: "Invalid artwork!",
-  //     },
-  //   });
-  // }
+  console.log("collection id in service: " + artwork.collection);
 
   try {
     // To Do: insert artwork image into gallery_photos with order 1
@@ -80,6 +57,7 @@ async function addArtwork(
         description: artwork.description,
         price: parsedPrice,
         dimensions: artwork.dimensions,
+        collection_id: artwork.collection,
         image_path: imageUrl,
       })
       .select("id");
@@ -387,6 +365,45 @@ async function getArtworks(supabase: SupabaseClient<Database>) {
   return artworks;
 }
 
+async function getCollectionArtworks(
+  supabase: SupabaseClient<Database>,
+  collectionId: string,
+) {
+  if (!supabase || !collectionId) {
+    console.log("Missing paremeters");
+    throw new Error("Missing parameters");
+  }
+
+  const { data: artworks, error } = await supabase
+    .from("artworks")
+    .select("*")
+    .eq("collection_id", collectionId)
+    .order("created_at", { ascending: false });
+
+  if (error || !artworks) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Error",
+      data: {
+        message: "Failed to fetch artworks",
+        details: error?.message,
+      },
+    });
+  }
+
+  artworks.map((artwork) => {
+    const imagePath = artwork.image_path;
+    if (imagePath) {
+      const { data: publicData } = supabase.storage
+        .from("artwork_images")
+        .getPublicUrl(imagePath);
+      artwork.image_path = publicData?.publicUrl;
+    }
+  });
+
+  return artworks;
+}
+
 async function getLatestArtwork(supabase: SupabaseClient<Database>) {
   if (!supabase) {
     throw new Error("Missing supabase client!");
@@ -426,6 +443,51 @@ async function getLatestArtwork(supabase: SupabaseClient<Database>) {
   }
 
   return artwork;
+}
+
+async function getArtworkForCollection(
+  supabase: SupabaseClient<Database>,
+  collectionId: string,
+) {
+  if (!supabase || !collectionId) {
+    throw new Error("Missing parameters!");
+  }
+
+  const { data: artworks, error } = await supabase
+    .from("artworks")
+    .select("image_path")
+    .eq("sold", false)
+    .eq("collection_id", collectionId)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (error || !artworks || artworks.length === 0) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Error",
+      data: {
+        message: "Failed to fetch latest artwork",
+        details: error?.message,
+      },
+    });
+  }
+
+  const artwork = artworks[0];
+
+  // Get public URL for the image
+  if (artwork.image_path) {
+    const { data: publicData } = supabase.storage
+      .from("artwork_images")
+      .getPublicUrl(artwork.image_path);
+    artwork.image_path = publicData?.publicUrl;
+
+    if (!publicData) {
+      console.log("Error fetching public URL: ");
+      throw new Error("Failed to fetch public URL for artwork image!");
+    }
+  }
+
+  return artwork; // artwork.image_path
 }
 
 async function markArtworkAsSold(
@@ -690,4 +752,6 @@ export {
   getGalleryImages,
   addGalleryImages,
   deleteGalleryImage,
+  getArtworkForCollection,
+  getCollectionArtworks,
 };

@@ -16,7 +16,10 @@ const toggleNav = () => {
       <div class="linkItems" :class="{ expanded: isOpen }">
         <div class="verticalSpaced">
           <NuxtLink to="/" class="dashLink" @click="toggleNav">HOME</NuxtLink>
-          <NuxtLink to="/artworks/available" @click="toggleNav" class="dashLink"
+          <NuxtLink
+            to="/collections/collections"
+            @click="toggleNav"
+            class="dashLink"
             >AVAILABLE ARTWORKS</NuxtLink
           >
           <NuxtLink to="/artworks/gallery" class="dashLink" @click="toggleNav"

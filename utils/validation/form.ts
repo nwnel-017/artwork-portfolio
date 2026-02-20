@@ -41,11 +41,7 @@ export const artworkFormSchema = z
     description: z.string().min(1, { message: "Description is required" }),
     price: priceSchema,
     dimensions: z.string().min(1, { message: "Dimensions are required" }),
-    // image: z.custom<File>((v) => v instanceof FileType),
-    // image: z.object({
-    //   filename: z.string().min(1),
-    //   data: z.instanceof(Buffer),
-    // }),
+    collection: z.string().min(1, { message: "Collection is required" }),
   })
   .strict()
   .strip();
@@ -83,21 +79,6 @@ export type ExistingArtworkForm = z.infer<typeof existingArtworkFormSchema>;
 
 export const validateNewArtworkForm = async (form: ArtworkData) => {
   console.log("safe parsing artwork form...");
-
-  // Extract fields from multipart array into object - not necessary - already done in api endpoint
-  // const title =
-  //   form.find((field) => field.name === "title")?.data?.toString() || "";
-  // const description =
-  //   form.find((field) => field.name === "description")?.data?.toString() || "";
-  // // const artist =
-  // //   form.find((field) => field.name === "artist")?.data?.toString() || "";
-  // const price =
-  //   form.find((field) => field.name === "price")?.data?.toString() || "";
-  // const dimensions =
-  //   form.find((field) => field.name === "dimensions")?.data?.toString() || "";
-  // const imageField = form.find((field) => field.name === "image");
-  // const publishDate =
-  //   form.find((field) => field.name === "publishDate")?.data?.toString() || "";
 
   // Convert to File object
   // image is a File object?

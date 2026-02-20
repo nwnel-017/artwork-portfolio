@@ -54,8 +54,12 @@
   align-items: center;
 }
 
+/* .alignCenter {
+  align-items: center;
+} */
+
 .spaced {
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .horizontalContent {
@@ -86,6 +90,13 @@
   justify-content: space-between;
 }
 
+.bannerWide {
+  height: 1.5rem;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .flexBetween {
   display: flex;
   justify-content: space-between;
@@ -96,6 +107,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.spaced {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.spaced h1 {
+  margin: none;
 }
 
 .clmGap {
@@ -171,6 +196,84 @@
   border: 2px solid black;
 }
 
+.collectionContainer {
+  padding: 0.5rem;
+  background-color: var(--theme-white);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.collectionDetails {
+  position: absolute;
+  background-color: white;
+  z-index: 10;
+  padding: 0.3em;
+  font-size: 0.9rem;
+}
+
+.artworkContainer {
+  padding: 0.5rem;
+  background-color: var(--theme-white);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.artDetails {
+  font-size: 0.9rem;
+  line-height: 1rem;
+}
+.soldArtwork {
+  opacity: 0.4;
+  filter: grayscale(70%);
+}
+
+.artworksGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.collectionsGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+.collectionImg {
+  width: 90%;
+  height: 40vh;
+  border-radius: 8px;
+  object-fit: cover;
+  opacity: 0.4;
+}
+
+.artwork {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
 .imgContainer {
   position: relative;
   display: flex;
@@ -181,6 +284,7 @@
   height: 50vh;
   background-color: white;
   align-content: center;
+  border-radius: 8px;
 }
 
 .imgLarge {
@@ -247,6 +351,10 @@
     width: 70vw;
     max-width: 70vw;
   }
+
+  .artworksGrid {
+    width: 80%;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -260,6 +368,14 @@
 
   .imgContainer {
     height: 70vh;
+  }
+
+  .artworksGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .collectionsGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

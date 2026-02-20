@@ -33,7 +33,11 @@ export default defineEventHandler(async (event) => {
     price: form.find((field) => field.name === "price")?.data?.toString() || "",
     dimensions:
       form.find((field) => field.name === "dimensions")?.data?.toString() || "",
+    collection:
+      form.find((field) => field.name === "collection")?.data?.toString() || "",
   };
+
+  console.log("collection id found in route: " + artworkForm.collection);
 
   const imageField = form.find((field) => field.name === "image");
 
@@ -63,13 +67,6 @@ export default defineEventHandler(async (event) => {
     const supabase = (await serverSupabaseClient(
       event,
     )) as SupabaseClient<Database>;
-
-    // const image: UploadInput = {
-    //   filename: validatedForm.data?.image.filename,
-    //   buffer: validatedForm.data?.image.data,
-    //   // size: validatedForm.data?.image.size,
-    //   // contentType: validatedForm.data?.image,
-    // };
 
     await addArtwork(supabase, artworkForm, image);
   } catch (err) {
