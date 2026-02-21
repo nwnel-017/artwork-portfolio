@@ -79,8 +79,6 @@ const toggleNav = () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* padding-top: 5rem; */
-  /* gap: 1rem; */
   transform: translateY(-200%);
   transition: transform 0.3s ease-in-out;
   background-color: white;
@@ -98,6 +96,12 @@ const toggleNav = () => {
 .dashLink {
   text-decoration: none;
   color: var(--text-color);
+  display: inline-block;
+  width: fit-content;
+}
+
+.dashLink.router-link-exact-active {
+  border-bottom: 2px solid black;
 }
 
 .verticalSpaced {

@@ -3,21 +3,25 @@ import { success } from "zod";
 
 export function useGallery() {
   type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
+  const { startLoading, stopLoading } = useLoading();
 
   const deleteImage = async (id: string) => {
     if (!id) {
       alert("Missing ID");
     }
 
-    const response = await fetch(`/api/artworks/gallery/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
+    try {
+      startLoading();
+      await fetch(`/api/artworks/gallery/${id}`, {
+        method: "DELETE",
+      });
+      return { success: true, message: "Image has been deleted" };
+    } catch (err) {
+      console.log("An error occured: " + err);
       return { success: false, message: "Something went wrong" };
+    } finally {
+      stopLoading();
     }
-
-    return { success: true, message: "Successfully removed image" };
   };
 
   const getGalleryImages = async (id: string): Promise<GalleryRow[]> => {

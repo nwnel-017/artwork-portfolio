@@ -1,6 +1,9 @@
 import type { Database } from "#types/supabase/database";
+// import { useLoadingStore } from "~/stores/loading";
 
 type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"];
+
+const { startLoading, stopLoading } = useLoading();
 
 export function useArtworks() {
   const getArtworks = () => {
@@ -40,6 +43,8 @@ export function useArtworks() {
     formData.append("collection", collection);
 
     try {
+      startLoading();
+      // loadingStore.startLoading();
       console.log("Submitting artwork...");
       const response = await fetch("/api/artworks/artwork", {
         method: "POST",
@@ -66,6 +71,9 @@ export function useArtworks() {
         success: false,
         message: "An error occurred! Please try again!",
       };
+    } finally {
+      stopLoading();
+      // loadingStore.stopLoading();
     }
   };
 
@@ -86,6 +94,7 @@ export function useArtworks() {
     });
 
     try {
+      startLoading();
       console.log("Submitting artwork images...");
       const response = await fetch("/api/artworks/gallery/gallery", {
         method: "POST",
@@ -111,6 +120,8 @@ export function useArtworks() {
         success: false,
         message: "An error occurred while uploading images! Please try again!",
       };
+    } finally {
+      stopLoading();
     }
   };
 

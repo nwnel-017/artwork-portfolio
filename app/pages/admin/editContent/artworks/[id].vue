@@ -17,6 +17,8 @@ type EditedArtwork = {
   image: File | null;
 };
 
+const { startLoading, stopLoading } = useLoading();
+
 const route = useRoute();
 
 const artworkId = computed(() => route.params.id as string);
@@ -43,13 +45,11 @@ const isEditing = ref(false);
 function startEdit() {
   isEditing.value = true;
   editedArtwork.value = {
-    // id: artworkId.value,
     title: artwork.value?.title || "",
     description: artwork.value?.description || "",
     dimensions: artwork.value?.dimensions || "",
     price: artwork.value?.price?.toString() || "",
     collection: artwork.value?.collection_id || "",
-    // image: null,
   };
   image.value = null;
 }
@@ -69,7 +69,6 @@ function stopEdit() {
 function handleImageChange(event: Event) {
   const target = event.target as HTMLInputElement;
   const file = target?.files ? target.files[0] : null;
-  // editedArtwork.value.image = file || null;
   image.value = file || null;
 }
 
@@ -110,6 +109,7 @@ async function save() {
   form.append("image", newImage);
 
   try {
+    startLoading();
     await $fetch(`/api/artworks/${artworkId.value}`, {
       method: "PUT",
       body: form,
@@ -119,6 +119,8 @@ async function save() {
   } catch (err) {
     console.log("Error updating artwork: " + err);
     alert("Something went wrong! Please try again");
+  } finally {
+    stopLoading();
   }
 }
 
@@ -127,6 +129,7 @@ async function deleteArtwork() {
   isEditing.value = false;
 
   try {
+    startLoading();
     await $fetch(`/api/artworks/${artworkId.value}`, {
       method: "DELETE",
     });
@@ -135,67 +138,83 @@ async function deleteArtwork() {
   } catch (error) {
     console.log("error deleting artist: " + error);
     alert("Something went wrong. Please try again later!");
+  } finally {
+    stopLoading();
   }
 }
 </script>
 
 <template>
-  <div class="verticalContent">
-    <div v-if="!isEditing">
-      <div v-if="pending">Loading details...</div>
-      <div v-if="error">There was an error getting artwork details</div>
-      <div v-else-if="artwork">
-        <div class="imgContainer">
-          <img
-            :src="artwork?.image_path ?? undefined"
-            alt=""
-            class="artworkFull"
+  <div class="fullWidth">
+    <div class="verticalContent verticalMargin paddedSides">
+      <div class="horizontalContent">
+        <div v-if="!isEditing">
+          <div v-if="pending">Loading details...</div>
+          <div v-if="error">There was an error getting artwork details</div>
+          <div v-else-if="artwork">
+            <div class="imgContainer">
+              <img
+                :src="artwork?.image_path ?? undefined"
+                alt=""
+                class="artworkFull"
+              />
+            </div>
+            <div class="artworkDetails">
+              <div>
+                <div><span>Title:</span> {{ artwork?.title }}</div>
+                <div><span>Description:</span> {{ artwork?.description }}</div>
+                <div><span>Dimensions:</span> {{ artwork?.dimensions }}</div>
+                <div><span>Price:</span> ${{ artwork?.price || `$${0}` }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="btnContainer">
+            <Button variant="primary" size="lg" class="btn" @click="startEdit"
+              >Click to Edit Artwork</Button
+            >
+            <Button
+              variant="primary"
+              size="lg"
+              class="btn"
+              @click="navigateTo('/admin/editContent/gallery/' + artwork?.id)"
+              >Click to Edit Gallery</Button
+            >
+            <Button
+              variant="danger"
+              size="lg"
+              @click="deleteArtwork"
+              class="btn"
+              >Click to Delete Artwork</Button
+            >
+          </div>
+        </div>
+        <div v-if="isEditing" class="verticalContent spaced">
+          <label for="title">Title</label>
+          <textarea v-model="editedArtwork.title" type="text"></textarea>
+          <label for="description">Description</label>
+          <textarea v-model="editedArtwork.description" type="text"></textarea>
+          <label for="price">Price</label>
+          <textarea v-model="editedArtwork.price" type="text"></textarea>
+          <label for="dimensions">Size:</label>
+          <textarea v-model="editedArtwork.dimensions" type="text"></textarea>
+          <label for="image">Artwork</label>
+          <input
+            type="file"
+            id="fileInput"
+            class="hiddenInput"
+            @change="handleImageChange"
           />
-        </div>
-        <div class="artworkDetails">
-          <div><span>Title:</span> {{ artwork?.title }}</div>
-          <div><span>Description:</span> {{ artwork?.description }}</div>
-          <div><span>Dimensions:</span> {{ artwork?.dimensions }}</div>
-          <div><span>Price:</span> ${{ artwork?.price || `$${0}` }}</div>
+          <label for="fileInput" class="fileInput">{{
+            image?.name || "Change image"
+          }}</label>
+          <Button variant="primary" size="lg" @click="save"
+            >Save Changes</Button
+          >
+          <Button variant="secondary" size="lg" @click="stopEdit"
+            >Cancel</Button
+          >
         </div>
       </div>
-      <div class="btnContainer">
-        <Button variant="primary" size="lg" class="btn" @click="startEdit"
-          >Click to Edit Artwork</Button
-        >
-        <Button
-          variant="primary"
-          size="lg"
-          class="btn"
-          @click="navigateTo('/admin/editContent/gallery/' + artwork?.id)"
-          >Click to Edit Gallery</Button
-        >
-        <Button variant="danger" size="lg" @click="deleteArtwork" class="btn"
-          >Click to Delete Artwork</Button
-        >
-      </div>
-    </div>
-    <div v-if="isEditing" class="verticalContent spaced">
-      <label for="title">Title</label>
-      <textarea v-model="editedArtwork.title" type="text"></textarea>
-      <label for="description">Description</label>
-      <textarea v-model="editedArtwork.description" type="text"></textarea>
-      <label for="price">Price</label>
-      <textarea v-model="editedArtwork.price" type="text"></textarea>
-      <label for="dimensions">Size:</label>
-      <textarea v-model="editedArtwork.dimensions" type="text"></textarea>
-      <label for="image">Artwork</label>
-      <input
-        type="file"
-        id="fileInput"
-        class="hiddenInput"
-        @change="handleImageChange"
-      />
-      <label for="fileInput" class="fileInput">{{
-        image?.name || "Change image"
-      }}</label>
-      <Button variant="primary" size="lg" @click="save">Save Changes</Button>
-      <Button variant="secondary" size="lg" @click="stopEdit">Cancel</Button>
     </div>
   </div>
 </template>
@@ -238,15 +257,20 @@ async function deleteArtwork() {
 }
 
 .artworkFull {
-  width: 100%;
+  max-width: 100%;
+  max-height: 50vh;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 8px;
 }
 .artworkDetails {
   padding: 0.5rem 0;
   height: auto;
   margin: 0.5rem 0;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
 }
 
 .artworkDetails span {

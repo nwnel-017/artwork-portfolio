@@ -54,9 +54,9 @@ const addCollection = () => {
             <div
               v-for="collection in collections"
               :key="collection.id"
-              class="artworkContainer clickable"
+              class="artworkContainer spaceBetween clickable"
             >
-              {{ collection?.collection_name }}
+              <span class="cutoffText">{{ collection?.collection_name }}</span>
 
               <Button variant="danger" @click="deleteCollection(collection.id)"
                 >Remove</Button

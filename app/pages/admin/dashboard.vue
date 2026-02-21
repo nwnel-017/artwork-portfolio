@@ -14,7 +14,7 @@ const { data: orders } = await getOrders();
 </script>
 
 <template>
-  <div>
+  <div class="verticalMargin">
     <section>
       <div><h3>Dashboard Overview</h3></div>
       <div class="verticalContent">
@@ -169,5 +169,16 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  .panel {
+    width: 10rem;
+    height: 8rem;
+  }
+
+  .panel span {
+    font-size: 1.7rem;
+  }
 }
 </style>

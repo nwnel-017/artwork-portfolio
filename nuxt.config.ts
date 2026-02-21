@@ -4,7 +4,13 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/styles/main.css"],
-  modules: ["@nuxtjs/supabase"],
+  modules: ["@nuxtjs/supabase", "nuxt-lottie"],
+  lottie: {
+    componentName: "Lottie", // Optional: Customize the component name
+    lottieFolder: "/assets/lottie", // Optional: Customize the Lottie folder path
+    autoFolderCreation: true, // Optional: Auto create lottie folder (default: true)
+    enableLogs: true, // Optional: Enable console logs from module (default: true)
+  },
   supabase: {
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,

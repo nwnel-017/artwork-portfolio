@@ -72,6 +72,12 @@ const logout = async () => {
   text-decoration: none;
   font-weight: bold;
   color: var(--text-color);
+  display: inline-block;
+  width: fit-content;
+}
+
+.dashLink.router-link-exact-active {
+  border-bottom: 2px solid black;
 }
 
 .hamburger {

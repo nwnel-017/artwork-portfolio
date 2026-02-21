@@ -17,11 +17,13 @@
 
 <style scoped>
 .footer {
+  margin-top: 1rem;
   font-size: 0.5rem;
   height: 10vh;
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  padding: 0 1rem;
   align-items: center;
 }
 
@@ -34,6 +36,7 @@
 @media (min-width: 1024px) {
   .footer {
     font-size: 0.9rem;
+    padding: 0 2rem;
   }
 }
 </style>

@@ -20,7 +20,7 @@ const editArtwork = (artworkId: string) => {
 </script>
 
 <template>
-  <div class="verticalContent fullWidth paddedT">
+  <div class="verticalContent fullWidth paddedSides">
     <div class="horizontalContent banner padded">
       <h1>Artworks</h1>
       <Button class="buttonCol" @click="addArtwork">Add Artwork</Button>

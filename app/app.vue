@@ -1,5 +1,10 @@
+<script lang="ts" setup>
+// const { isLoading } = useLoadingIndicator();
+</script>
 <template>
   <div>
+    <NuxtLoadingIndicator color="var(--text-color)" :height="2" />
+    <LoadingOverlay />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -60,6 +65,11 @@
 
 .spaced {
   gap: 1rem;
+}
+
+.verticalMargin {
+  margin: 1rem 0;
+  /* margin: 10rem 0; */
 }
 
 .horizontalContent {
@@ -232,6 +242,11 @@
   gap: 0.5rem;
 }
 
+.gridItem {
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
 .artDetails {
   font-size: 0.9rem;
   line-height: 1rem;
@@ -279,9 +294,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 90vw;
-  max-width: 90vw;
-  height: 50vh;
+  width: 80vw;
+  max-width: 80vw;
+  max-height: 50vh;
   background-color: white;
   align-content: center;
   border-radius: 8px;
