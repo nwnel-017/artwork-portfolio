@@ -8,6 +8,7 @@ definePageMeta({
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
+const { startLoading, stopLoading } = useLoading();
 const email = ref("");
 const password = ref("");
 
@@ -15,7 +16,26 @@ const login = async () => {
   console.log("logging in!");
   if (!email.value.trim() || !password.value.trim()) return;
 
-  // should be refreshing the jwt?
+  try {
+    startLoading();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value,
+    });
+
+    if (error) {
+      console.log(error.message);
+      return;
+    }
+
+    email.value = "";
+    password.value = "";
+
+    await navigateTo("/admin/dashboard");
+    stopLoading();
+  } catch (err) {
+    console.error("Unexpected login error:", err);
+  }
   const { error } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value,
@@ -28,16 +48,6 @@ const login = async () => {
 
   email.value = "";
   password.value = "";
-
-  watch(
-    user,
-    (u) => {
-      if (u) {
-        navigateTo("/admin/dashboard");
-      }
-    },
-    { once: true }
-  );
 
   // await navigateTo("/admin/dashboard"); // client side routing - maybe change to navigateTo?
 };

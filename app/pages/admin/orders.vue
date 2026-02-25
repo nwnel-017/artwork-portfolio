@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import type { Order } from "@stripe/stripe-js";
+import { toast } from "vue-sonner";
+
 definePageMeta({
   layout: "dashboard",
   middleware: "admin",
 });
 
 const { getOrders } = useOrders();
+const { startLoading, stopLoading } = useLoading();
 
-const {
-  data: orders,
-  pending,
-  error,
-} = await getOrders();
+const { data: orders, pending, error } = await getOrders();
 
 const selectedOrder = ref<any | null>(null);
 const showOrderDetails = ref(false);
@@ -22,10 +21,13 @@ function changeOrderStatus(id: string) {
   showOrderOptions.value = true;
 }
 
+// TO DO: move to composable
+// TO DO: find some better way than manually refreshing page`after status change
 async function updateOrderStatus(item: string) {
   if (!item) return;
 
   try {
+    startLoading();
     await $fetch("/api/orders/status", {
       method: "POST",
       body: {
@@ -33,10 +35,15 @@ async function updateOrderStatus(item: string) {
         status: item,
       },
     });
-    alert("Status changed successfully!");
+    toast.success("Status changed successfully!");
   } catch (err) {
     console.log("Error from backend: " + err);
-    alert("Something went wrong!");
+    toast.error("Something went wrong!");
+  } finally {
+    selectedOrder.value = null;
+    showOrderOptions.value = false;
+    window.location.reload();
+    stopLoading();
   }
 }
 

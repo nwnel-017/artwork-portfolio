@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
 import type { ArtworkData } from "#types/artworks/artworks";
+import { toast } from "vue-sonner";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "admin",
 });
+
+// TO DO: fix backend - getting error "invalid form"
 
 type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later;
 type EditedArtwork = {
@@ -18,16 +21,13 @@ type EditedArtwork = {
 };
 
 const { startLoading, stopLoading } = useLoading();
+const { getArtwork, updateArtwork, removeArtwork } = useArtworks();
 
 const route = useRoute();
 
 const artworkId = computed(() => route.params.id as string);
 
-const {
-  data: artwork,
-  pending,
-  error,
-} = useFetch<ArtworkRow>(`/api/artworks/${artworkId.value}`); // why is artwork id an object?
+const { data: artwork, pending, error } = await getArtwork(artworkId.value);
 
 const editedArtwork = ref<ArtworkData>({
   // id: "",
@@ -96,7 +96,7 @@ async function save() {
     newPrice === artwork.value?.price?.toString() &&
     newDimensions === artwork.value?.dimensions
   ) {
-    alert("No changes have been made!");
+    toast.error("No changes have been made!");
     return;
   }
 
@@ -110,15 +110,12 @@ async function save() {
 
   try {
     startLoading();
-    await $fetch(`/api/artworks/${artworkId.value}`, {
-      method: "PUT",
-      body: form,
-    });
-    alert("Artwork successfully updated!");
+    await updateArtwork(artworkId.value, form);
+    toast.success("Artwork successfully updated!");
     await navigateTo("/admin/artworks");
   } catch (err) {
     console.log("Error updating artwork: " + err);
-    alert("Something went wrong! Please try again");
+    toast.error("Something went wrong! Please try again");
   } finally {
     stopLoading();
   }
@@ -130,14 +127,12 @@ async function deleteArtwork() {
 
   try {
     startLoading();
-    await $fetch(`/api/artworks/${artworkId.value}`, {
-      method: "DELETE",
-    });
-    alert("Artwork deleted successfully!");
+    await removeArtwork(artworkId.value);
+    toast.success("Artwork deleted successfully!");
     navigateTo("/admin/artworks");
   } catch (error) {
-    console.log("error deleting artist: " + error);
-    alert("Something went wrong. Please try again later!");
+    console.log("error deleting artwork: " + error);
+    toast.error("Something went wrong. Please try again later!");
   } finally {
     stopLoading();
   }

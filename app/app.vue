@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-// const { isLoading } = useLoadingIndicator();
+import { Toaster } from "vue-sonner";
 </script>
 <template>
   <div>
     <NuxtLoadingIndicator color="var(--text-color)" :height="2" />
     <LoadingOverlay />
+    <Toaster richColors position="top-center" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -39,6 +40,10 @@
   padding: 0;
 }
 
+.marginTop {
+  margin-top: 3rem;
+}
+
 .centerContent h1 {
   margin: 0.75rem 0;
 }
@@ -55,7 +60,7 @@
 .verticalContent {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
 }
 
@@ -179,6 +184,14 @@
   -webkit-box-orient: vertical;
 }
 
+.cutoffTextSmall {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /* min-width: 0; */
+  width: 100%;
+}
+
 .closeHorContent {
   display: flex;
   gap: 1rem;
@@ -206,7 +219,12 @@
   border: 2px solid black;
 }
 
+.largeWidth {
+  width: 80%;
+}
+
 .collectionContainer {
+  width: 80%;
   padding: 0.5rem;
   background-color: var(--theme-white);
   box-shadow:
@@ -223,10 +241,19 @@
 
 .collectionDetails {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: white;
   z-index: 10;
   padding: 0.3em;
   font-size: 0.9rem;
+}
+
+.collectionCard {
+  width: 90%;
+  height: 40vh;
 }
 
 .artworkContainer {
@@ -259,15 +286,28 @@
 .artworksGrid {
   display: grid;
   width: 100%;
+  max-width: 100%;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
 .collectionsGrid {
   display: grid;
+  justify-items: center;
   width: 100%;
   grid-template-columns: repeat(1, 1fr);
   gap: 1.5rem;
+}
+
+.internalCollectionsGrid {
+  display: grid;
+  width: 50%;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+.collectionsGrid > * {
+  min-width: 0;
 }
 
 .collectionImg {
@@ -392,5 +432,9 @@
   .collectionsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* .largeWidth {
+    width: 80%;
+  } */
 }
 </style>

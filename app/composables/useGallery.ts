@@ -1,5 +1,6 @@
 import type { Database } from "#types/supabase/database";
 import { success } from "zod";
+import { toast } from "vue-sonner";
 
 export function useGallery() {
   type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
@@ -7,7 +8,7 @@ export function useGallery() {
 
   const deleteImage = async (id: string) => {
     if (!id) {
-      alert("Missing ID");
+      toast.error("Missing ID");
     }
 
     try {

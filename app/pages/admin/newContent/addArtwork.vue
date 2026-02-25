@@ -4,6 +4,7 @@
 import type { ArtworkData } from "#types/artworks/artworks.ts";
 import type { Database } from "#types/supabase/database";
 import type { DropDown } from "#types/dropdown/dropdown";
+import { toast } from "vue-sonner";
 
 type CollectionRow = Database["public"]["Tables"]["collections"]["Row"];
 
@@ -64,11 +65,11 @@ const submit = async () => {
   );
 
   if (!response.success) {
-    alert(response.message);
+    toast.error(response.message);
     return;
   }
 
-  alert(response.message);
+  toast.success(response.message);
   artwork.title = "";
   artwork.description = "";
   image.value = null;

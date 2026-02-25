@@ -8,5 +8,12 @@ export function useCollections() {
     return useFetch<CollectionCard[]>("/api/collections/collections");
   };
 
-  return { getCollections };
+  const deleteCollection = (id: string) => {
+    if (!id) return;
+    return $fetch(`/api/collections/${id}`, {
+      method: "DELETE",
+    });
+  };
+
+  return { getCollections, deleteCollection };
 }

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+const supabase = useSupabaseClient();
+const { startLoading, stopLoading } = useLoading();
+
 const isOpen = ref(false);
 
 const toggleNav = () => {
@@ -6,8 +9,21 @@ const toggleNav = () => {
 };
 
 const logout = async () => {
-  // TO DO: implement
-  return;
+  try {
+    startLoading();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Logout error:", error.message);
+      return;
+    }
+
+    await navigateTo("/admin/login");
+  } catch (err) {
+    console.error("Unexpected logout error:", err);
+  } finally {
+    stopLoading();
+  }
 };
 </script>
 

@@ -6,8 +6,21 @@ type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"];
 const { startLoading, stopLoading } = useLoading();
 
 export function useArtworks() {
-  const getArtworks = () => {
+  const getArtworks = async () => {
     return useFetch<ArtworkRow[]>("/api/artworks/artworks");
+  };
+
+  const getArtwork = async (id: string) => {
+    return useFetch<ArtworkRow>(`/api/artworks/${id}`, {
+      lazy: true,
+    });
+  };
+
+  const updateArtwork = async (id: string, form: FormData) => {
+    return $fetch(`/api/artworks/${id}`, {
+      method: "PUT",
+      body: form,
+    });
   };
 
   const addArtwork = async (
@@ -44,7 +57,6 @@ export function useArtworks() {
 
     try {
       startLoading();
-      // loadingStore.startLoading();
       console.log("Submitting artwork...");
       const response = await fetch("/api/artworks/artwork", {
         method: "POST",
@@ -77,53 +89,63 @@ export function useArtworks() {
     }
   };
 
-  const addArtworkImages = async (artworkId: string, images: File[]) => {
-    // Validation
-    if (!artworkId || images.length === 0) {
-      return {
-        success: false,
-        message: "Artwork ID and images are required!",
-      };
-    }
-
-    // Create FormData
-    const formData = new FormData();
-    formData.append("artworkId", artworkId);
-    images.forEach((image, index) => {
-      formData.append(`image`, image);
+  const removeArtwork = async (id: string) => {
+    return $fetch(`/api/artworks/${id}`, {
+      method: "DELETE",
     });
-
-    try {
-      startLoading();
-      console.log("Submitting artwork images...");
-      const response = await fetch("/api/artworks/gallery/gallery", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (!result.ok) {
-        return {
-          success: false,
-          message: result?.message || "Something went wrong!",
-        };
-      }
-
-      return {
-        success: true,
-        message: result.message || "Successfully submitted photos!",
-      };
-    } catch (err) {
-      console.error(err);
-      return {
-        success: false,
-        message: "An error occurred while uploading images! Please try again!",
-      };
-    } finally {
-      stopLoading();
-    }
   };
 
-  return { getArtworks, addArtwork, addArtworkImages };
+  const addArtworkImages = async (artworkId: string, form: FormData) => {
+    // Validation
+    // if (!artworkId || !form) {
+    //   return {
+    //     success: false,
+    //     message: "Artwork ID and images are required!",
+    //   };
+    // }
+
+    // Create FormData
+    // const formData = new FormData();
+    // formData.append("artworkId", artworkId);
+    // images.forEach((image, index) => {
+    //   formData.append(`image`, image);
+    // });
+
+    // try {
+    console.log("Submitting artwork images...");
+    return await $fetch("/api/artworks/gallery/gallery", {
+      method: "POST",
+      body: form,
+    });
+
+    // if (!result.ok) {
+    //   return {
+    //     success: false,
+    //     message: result?.message || "Something went wrong!",
+    //   };
+    // }
+
+    // return {
+    //   success: true,
+    //   message: result.message || "Successfully submitted photos!",
+    // };
+    // } catch (err) {
+    //   console.error(err);
+    //   return {
+    //     success: false,
+    //     message: "An error occurred while uploading images! Please try again!",
+    //   };
+    // } finally {
+    //   stopLoading();
+    // }
+  };
+
+  return {
+    getArtworks,
+    getArtwork,
+    updateArtwork,
+    addArtwork,
+    removeArtwork,
+    addArtworkImages,
+  };
 }

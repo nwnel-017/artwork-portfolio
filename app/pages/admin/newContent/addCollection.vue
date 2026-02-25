@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Collection } from "#types/collections/collection";
+import { toast } from "vue-sonner";
 
 definePageMeta({
   layout: "dashboard",
@@ -14,7 +15,7 @@ const newCollection = ref("");
 
 async function submit() {
   if (!newCollection.value) {
-    alert("Please enter a valid value!");
+    toast.error("Please enter a valid value!");
   }
 
   const collectionName = newCollection.value;
@@ -24,7 +25,7 @@ async function submit() {
     body: { name: collectionName },
   });
 
-  alert(res.message);
+  toast(res.message);
 
   await navigateTo("/admin/collections/collections");
 }

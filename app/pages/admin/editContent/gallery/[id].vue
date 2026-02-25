@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
+import { toast } from "vue-sonner";
 
 // To Do: implement edit gallery functionality
 // To Do: refactor - this is basically a copy of ArtworkGallery component
@@ -18,22 +19,11 @@ const artworkId = computed(() => route.params.id as string); // Issue
 
 const { addArtworkImages } = useArtworks();
 const { deleteImage } = useGallery();
+const { startLoading, stopLoading } = useLoading();
 
 const viewFileUpload = ref(false);
 
 const offset = ref(0);
-// const limit = 1;
-
-function nextImage() {
-  if (!gallery?.value) return;
-  if (offset.value < gallery.value.length - 1) offset.value++;
-}
-
-function prevImage() {
-  if (offset.value > 0) {
-    offset.value--;
-  }
-}
 
 function toggleFileUpload() {
   viewFileUpload.value = !viewFileUpload.value;
@@ -42,14 +32,28 @@ function toggleFileUpload() {
 async function uploadFiles(files: File[]) {
   console.log("Files to upload:", files);
   toggleFileUpload();
-  const result = await addArtworkImages(artworkId.value, files);
-  alert(result?.message || "");
+
+  const formData = new FormData();
+  formData.append("artworkId", artworkId.value);
+  files.forEach((image, index) => {
+    formData.append(`image`, image);
+  });
+
+  try {
+    startLoading();
+    await addArtworkImages(artworkId.value, formData);
+    toast.success("Successfully added images!");
+  } catch (err) {
+    toast.error("something went wrong!");
+  } finally {
+    stopLoading();
+  }
 }
 
 async function removePhoto(id: string) {
   console.log("removing photo!");
   const res = await deleteImage(id);
-  alert(res.message);
+  toast(res.message);
 }
 
 const {
