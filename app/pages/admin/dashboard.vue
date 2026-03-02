@@ -29,6 +29,10 @@ const isLoading = computed(
   () => loadingStats.value || loadingArtworks.value || loadingOrders.value,
 );
 
+const contentLoaded = computed(
+  () => stats.value && artworks.value && orders.value,
+);
+
 const error = computed(
   () => statsError.value || artworksError.value || ordersError.value,
 );
@@ -44,80 +48,78 @@ watch(isLoading, (loading) => {
 
 <template>
   <div class="verticalMargin">
-    <section>
-      <div><h3>Dashboard Overview</h3></div>
-      <div class="verticalContent">
-        <div>
-          <!-- <div v-if="pending">Loading...</div> -->
-          <div v-if="error">Something Went Wrong</div>
-          <div v-else class="dashPanel">
-            <div class="panel">
-              <div class="statCard">
-                <span>{{ stats?.artworks }}</span
-                >Artworks
+    <div v-if="isLoading"></div>
+    <div v-else>
+      <section>
+        <div><h3>Dashboard Overview</h3></div>
+        <div class="verticalContent">
+          <div>
+            <div class="dashPanel">
+              <div class="panel">
+                <div class="statCard">
+                  <span>{{ stats?.artworks }}</span
+                  >Artworks
+                </div>
               </div>
-            </div>
-            <div class="panel">
-              <div class="statCard">
-                <span>{{ formatFunds(stats?.fundsRaised || 0) }}</span
-                >Raised
+              <div class="panel">
+                <div class="statCard">
+                  <span>{{ formatFunds(stats?.fundsRaised || 0) }}</span
+                  >Raised
+                </div>
               </div>
-            </div>
-            <div class="panel">
-              <div class="statCard">
-                <span>{{ stats?.orders }}</span
-                >Orders
+              <div class="panel">
+                <div class="statCard">
+                  <span>{{ stats?.orders }}</span
+                  >Orders
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    <section>
-      <div><h3>Recent Activity</h3></div>
-      <div
-        v-if="artworks && artworks.length > 0"
-        class="recentArtworks"
-        @click="navigateTo('/admin/artworks')"
-      >
+      </section>
+      <section>
+        <div><h3>Recent Activity</h3></div>
         <div
-          v-for="artwork in artworks.slice(0, 2)"
-          :key="artwork?.id"
-          class="artworkCard"
+          v-if="artworks && artworks.length > 0"
+          class="recentArtworks"
+          @click="navigateTo('/admin/artworks')"
         >
-          <div class="dashArtworkContainer">
-            <NuxtImg
-              :src="artwork?.image_path ?? undefined"
-              :alt="artwork?.title ?? 'Artwork'"
-              class="cardImage"
-            />
+          <div
+            v-for="artwork in artworks.slice(0, 2)"
+            :key="artwork?.id"
+            class="artworkCard"
+          >
+            <div class="dashArtworkContainer">
+              <NuxtImg
+                :src="artwork?.image_path ?? undefined"
+                :alt="artwork?.title ?? 'Artwork'"
+                class="cardImage"
+              />
+            </div>
+            <p class="cutoffText">{{ artwork?.title }}</p>
           </div>
-          <p class="cutoffText">{{ artwork?.title }}</p>
         </div>
-      </div>
-      <div v-else class="noArtworks">No artworks yet</div>
-      <!-- </div> -->
-    </section>
-    <div><h3>Recent Orders</h3></div>
-    <section>
-      <!-- <div class="verticalContent"> -->
-      <div
-        v-if="orders && orders.length > 0"
-        class="recentArtworks"
-        @click="navigateTo('/admin/orders')"
-      >
+        <div v-else class="noArtworks">No artworks yet</div>
+      </section>
+      <div><h3>Recent Orders</h3></div>
+      <section>
         <div
-          v-for="order in orders.slice(0, 2)"
-          :key="order?.id"
-          class="artworkCard"
+          v-if="orders && orders.length > 0"
+          class="recentArtworks"
+          @click="navigateTo('/admin/orders')"
         >
-          <p class="cutoffText">${{ order?.amount }}</p>
-          <p class="cutoffText">{{ order?.status }}</p>
+          <div
+            v-for="order in orders.slice(0, 2)"
+            :key="order?.id"
+            class="artworkCard"
+          >
+            <p class="cutoffText">${{ order?.amount }}</p>
+            <p class="cutoffText">{{ order?.status }}</p>
+          </div>
         </div>
-      </div>
-      <div v-else class="noArtworks">No orders yet</div>
-      <!-- </div> -->
-    </section>
+        <div v-else class="noArtworks">No orders yet</div>
+      </section>
+    </div>
   </div>
 </template>
 
