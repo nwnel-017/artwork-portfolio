@@ -68,7 +68,12 @@ async function payWithStripe() {
       @click="viewArtwork(artwork.id)"
       class="artworkContainer clickable"
     >
-      <img :src="artwork?.image_path ?? undefined" alt="" class="artwork" />
+      <NuxtImg
+        :src="artwork?.image_path ?? undefined"
+        alt=""
+        class="artwork"
+        placeholder
+      />
       <div class="artDetails">
         <div>{{ artwork?.title }}</div>
         <div v-if="!artwork?.sold">${{ artwork?.price }}</div>

@@ -7,10 +7,39 @@ definePageMeta({
 const { getStats } = useDashboard();
 const { getArtworks } = useArtworks();
 const { getOrders } = useOrders();
+const { startLoading, stopLoading } = useLoading();
 
-const { data: stats, pending, error } = await getStats();
-const { data: artworks } = await getArtworks();
-const { data: orders } = await getOrders();
+const {
+  data: stats,
+  pending: loadingStats,
+  error: statsError,
+} = await getStats();
+const {
+  data: artworks,
+  pending: loadingArtworks,
+  error: artworksError,
+} = await getArtworks();
+const {
+  data: orders,
+  pending: loadingOrders,
+  error: ordersError,
+} = await getOrders();
+
+const isLoading = computed(
+  () => loadingStats.value || loadingArtworks.value || loadingOrders.value,
+);
+
+const error = computed(
+  () => statsError.value || artworksError.value || ordersError.value,
+);
+
+watch(isLoading, (loading) => {
+  if (loading) {
+    startLoading();
+  } else {
+    stopLoading();
+  }
+});
 </script>
 
 <template>
@@ -19,7 +48,7 @@ const { data: orders } = await getOrders();
       <div><h3>Dashboard Overview</h3></div>
       <div class="verticalContent">
         <div>
-          <div v-if="pending">Loading...</div>
+          <!-- <div v-if="pending">Loading...</div> -->
           <div v-if="error">Something Went Wrong</div>
           <div v-else class="dashPanel">
             <div class="panel">
@@ -57,7 +86,7 @@ const { data: orders } = await getOrders();
           class="artworkCard"
         >
           <div class="dashArtworkContainer">
-            <img
+            <NuxtImg
               :src="artwork?.image_path ?? undefined"
               :alt="artwork?.title ?? 'Artwork'"
               class="cardImage"

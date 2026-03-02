@@ -26,6 +26,8 @@ const artwork = reactive<ArtworkData>({
   collection: "",
 });
 
+const collectionName = ref<string>("");
+
 // To Do: research which is better - this way or using async data in artworks/id.vue
 const {
   data: collections,
@@ -44,6 +46,7 @@ const collectionItems = computed<DropDown[]>(
 function selectCollection(collection: DropDown) {
   if (!collection) return;
   artwork.collection = collection.value;
+  collectionName.value = collection.label;
   console.log("selected collection: " + artwork.collection);
 }
 
@@ -94,12 +97,21 @@ const submit = async () => {
       <input type="text" v-model="artwork.dimensions" />
       <label for="image">Artwork Image</label>
       <input @change="onFileChange" name="image" accept="image" type="file" />
-      <DropDown
-        label="Collection"
-        :items="collectionItems ?? []"
-        @select="selectCollection"
-      />
+      <div class="">
+        <DropDown
+          label="Collection"
+          :items="collectionItems ?? []"
+          @select="selectCollection"
+        />
+        <span>{{ collectionName }}</span>
+      </div>
       <button variant="primary" type="submit" size="sm">Submit</button>
     </form>
   </div>
 </template>
+
+<style scoped>
+span {
+  margin-left: 0.5rem;
+}
+</style>

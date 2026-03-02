@@ -12,6 +12,14 @@ const { startLoading, stopLoading } = useLoading();
 const email = ref("");
 const password = ref("");
 
+watch(
+  user,
+  (u) => {
+    if (u) navigateTo("/admin/dashboard");
+  },
+  { immediate: true },
+);
+
 const login = async () => {
   console.log("logging in!");
   if (!email.value.trim() || !password.value.trim()) return;
@@ -28,23 +36,31 @@ const login = async () => {
       return;
     }
 
+    stopLoading();
+
     email.value = "";
     password.value = "";
 
-    await navigateTo("/admin/dashboard");
-    stopLoading();
+    // await navigateTo("/admin/dashboard");
+
+    // if (user.value) {
+    //   // already set
+    //   await navigateTo("/admin/dashboard");
+    // } else {
+    // watch user for first login
+    // }
   } catch (err) {
     console.error("Unexpected login error:", err);
   }
-  const { error } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value,
-  });
+  // const { error } = await supabase.auth.signInWithPassword({
+  //   email: email.value,
+  //   password: password.value,
+  // });
 
-  if (error) {
-    console.log(error.message);
-    return;
-  }
+  // if (error) {
+  //   console.log(error.message);
+  //   return;
+  // }
 
   email.value = "";
   password.value = "";

@@ -32,7 +32,8 @@ async function removeCollection(id: string) {
     startLoading();
     await deleteCollection(id);
     toast.success("Successfully deleted collection!");
-    window.location.reload();
+    collections.value =
+      collections.value?.filter((collection) => collection.id !== id) ?? [];
   } catch (err) {
     toast.error("Something went wrong!");
   } finally {
@@ -63,7 +64,7 @@ const addCollection = () => {
         :key="collection.id"
         class="collectionContainer clickable"
       >
-        <img
+        <NuxtImg
           :src="collection?.image_path ?? undefined"
           alt=""
           class="collectionImg"

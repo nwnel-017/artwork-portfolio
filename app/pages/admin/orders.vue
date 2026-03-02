@@ -42,7 +42,7 @@ async function updateOrderStatus(item: string) {
   } finally {
     selectedOrder.value = null;
     showOrderOptions.value = false;
-    window.location.reload();
+    // window.location.reload();
     stopLoading();
   }
 }

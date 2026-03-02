@@ -26,7 +26,7 @@ const {
       <div class="lndPadImgContainer">
         <div v-if="pending">Loading...</div>
         <div v-else-if="error">Failed to load content</div>
-        <img
+        <NuxtImg
           v-else-if="artwork"
           :src="artwork?.image_path ?? undefined"
           alt="Artwork"

@@ -24,6 +24,9 @@ body {
 
   --text-color: #242424;
 
+  --toastify-color-success: #22c55e;
+  --toastify-color-error: #ef4444;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

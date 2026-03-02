@@ -10,48 +10,71 @@ const toggle = () => {
 };
 
 const closeOptions = () => {
-  isOpen.value = false;
+  if (isOpen.value) isOpen.value = false;
 };
 
-const emit = defineEmits<{ (e: "select", item: DropDown): void }>();
+const emit = defineEmits<{
+  (e: "select", item: DropDown): void;
+}>();
 
 const selectItem = (item: DropDown) => {
+  console.log("selected item: " + item.value);
   emit("select", item);
   closeOptions();
 };
 </script>
 
 <template>
-  <div class="dropdown" @click.outside.self="closeOptions">
-    <Button @click.stop="toggle">{{ label }}</Button>
-    <ul v-if="isOpen" class="dropdownOptions">
-      <li
-        v-for="(item, index) in items"
-        :key="index"
-        class="dropdownItem"
-        @click="selectItem(item)"
-      >
-        {{ item.label }}
-      </li>
-    </ul>
+  <div class="dropdown" @click.outside="closeOptions">
+    <div class="dropdownContainer">
+      <Button @click.stop="toggle">{{ label }}</Button>
+      <div v-show="isOpen" class="dropdownOptions" :class="{ active: isOpen }">
+        <div
+          v-for="(item, index) in items"
+          :key="index"
+          class="dropdownItem"
+          @click="selectItem(item)"
+        >
+          {{ item.label }}
+        </div>
+      </div>
+    </div>
+    <span></span>
   </div>
 </template>
 
 <style scoped>
 .dropdown {
   cursor: pointer;
+  display: inline-block;
+}
+
+.dropdownContainer {
+  display: inline-block;
+  position: relative;
 }
 
 .dropdownOptions {
-  background-color: var(--text-blue);
-  top: 0;
-  margin: 0 auto;
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  position: absolute;
+  top: 100%;
+  margin: 0;
+  z-index: 10;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid var(--theme-grey);
+  /* width: auto; */
+  width: 100%;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 .dropdownItem {
   text-decoration: none;
   list-style: none;
+  /* width: 100%; */
+  /* width: auto; */
+  /* padding: 0 auto; */
 }
 </style>

@@ -32,10 +32,11 @@ async function viewCollection(collectionId: string) {
         @click="viewCollection(collection.id)"
         class="collectionContainer clickable"
       >
-        <img
+        <NuxtImg
           :src="collection?.image_path ?? undefined"
           alt=""
           class="collectionImg"
+          placeholder
         />
         <div class="collectionDetails">
           <div>{{ collection?.collection_name }}</div>

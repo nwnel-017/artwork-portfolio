@@ -10,6 +10,7 @@ import type { ArtworkData } from "#types/artworks/artworks";
 import type { UploadInput } from "./storage.service";
 import { validateImageFile } from "@utils/validation/image";
 import { uploadFile, deleteFile } from "./storage.service";
+import { de } from "zod/locales";
 
 // To Do:
 // add form validation
@@ -185,9 +186,6 @@ async function deleteArtwork(supabase: SupabaseClient<Database>, id: string) {
     .eq("id", id)
     .single();
 
-  console.log("row retrieved: " + artwork);
-  console.log("image path: " + artwork?.image_path); // undefined
-
   if (error || !artwork || !artwork.image_path) {
     throw new Error("Failed to retrieve artwork!");
   }
@@ -195,8 +193,40 @@ async function deleteArtwork(supabase: SupabaseClient<Database>, id: string) {
   try {
     await deleteFile(supabase, artwork.image_path, "artwork_images");
   } catch (err) {
-    console.log("Failed to delete artist: " + err);
-    throw new Error("Failed to delete artist");
+    console.log("Failed to delete file: " + err);
+    throw new Error("Failed to delete artwork image");
+  }
+
+  // delete gallery images if they exist
+  const { error: galleryError, data: gallery } = await supabase
+    .from("gallery_images")
+    .select("id, image_path")
+    .eq("artwork_id", id);
+
+  if (galleryError || !gallery) {
+    console.log("No gallery images to delete!");
+    return;
+  }
+  try {
+    await Promise.all(
+      gallery.map((image) =>
+        deleteFile(supabase, image.image_path!, "gallery_images"),
+      ),
+    );
+  } catch (err) {
+    console.log("Failed to delete gallery images: " + err);
+    throw new Error("Failed to delete images from storage!");
+  }
+
+  const { error: deleteGalleryError } = await supabase
+    .from("gallery_images")
+    .delete()
+    .eq("artwork_id", id);
+
+  if (deleteGalleryError) {
+    throw new Error(
+      "Failed to delete the gallery: " + deleteGalleryError.message,
+    );
   }
 
   // delete artwork from artists table
@@ -205,34 +235,16 @@ async function deleteArtwork(supabase: SupabaseClient<Database>, id: string) {
     .delete()
     .eq("id", id);
   if (deleteError) {
-    console.log("failed to delete artwork: " + deleteError);
+    console.log("failed to delete artwork: " + deleteError?.message);
     throw new Error("Failed to delete artwork!");
   }
 
-  // delete gallery images if they exist
-  const { data: gallery, error: galleryError } = await supabase
-    .from("gallery_images")
-    .select("id, image_path")
-    .eq("artwork_id", id);
-
-  if (!gallery) {
-    console.log("No gallery images to delete!");
-    return;
-  }
-  try {
-    for (const image of gallery) {
-      const path = image.image_path;
-      const id = image.id;
-      if (!path) {
-        throw new Error("Missing path");
-      }
-      await deleteFile(supabase, path, "gallery_images");
-      await supabase.from("gallery_images").delete().eq("id", id);
-    }
-  } catch (err) {
-    console.log("Failed to delete gallery images: " + err);
-    throw new Error("Failed to delete images from storage!");
-  }
+  // try {
+  //   await deleteGalleryImagesForArtwork(supabase, id);
+  // } catch (err) {
+  //   console.log("Failed to delete gallery images for artwork: " + err);
+  //   throw new Error("Failed to delete gallery images for artwork!");
+  // }
 }
 
 async function getArtworkDetails(
@@ -590,13 +602,36 @@ async function deleteGalleryImage(
   }
 }
 
-// organize better later
-// type Image = {
-//   filename: string;
-//   data: Buffer;
-//   size: number;
-//   contentType: string;
-// };
+async function deleteGalleryImagesForArtwork(
+  supabase: SupabaseClient<Database>,
+  artworkId: string,
+) {
+  if (!supabase || !artworkId) {
+    throw new Error("Missing parameters!");
+  }
+
+  const { data: gallery, error } = await supabase
+    .from("gallery_images")
+    .select("id, image_path")
+    .eq("artwork_id", artworkId);
+
+  if (error) {
+    console.log("Failed to fetch gallery images: " + error);
+    throw new Error("Failed to fetch gallery images for artwork!");
+  }
+
+  const { error: deleteError } = await supabase
+    .from("gallery_images")
+    .delete()
+    .eq("artwork_id", artworkId);
+
+  if (deleteError) {
+    console.log(
+      "Failed to delete gallery image records: " + deleteError?.message,
+    );
+    throw new Error("Failed to delete gallery image records for artwork!");
+  }
+}
 
 async function addGalleryImages(
   supabase: SupabaseClient<Database>,
@@ -752,6 +787,7 @@ export {
   getGalleryImages,
   addGalleryImages,
   deleteGalleryImage,
+  deleteGalleryImagesForArtwork,
   getArtworkForCollection,
   getCollectionArtworks,
 };

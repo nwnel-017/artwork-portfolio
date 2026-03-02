@@ -1,18 +1,34 @@
 <script lang="ts" setup>
+import "vue-sonner/style.css";
 import { Toaster } from "vue-sonner";
+// import "vue-sonner/dist/style.css";
 </script>
 <template>
-  <div>
-    <NuxtLoadingIndicator color="var(--text-color)" :height="2" />
-    <LoadingOverlay />
-    <Toaster richColors position="top-center" />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <!-- <div> -->
+  <NuxtLoadingIndicator color="var(--text-color)" :height="2" />
+  <LoadingOverlay />
+  <NuxtLayout>
+    <Toaster
+      richColors
+      position="top-center"
+      :toastOptions="{
+        class: 'toast',
+        // success: { className: 'toastSuccess' },
+        // fail: { className: 'toastFail' },
+      }"
+    />
+    <NuxtPage />
+  </NuxtLayout>
+  <!-- </div> -->
 </template>
 
 <style>
+.toast {
+  z-index: 9999;
+  position: fixed;
+  top: 1rem;
+}
+
 .page {
   width: 100vw;
   min-height: 100vh;

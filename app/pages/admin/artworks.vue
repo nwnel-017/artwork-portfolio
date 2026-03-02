@@ -7,8 +7,17 @@ definePageMeta({
 });
 
 const { getArtworks } = useArtworks();
+const { startLoading, stopLoading } = useLoading();
 
 const { data: artworks, error, pending } = await getArtworks();
+
+watch(pending, (newVal) => {
+  if (newVal) {
+    startLoading();
+  } else {
+    stopLoading();
+  }
+});
 
 const addArtwork = () => {
   navigateTo("/admin/newContent/addArtwork");
@@ -20,15 +29,13 @@ const editArtwork = (artworkId: string) => {
 </script>
 
 <template>
-  <div class="verticalContent fullWidth paddedSides marginTop">
+  <div v-if="artworks" class="verticalContent fullWidth paddedSides marginTop">
     <div class="horizontalContent banner">
       <h1>Artworks</h1>
       <Button class="buttonCol" @click="addArtwork">Add Artwork</Button>
     </div>
     <div class="horizontalContent fullWidth padded">
-      <div v-if="pending">Loading Artworks...</div>
-      <div v-else-if="error">No artworks</div>
-      <div v-else class="fullWidth">
+      <div class="fullWidth">
         <div class="internalArtGrid">
           <div class="header image">Image</div>
           <div class="header title">Title</div>
@@ -41,10 +48,11 @@ const editArtwork = (artworkId: string) => {
             class="contentCard"
           >
             <div class="imageCell">
-              <img
+              <NuxtImg
                 :src="artwork?.image_path ?? undefined"
                 alt=""
                 class="artworkImg"
+                placeholder
               />
             </div>
             <div class="cutoffText gridText">{{ artwork?.title }}</div>

@@ -73,7 +73,7 @@ async function payWithStripe() {
     <div v-else-if="artwork" class="verticalContent">
       <div class="imgContainer">
         <ArrowButton direction="left" @click="prevImage" />
-        <img
+        <NuxtImg
           :src="currentImage?.image_path ?? undefined"
           alt=""
           class="imgLarge clickable"

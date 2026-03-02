@@ -148,7 +148,7 @@ async function deleteArtwork() {
           <div v-if="error">There was an error getting artwork details</div>
           <div v-else-if="artwork">
             <div class="imgContainer">
-              <img
+              <NuxtImg
                 :src="artwork?.image_path ?? undefined"
                 alt=""
                 class="artworkFull"

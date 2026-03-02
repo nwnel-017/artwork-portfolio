@@ -7,7 +7,7 @@ const { startLoading, stopLoading } = useLoading();
 
 export function useArtworks() {
   const getArtworks = async () => {
-    return useFetch<ArtworkRow[]>("/api/artworks/artworks");
+    return useFetch<ArtworkRow[]>("/api/artworks/artworks", { lazy: true });
   };
 
   const getArtwork = async (id: string) => {

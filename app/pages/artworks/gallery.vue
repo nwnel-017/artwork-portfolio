@@ -12,43 +12,6 @@ const {
   pending,
   error,
 } = await useFetch<ArtworkRow[]>("/api/artworks/artworks");
-
-// const displayArtworkPopup = ref(false);
-// const selectedArtwork = ref<ArtworkRow | null>(null);
-
-// function openPopup(artwork: ArtworkRow) {
-//   if (artwork?.sold) return;
-//   selectedArtwork.value = artwork;
-//   displayArtworkPopup.value = true;
-// }
-
-// function closePopup() {
-//   selectedArtwork.value = null;
-//   displayArtworkPopup.value = false;
-// }
-
-// async function payWithStripe() {
-//   try {
-//     const { url } = await $fetch<{ url: string }>(
-//       "/api/stripe/create-checkout-session",
-//       {
-//         method: "POST",
-//         body: {
-//           artworkId: selectedArtwork.value?.id,
-//         },
-//       },
-//     );
-
-//     if (url) {
-//       window.location.href = url;
-//     }
-//   } catch (err) {
-//     console.log(
-//       "There was an error retrieving Stripe checkout session: " + err,
-//     );
-//     throw new Error("Failed to retrieve stripe checkout session");
-//   }
-// }
 </script>
 
 <template>

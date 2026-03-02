@@ -1,4 +1,5 @@
 import type { DashboardStats } from "#types/dashboard/dashboardStats";
+import { lazy } from "zod";
 
 // To Do: Change to have sold artwork count instead of posts
 export function useDashboard() {
@@ -11,6 +12,7 @@ export function useDashboard() {
         fundsRaised: stats?.fundsRaised ?? 0,
       }),
       credentials: "include",
+      lazy: true,
     });
 
   return { getStats };
