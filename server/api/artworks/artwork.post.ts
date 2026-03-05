@@ -35,6 +35,9 @@ export default defineEventHandler(async (event) => {
       form.find((field) => field.name === "dimensions")?.data?.toString() || "",
     collection:
       form.find((field) => field.name === "collection")?.data?.toString() || "",
+    cover_image:
+      form.find((field) => field.name === "cover_image")?.data?.toString() ===
+        "true" || false,
   };
 
   console.log("collection id found in route: " + artworkForm.collection);

@@ -4,4 +4,5 @@ export type ArtworkData = {
   price: string;
   dimensions: string;
   collection: string;
+  cover_image?: boolean;
 };

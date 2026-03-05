@@ -357,20 +357,18 @@ import { Toaster } from "vue-sonner";
   align-items: center;
   justify-content: center;
   width: 80vw;
-  max-width: 80vw;
-  max-height: 50vh;
+  /* max-width: 80vw; */
+  /* max-height: 50vh; */
+  height: 50vh;
   background-color: white;
   align-content: center;
   border-radius: 8px;
 }
 
-.imgLarge {
-  /* max-width: 100%;
-  max-height: 100%; */
+/* .imgLarge {
   width: 100%;
   height: 100%;
   border-radius: 8px;
-  /* object-fit: cover; */
   object-fit: contain;
   border: 1px solid var(--text-color);
   opacity: 0;
@@ -379,7 +377,7 @@ import { Toaster } from "vue-sonner";
 
 .imgLarge.visible {
   opacity: 1;
-}
+} */
 
 .artworkFull {
   width: 100%;

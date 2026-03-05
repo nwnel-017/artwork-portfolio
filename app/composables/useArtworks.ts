@@ -30,6 +30,7 @@ export function useArtworks() {
     dimensions: string,
     price: string,
     collection: string,
+    cover_image: boolean,
   ) => {
     // Validation
     if (
@@ -54,6 +55,7 @@ export function useArtworks() {
     formData.append("dimensions", dimensions);
     formData.append("image", image);
     formData.append("collection", collection);
+    formData.append("cover_image", cover_image.toString());
 
     try {
       startLoading();

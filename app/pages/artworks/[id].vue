@@ -125,4 +125,31 @@ async function payWithStripe() {
   z-index: 10;
   opacity: 1;
 }
+
+.imgLarge {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  object-fit: contain;
+  border: 1px solid var(--text-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.imgLarge.visible {
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .imgContainer {
+    width: 70vw;
+    max-width: 70vw;
+  }
+}
+@media (min-width: 1024px) {
+  .imgContainer {
+    height: 70vh;
+    width: 50vw;
+  }
+}
 </style>

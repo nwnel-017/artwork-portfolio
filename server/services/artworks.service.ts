@@ -60,6 +60,7 @@ async function addArtwork(
         dimensions: artwork.dimensions,
         collection_id: artwork.collection,
         image_path: imageUrl,
+        cover_image: artwork.cover_image || false,
       })
       .select("id");
 
@@ -425,8 +426,9 @@ async function getLatestArtwork(supabase: SupabaseClient<Database>) {
     .from("artworks")
     .select("*")
     .eq("sold", false)
+    .eq("cover_image", true)
     .order("created_at", { ascending: false })
-    .limit(1);
+    .limit(3);
 
   if (error || !artworks || artworks.length === 0) {
     throw createError({
@@ -439,22 +441,23 @@ async function getLatestArtwork(supabase: SupabaseClient<Database>) {
     });
   }
 
-  const artwork = artworks[0];
+  // const artwork = artworks[0];
+  for (const artwork of artworks) {
+    // Get public URL for the image
+    if (artwork.image_path) {
+      const { data: publicData } = supabase.storage
+        .from("artwork_images")
+        .getPublicUrl(artwork.image_path);
+      artwork.image_path = publicData?.publicUrl;
 
-  // Get public URL for the image
-  if (artwork.image_path) {
-    const { data: publicData } = supabase.storage
-      .from("artwork_images")
-      .getPublicUrl(artwork.image_path);
-    artwork.image_path = publicData?.publicUrl;
-
-    if (!publicData) {
-      console.log("Error fetching public URL: ");
-      throw new Error("Failed to fetch public URL for artwork image!");
+      if (!publicData) {
+        console.log("Error fetching public URL: ");
+        throw new Error("Failed to fetch public URL for artwork image!");
+      }
     }
   }
 
-  return artwork;
+  return artworks;
 }
 
 async function getArtworkForCollection(

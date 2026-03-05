@@ -24,6 +24,7 @@ const artwork = reactive<ArtworkData>({
   price: "",
   dimensions: "",
   collection: "",
+  cover_image: false,
 });
 
 const collectionName = ref<string>("");
@@ -65,6 +66,7 @@ const submit = async () => {
     artwork.dimensions,
     artwork.price,
     artwork.collection,
+    artwork.cover_image || false,
   );
 
   if (!response.success) {
@@ -104,6 +106,10 @@ const submit = async () => {
           @select="selectCollection"
         />
         <span>{{ collectionName }}</span>
+      </div>
+      <div>
+        <input type="checkbox" v-model="artwork.cover_image" id="cover_image" />
+        <label for="cover_image">Set as collection cover image</label>
       </div>
       <button variant="primary" type="submit" size="sm">Submit</button>
     </form>
