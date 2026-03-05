@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import InstagramIcon from "./icons/InstagramIcon.vue";
+</script>
+
 <template>
   <div class="footer">
     <div>
@@ -13,7 +17,7 @@
       <div>
         jamiestambolie@gmail.com |
         <!-- <img src="/public/icons/instagram.svg" height="24px" width="24px" /> -->
-        IG
+        <InstagramIcon />
       </div>
     </div>
   </div>

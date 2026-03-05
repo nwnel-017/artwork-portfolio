@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/styles/main.css"],
-  modules: ["@nuxtjs/supabase", "nuxt-lottie", "@nuxt/image"],
+  modules: ["@nuxtjs/supabase", "nuxt-lottie", "@nuxt/image", "nuxt-svgo"],
   lottie: {
     componentName: "Lottie", // Optional: Customize the component name
     lottieFolder: "/assets/lottie", // Optional: Customize the Lottie folder path
