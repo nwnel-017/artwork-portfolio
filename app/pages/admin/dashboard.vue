@@ -29,14 +29,6 @@ const isLoading = computed(
   () => loadingStats.value || loadingArtworks.value || loadingOrders.value,
 );
 
-const contentLoaded = computed(
-  () => stats.value && artworks.value && orders.value,
-);
-
-const error = computed(
-  () => statsError.value || artworksError.value || ordersError.value,
-);
-
 watch(isLoading, (loading) => {
   if (loading) {
     startLoading();
@@ -125,7 +117,6 @@ watch(isLoading, (loading) => {
 
 <style scoped>
 section {
-  /* border: 1px solid var(--text-color); */
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -150,7 +141,6 @@ section {
   justify-content: space-between;
   gap: 1rem;
   border-radius: 8px;
-  /* min-height: 50vh; */
 }
 
 .panel {
@@ -175,7 +165,6 @@ section {
   justify-content: center;
   gap: 0;
   align-items: left;
-  /* background-color: #ffffff; */
 }
 
 .artworkCard {

@@ -5,8 +5,6 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "#types/supabase/database";
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAdmin(event);
-
   const id = event.context.params?.id as string;
 
   if (!id) {
@@ -21,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const supabase = (await serverSupabaseClient(
-      event
+      event,
     )) as SupabaseClient<Database>;
 
     const data = await getArtworkDetails(supabase, id);

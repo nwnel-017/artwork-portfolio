@@ -331,6 +331,12 @@ import { Toaster } from "vue-sonner";
   height: 40vh;
   border-radius: 8px;
   object-fit: cover;
+  /* opacity: 0.4; */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.collectionImg.visible {
   opacity: 0.4;
 }
 
@@ -359,10 +365,20 @@ import { Toaster } from "vue-sonner";
 }
 
 .imgLarge {
-  max-width: 100%;
-  max-height: 100%;
+  /* max-width: 100%;
+  max-height: 100%; */
+  width: 100%;
+  height: 100%;
   border-radius: 8px;
-  object-fit: cover;
+  /* object-fit: cover; */
+  object-fit: contain;
+  border: 1px solid var(--text-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.imgLarge.visible {
+  opacity: 1;
 }
 
 .artworkFull {
@@ -426,6 +442,12 @@ import { Toaster } from "vue-sonner";
   .artworksGrid {
     width: 80%;
   }
+
+  .imgLarge {
+    max-width: 80%;
+    max-height: 80%;
+    /* border: 2px solid black; */
+  }
 }
 
 @media (min-width: 1024px) {
@@ -439,6 +461,7 @@ import { Toaster } from "vue-sonner";
 
   .imgContainer {
     height: 70vh;
+    width: 50vw;
   }
 
   .artworksGrid {

@@ -10,7 +10,11 @@
     </div>
     <div>
       <div>CONTACT</div>
-      <div>jamiestambolie@gmail.com | IG</div>
+      <div>
+        jamiestambolie@gmail.com |
+        <!-- <img src="/public/icons/instagram.svg" height="24px" width="24px" /> -->
+        IG
+      </div>
     </div>
   </div>
 </template>

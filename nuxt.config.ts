@@ -5,9 +5,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles/main.css"],
   modules: ["@nuxtjs/supabase", "nuxt-lottie", "@nuxt/image"],
-  // image: {
-  //   domains: process.env.SUPABASE_DOMAIN ? [process.env.SUPABASE_DOMAIN] : [],
-  // },
   lottie: {
     componentName: "Lottie", // Optional: Customize the component name
     lottieFolder: "/assets/lottie", // Optional: Customize the Lottie folder path

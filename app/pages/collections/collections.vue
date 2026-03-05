@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useCollections } from "#imports";
+import type { CollectionCard } from "#types/collections/collection";
 
 definePageMeta({
   layout: "default",
@@ -7,8 +8,19 @@ definePageMeta({
 
 const { getCollections } = useCollections();
 
-// To Do: do we need an extra collection type including image_path?
 const { data: collections, pending, error } = await getCollections();
+
+const imagesLoaded = ref(0);
+
+const allImagesLoaded = computed(() => {
+  return (
+    imagesLoaded.value > 0 && imagesLoaded.value === collections.value?.length
+  );
+});
+
+function loadImage() {
+  imagesLoaded.value++;
+}
 
 async function viewCollection(collectionId: string) {
   console.log(collectionId);
@@ -32,12 +44,20 @@ async function viewCollection(collectionId: string) {
         @click="viewCollection(collection.id)"
         class="collectionContainer clickable"
       >
-        <NuxtImg
-          :src="collection?.image_path ?? undefined"
-          alt=""
-          class="collectionImg"
-          placeholder
-        />
+        <div class="collectionImgWrapper">
+          <NuxtImg
+            :src="collection?.image_path ?? undefined"
+            alt=""
+            class="collectionImg"
+            :class="{ visible: allImagesLoaded }"
+            @load="loadImage"
+          />
+          <Lottie
+            v-if="!allImagesLoaded"
+            name="img-placeholder"
+            class="imgOverlay"
+          />
+        </div>
         <div class="collectionDetails">
           <div>{{ collection?.collection_name }}</div>
         </div>
@@ -45,3 +65,25 @@ async function viewCollection(collectionId: string) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.collectionImgWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imgOverlay {
+  position: absolute;
+  background: var(--theme-off-white);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 1;
+}
+</style>

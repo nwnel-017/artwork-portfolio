@@ -2,12 +2,23 @@
 import type { Database } from "#types/supabase/database";
 type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
 
-const { artworks } = defineProps<{
+const props = defineProps<{
   artworks: ArtworkRow[];
 }>();
 
 const displayArtworkPopup = ref(false);
 const selectedArtwork = ref<ArtworkRow | null>(null);
+const imagesLoaded = ref(0);
+
+const allImagesLoaded = computed(() => {
+  return (
+    props.artworks.length > 0 && props.artworks.length === imagesLoaded.value
+  );
+});
+
+function loadImage() {
+  imagesLoaded.value++;
+}
 
 function openPopup(artwork: ArtworkRow) {
   if (artwork?.sold) return;
@@ -20,9 +31,8 @@ function closePopup() {
   displayArtworkPopup.value = false;
 }
 
-async function viewArtwork(id: string) {
-  console.log("viewing: " + id);
-
+async function viewArtwork(id: string, sold: boolean) {
+  if (sold) return;
   // Doing a full page reload - preference for a clean UX
   await navigateTo(`/artworks/${id}`, { external: true });
 }
@@ -63,17 +73,26 @@ async function payWithStripe() {
   </div>
   <div class="artworksGrid">
     <div
-      v-for="artwork in artworks"
+      v-for="artwork in props.artworks"
       :key="artwork.id"
-      @click="viewArtwork(artwork.id)"
-      class="artworkContainer clickable"
+      @click="viewArtwork(artwork.id, artwork.sold)"
+      class="artworkContainer"
+      :class="{ clickable: !artwork.sold }"
     >
-      <NuxtImg
-        :src="artwork?.image_path ?? undefined"
-        alt=""
-        class="artwork"
-        placeholder
-      />
+      <div class="imageWrapper">
+        <NuxtImg
+          :src="artwork?.image_path ?? undefined"
+          alt=""
+          class="artwork"
+          @load="loadImage"
+          :class="{ visible: allImagesLoaded }"
+        />
+        <Lottie
+          v-if="!allImagesLoaded"
+          name="img-placeholder"
+          class="artwork visible imgOverlay"
+        />
+      </div>
       <div class="artDetails">
         <div>{{ artwork?.title }}</div>
         <div v-if="!artwork?.sold">${{ artwork?.price }}</div>
@@ -84,6 +103,7 @@ async function payWithStripe() {
 
 <style scoped>
 .artworkContainer {
+  position: relative;
   padding: 0.5rem;
   background-color: var(--theme-white);
   box-shadow:
@@ -94,6 +114,12 @@ async function payWithStripe() {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
 }
 
 .artDetails {
@@ -112,11 +138,28 @@ async function payWithStripe() {
   gap: 1.5rem;
 }
 
+.imgOverlay {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  margin: auto;
+  opacity: 1;
+  inset: 0;
+  z-index: 10;
+  background: var(--theme-off-white);
+}
+
 .artwork {
   width: 5rem;
   height: 5rem;
   border-radius: 8px;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.artwork.visible {
+  opacity: 1;
 }
 
 .clickable {

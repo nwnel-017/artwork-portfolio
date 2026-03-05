@@ -6,11 +6,9 @@ import { Database } from "#types/supabase/database";
 export default defineEventHandler(async (event) => {
   console.log("retrieving artworks!");
 
-  const adminUser = await requireAdmin(event);
-
   try {
     const supabase = (await serverSupabaseClient(
-      event
+      event,
     )) as SupabaseClient<Database>;
     const data = await getArtworks(supabase);
     return data;

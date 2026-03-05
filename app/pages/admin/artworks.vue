@@ -9,6 +9,8 @@ definePageMeta({
 const { getArtworks } = useArtworks();
 const { startLoading, stopLoading } = useLoading();
 
+const imagesLoaded = ref(false);
+
 const { data: artworks, error, pending } = await getArtworks();
 
 watch(pending, (newVal) => {
@@ -16,6 +18,22 @@ watch(pending, (newVal) => {
     startLoading();
   } else {
     stopLoading();
+  }
+});
+
+watch(artworks, async (val) => {
+  if (val) {
+    const imagePromises = val.map((artwork) => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = artwork?.image_path ?? "";
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(true);
+      });
+    });
+
+    await Promise.all(imagePromises);
+    imagesLoaded.value = true;
   }
 });
 
@@ -49,11 +67,13 @@ const editArtwork = (artworkId: string) => {
           >
             <div class="imageCell">
               <NuxtImg
+                v-if="imagesLoaded"
                 :src="artwork?.image_path ?? undefined"
                 alt=""
                 class="artworkImg"
                 placeholder
               />
+              <Lottie v-else name="img-placeholder" class="artworkImg" />
             </div>
             <div class="cutoffText gridText">{{ artwork?.title }}</div>
             <div class="cutoffText gridText">

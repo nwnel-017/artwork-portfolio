@@ -42,6 +42,18 @@ const prevImage = () => {
   currentIndex.value = (currentIndex.value - 1 + images.length) % images.length;
 };
 
+const imagesLoaded = ref(0);
+
+const allImagesLoaded = computed(() => {
+  return (
+    imagesLoaded.value > 0 && imagesLoaded.value === galleryImages.value?.length
+  );
+});
+
+function loadImage() {
+  imagesLoaded.value++;
+}
+
 async function payWithStripe() {
   try {
     const { url } = await $fetch<{ url: string }>(
@@ -77,6 +89,13 @@ async function payWithStripe() {
           :src="currentImage?.image_path ?? undefined"
           alt=""
           class="imgLarge clickable"
+          :class="{ visible: allImagesLoaded }"
+          @load="loadImage"
+        />
+        <Lottie
+          v-if="!allImagesLoaded"
+          name="img-placeholder"
+          class="imgOverlay"
         />
         <ArrowButton @click="nextImage" />
       </div>
@@ -95,4 +114,15 @@ async function payWithStripe() {
   </div>
 </template>
 
-<!-- <style scoped></style> -->
+<style scoped>
+.imgOverlay {
+  position: absolute;
+  background: var(--theme-off-white);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 1;
+}
+</style>
