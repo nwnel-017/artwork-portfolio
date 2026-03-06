@@ -7,6 +7,8 @@ import { requireAdmin } from "@server/utils/auth/requireAdmin";
 import { UploadInput } from "~~/server/services/storage.service";
 import type { ArtworkData } from "#types/artworks/artworks";
 import { fi } from "zod/locales";
+import { extractArtworkFormData } from "~~/server/utils/form/artworkForm";
+import { validateImageFile } from "~~/utils/validation/image";
 
 export default defineEventHandler(async (event) => {
   const adminUser = await requireAdmin(event);
@@ -24,27 +26,23 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // To Do: move logic to extractArtwork util function
-  const artworkForm: ArtworkData = {
-    title: form.find((field) => field.name === "title")?.data?.toString() || "",
-    description:
-      form.find((field) => field.name === "description")?.data?.toString() ||
-      "",
-    price: form.find((field) => field.name === "price")?.data?.toString() || "",
-    dimensions:
-      form.find((field) => field.name === "dimensions")?.data?.toString() || "",
-    collection:
-      form.find((field) => field.name === "collection")?.data?.toString() || "",
-    cover_image:
-      form.find((field) => field.name === "cover_image")?.data?.toString() ===
-        "true" || false,
-  };
+  const artworkForm: ArtworkData = extractArtworkFormData(form);
 
   console.log("collection id found in route: " + artworkForm.collection);
 
   const imageField = form.find((field) => field.name === "image");
 
-  const validatedForm = await validateNewArtworkForm(artworkForm); // expects object
+  if (!artworkForm || !imageField) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      data: {
+        message: "Invalid form!",
+      },
+    });
+  }
+
+  const validatedForm = await validateNewArtworkForm(artworkForm);
   if (!validatedForm.success) {
     // invalid form
     console.log("Invalid form!");
@@ -64,7 +62,18 @@ export default defineEventHandler(async (event) => {
     contentType: imageField?.type || "application/octet-stream",
   };
 
-  // To Do:  call image validation with validateImage()
+  // validate image
+  if (!validateImageFile(image)) {
+    console.log("Invalid image file!");
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      data: {
+        message: "Invalid image file!",
+      },
+    });
+  }
+  console.log("image validation passed");
 
   try {
     const supabase = (await serverSupabaseClient(

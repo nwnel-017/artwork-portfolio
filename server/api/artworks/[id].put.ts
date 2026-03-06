@@ -1,12 +1,11 @@
 import { requireAdmin } from "@server/utils/auth/requireAdmin";
 import { updateArtwork } from "@server/services/artworks.service";
 import { serverSupabaseClient } from "#supabase/server";
-import {
-  validateExistingArtworkForm,
-  validateNewArtworkForm,
-} from "@utils/validation/form";
+import { validateNewArtworkForm } from "@utils/validation/form";
+import { validateImageFile } from "~~/utils/validation/image";
 import type { ArtworkData } from "#types/artworks/artworks";
 import type { UploadInput } from "#types/files/files";
+import { extractArtworkFormData } from "~~/server/utils/form/artworkForm";
 
 export default defineEventHandler(async (event) => {
   console.log("updating artwork!");
@@ -45,7 +44,6 @@ export default defineEventHandler(async (event) => {
   };
 
   const imageField = form.find((field) => field.name === "image");
-
   const image: UploadInput = {
     filename: imageField?.filename || "",
     buffer: imageField?.data || Buffer.from([]),
@@ -54,7 +52,6 @@ export default defineEventHandler(async (event) => {
   };
 
   // validate artwork
-  // const validatedForm = await validateExistingArtworkForm(form); // expects object
   const validatedForm = await validateNewArtworkForm(artworkForm); // expects object
   if (!validatedForm.success) {
     // invalid form
@@ -68,8 +65,18 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // To Do: image validation with validateImage()
-  // const validatedImage = validateImage(imageField);
+  // image validation
+  if (!validateImageFile(image)) {
+    console.log("Invalid image file!");
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      data: {
+        message: "Invalid image file!",
+      },
+    });
+  }
+  console.log("image validation passed");
 
   try {
     await updateArtwork(supabase, id, artworkForm, image);

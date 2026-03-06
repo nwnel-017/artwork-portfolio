@@ -6,13 +6,8 @@ import { Database } from "#types/supabase/database";
 
 export default defineEventHandler(async (event) => {
   console.log("hit gallery GET api route");
-  // const user = await requireAdmin(event);
 
   const id = event.context.params?.id as string;
-
-  // const query = getQuery(event);
-  // const limit = parseInt(query.limit as string) || 1;
-  // const offset = parseInt(query.offset as string) || 0;
 
   if (!id) {
     throw createError({

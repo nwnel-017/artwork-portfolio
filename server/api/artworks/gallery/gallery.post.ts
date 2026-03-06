@@ -48,23 +48,6 @@ export default defineEventHandler(async (event) => {
 
   // change - we shouldnt throw 500 error for validation issues
   try {
-    // To Do: no artwork validation required - just call validateImage on each item in images[]
-    // const validated = await validateGalleryImages(artworkId, images);
-
-    // if (!validated) {
-    //   console.log("Gallery image validation failed");
-    //   throw createError({
-    //     statusCode: 400,
-    //     message: "Invalid gallery image data!",
-    //   });
-    // }
-
-    // const uploadImages: UploadInput[] = validated.images.map((img) => ({
-    //   filename: img.filename,
-    //   buffer: img.data,
-    //   contentType: img.contentType,
-    // }));
-
     const supabase = await serverSupabaseClient(event);
 
     await addGalleryImages(supabase, artworkId, images);

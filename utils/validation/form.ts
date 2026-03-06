@@ -1,5 +1,5 @@
-import { file, z } from "zod";
-import type { MultiPartData, createError } from "h3";
+import { z } from "zod";
+import type { MultiPartData } from "h3";
 import { validateImageFile } from "./image";
 import type { ArtworkData } from "#types/artworks/artworks";
 import type { UploadInput } from "~~/server/services/storage.service";
@@ -53,8 +53,7 @@ export const existingArtworkFormSchema = z
     description: z.string().min(1, { message: "Description is required" }),
     price: priceSchema,
     dimensions: z.string().min(1, { message: "Dimensions are required" }),
-    // publishDate: isoDateString,
-    image: z.custom<File>((v) => v instanceof FileType),
+    image: z.custom<File>((v) => v instanceof FileType).optional(),
   })
   .strict()
   .strip();
@@ -80,110 +79,12 @@ export type ExistingArtworkForm = z.infer<typeof existingArtworkFormSchema>;
 export const validateNewArtworkForm = async (form: ArtworkData) => {
   console.log("safe parsing artwork form...");
 
-  // Convert to File object
-  // image is a File object?
-  // use this file object to validate the image
-  // remove this later - using File object is not reliable
-
   if (!form) {
     console.log("No form data received!");
     return { success: false, message: "No form data received" };
   }
 
-  // wrong - call image validator from api endpoint
-  // const imageFile = imageField
-  //   ? new File(
-  //       [new Uint8Array(imageField.data)],
-  //       imageField.filename || "image",
-  //       { type: imageField.type },
-  //     )
-  //   : new File([], "");
-
-  // try {
-  //   validateImageFile(imageFile);
-  // } catch (error) {
-  //   console.log("Image validation failed:", error);
-  //   // const zodError = new z.ZodError([
-  //   //   {
-  //   //     code: z.ZodIssueCode.custom,
-  //   //     path: ["image"],
-  //   //     message:
-  //   //       error instanceof Error ? error.message : "Failed to validate image!",
-  //   //   },
-  //   // ]);
-  //   // // To Do: handle this error properly and consistently with other errors
-  //   // return {
-  //   //   success: false as const,
-  //   //   error: zodError,
-  //   // };
-  //   throw new Error("Validation failed");
-  // }
-
-  // console.log("Image validation passed");
-
-  // const buffer = imageField?.data;
-  // const name = imageField?.filename || "image";
-
-  // if (!buffer || !name) {
-  //   // const zodError = new z.ZodError([
-  //   //   {
-  //   //     code: z.ZodIssueCode.custom,
-  //   //     path: ["image"],
-  //   //     message: "Image is required",
-  //   //   },
-  //   // ]);
-  //   // return {
-  //   //   success: false as const,
-  //   //   error: zodError,
-  //   // };
-  //   console.log("Missing image data!");
-  //   throw new Error("Validation failed");
-  // }
-
-  // const image = {
-  //   filename: name,
-  //   buffer: buffer,
-  //   size: buffer.length,
-  //   contentType: imageField.type,
-  // };
-
-  // // console.log("Validated image:", validatedImage); // validatedImage is correct
-
-  // // const formData = { title, description, artist, price, dimensions, image };
-  // const formData = {
-  //   title,
-  //   description,
-  //   price,
-  //   dimensions,
-  //   image, // "Invalid input: expected object, received undefined"
-  // };
-
-  // const parsed = artworkFormSchema.safeParse(formData); // heres where were failing
-
   const parsed = artworkFormSchema.safeParse(form);
-
-  // if (!parsed.success) {
-  //   console.log("Artwork form validation failed:", parsed.error);
-  //   throw new Error("Artwork form validation failed");
-  // }
-
-  // try {
-  //   validateImageFile(parsed.data.image);
-  // } catch (error) {
-  //   console.log("Image validation failed:", error);
-  //   const zodError = new z.ZodError([
-  //     {
-  //       code: z.ZodIssueCode.custom,
-  //       path: ["image"],
-  //       message:
-  //         error instanceof Error ? error.message : "Failed to validate image!",
-  //     },
-  //   ]);
-  //   return {
-  //     success: false as const,
-  //     error: zodError,
-  //   };
-  // }
 
   return parsed;
 };
@@ -202,17 +103,18 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
   const imageField = form.find((field) => field.name === "image");
   const dimensions =
     form.find((field) => field.name === "dimensions")?.data?.toString() || "";
-  // const publishDate =
-  //   form.find((field) => field.name === "publishDate")?.data?.toString() || "";
 
   // Convert to File object
-  const image = imageField
-    ? new File(
-        [new Uint8Array(imageField.data)],
-        imageField.filename || "image",
-        { type: imageField.type },
-      )
-    : new File([], "");
+  let image: File | undefined = undefined;
+  if (imageField && imageField.data) {
+    image = imageField
+      ? new File(
+          [new Uint8Array(imageField.data)],
+          imageField.filename || "image",
+          { type: imageField.type },
+        )
+      : new File([], "");
+  }
 
   const formData = {
     id,
@@ -229,23 +131,23 @@ export const validateExistingArtworkForm = async (form: MultiPartData[]) => {
     return parsed;
   }
 
-  try {
-    validateImageFile(parsed.data.image);
-  } catch (error) {
-    console.log("Image validation failed:", error);
-    const zodError = new z.ZodError([
-      {
-        code: z.ZodIssueCode.custom,
-        path: ["image"],
-        message:
-          error instanceof Error ? error.message : "Failed to validate image!",
-      },
-    ]);
-    return {
-      success: false as const,
-      error: zodError,
-    };
-  }
+  // try {
+  //   validateImageFile(parsed.data.image);
+  // } catch (error) {
+  //   console.log("Image validation failed:", error);
+  //   const zodError = new z.ZodError([
+  //     {
+  //       code: z.ZodIssueCode.custom,
+  //       path: ["image"],
+  //       message:
+  //         error instanceof Error ? error.message : "Failed to validate image!",
+  //     },
+  //   ]);
+  //   return {
+  //     success: false as const,
+  //     error: zodError,
+  //   };
+  // }
 
   return parsed;
 };

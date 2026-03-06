@@ -10,13 +10,9 @@
 
 <style scoped>
 .igIcon {
-  width: 14px;
-  height: 14px;
-}
-
-.igIcon :deep(svg) {
-  width: 100%;
-  height: 100%;
+  width: 12px;
+  height: 12px;
+  color: var(--text-color);
 }
 
 a {

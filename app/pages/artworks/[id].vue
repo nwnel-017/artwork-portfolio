@@ -8,20 +8,29 @@ const route = useRoute();
 const id = computed(() => route.params.id as string);
 
 const { getGalleryImages } = useGallery();
+const { startLoading, stopLoading } = useLoading();
 
 const {
   data: artwork,
-  pending,
+  pending: pendingArtwork,
   error,
 } = await useFetch<ArtworkRow>(`/api/artworks/${id.value}`);
 
 // To Do: research useAsyncData - best practice and why to use
-const { data: galleryImages } = await useAsyncData<GalleryRow[]>(
-  `gallery-${route.params.id}`,
-  () => getGalleryImages(id.value as string),
-);
+const { data: galleryImages, pending: pendingGallery } = await useAsyncData<
+  GalleryRow[]
+>(`gallery-${route.params.id}`, () => getGalleryImages(id.value as string));
 
 const currentIndex = ref(0);
+const loading = computed(() => pendingArtwork.value || pendingGallery.value);
+
+watch(loading, (val) => {
+  if (val) {
+    startLoading();
+  } else {
+    stopLoading();
+  }
+});
 
 const currentImage = computed<GalleryRow | null>(() => {
   if (!galleryImages.value) return null;
@@ -30,28 +39,28 @@ const currentImage = computed<GalleryRow | null>(() => {
 
 const nextImage = () => {
   const images = galleryImages.value;
-  if (!images?.length) return;
+  if (!images?.length || images?.length < 2) return;
 
   currentIndex.value = (currentIndex.value + 1) % images.length;
+  if (imageLoaded.value) {
+    imageLoaded.value = false;
+  }
 };
 
 const prevImage = () => {
   const images = galleryImages.value;
-  if (!images?.length) return;
+  if (!images?.length || images?.length < 2) return;
 
   currentIndex.value = (currentIndex.value - 1 + images.length) % images.length;
+  if (imageLoaded.value) {
+    imageLoaded.value = false;
+  }
 };
 
-const imagesLoaded = ref(0);
-
-const allImagesLoaded = computed(() => {
-  return (
-    imagesLoaded.value > 0 && imagesLoaded.value === galleryImages.value?.length
-  );
-});
+const imageLoaded = ref(false);
 
 function loadImage() {
-  imagesLoaded.value++;
+  imageLoaded.value = true;
 }
 
 async function payWithStripe() {
@@ -80,23 +89,17 @@ async function payWithStripe() {
 
 <template>
   <div>
-    <div v-if="pending">Loading</div>
-    <div v-else-if="error">Something went wrong</div>
-    <div v-else-if="artwork" class="verticalContent">
+    <div v-if="artwork" class="verticalContent">
       <div class="imgContainer">
         <ArrowButton direction="left" @click="prevImage" />
         <NuxtImg
           :src="currentImage?.image_path ?? undefined"
           alt=""
           class="imgLarge clickable"
-          :class="{ visible: allImagesLoaded }"
+          :class="{ visible: imageLoaded }"
           @load="loadImage"
         />
-        <Lottie
-          v-if="!allImagesLoaded"
-          name="img-placeholder"
-          class="imgOverlay"
-        />
+        <Lottie v-if="!imageLoaded" name="img-placeholder" class="imgOverlay" />
         <ArrowButton @click="nextImage" />
       </div>
       <div class="clmGap paddedSides">

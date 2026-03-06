@@ -20,12 +20,6 @@ function loadImage() {
   imagesLoaded.value++;
 }
 
-function openPopup(artwork: ArtworkRow) {
-  if (artwork?.sold) return;
-  selectedArtwork.value = artwork;
-  displayArtworkPopup.value = true;
-}
-
 function closePopup() {
   selectedArtwork.value = null;
   displayArtworkPopup.value = false;
@@ -34,40 +28,34 @@ function closePopup() {
 async function viewArtwork(id: string, sold: boolean) {
   if (sold) return;
   // Doing a full page reload - preference for a clean UX
-  await navigateTo(`/artworks/${id}`, { external: true });
+  await navigateTo(`/artworks/${id}`);
 }
 
-async function payWithStripe() {
-  try {
-    const { url } = await $fetch<{ url: string }>(
-      "/api/stripe/create-checkout-session",
-      {
-        method: "POST",
-        body: {
-          artworkId: selectedArtwork.value?.id,
-        },
-      },
-    );
+// async function payWithStripe() {
+//   try {
+//     const { url } = await $fetch<{ url: string }>(
+//       "/api/stripe/create-checkout-session",
+//       {
+//         method: "POST",
+//         body: {
+//           artworkId: selectedArtwork.value?.id,
+//         },
+//       },
+//     );
 
-    if (url) {
-      window.location.href = url;
-    }
-  } catch (err) {
-    console.log(
-      "There was an error retrieving Stripe checkout session: " + err,
-    );
-    throw new Error("Failed to retrieve stripe checkout session");
-  }
-}
+//     if (url) {
+//       window.location.href = url;
+//     }
+//   } catch (err) {
+//     console.log(
+//       "There was an error retrieving Stripe checkout session: " + err,
+//     );
+//     throw new Error("Failed to retrieve stripe checkout session");
+//   }
+// }
 </script>
 
 <template>
-  <ArtworkDetails
-    v-if="displayArtworkPopup && selectedArtwork"
-    :artwork="selectedArtwork"
-    @close="closePopup"
-    @checkout="payWithStripe"
-  />
   <div class="textBlock">
     <h1>Artworks</h1>
   </div>
@@ -94,8 +82,9 @@ async function payWithStripe() {
         />
       </div>
       <div class="artDetails">
-        <div>{{ artwork?.title }}</div>
-        <div v-if="!artwork?.sold">${{ artwork?.price }}</div>
+        <div class="artTitle">{{ artwork?.title }}</div>
+        <div v-if="!artwork?.sold" class="price">${{ artwork?.price }}</div>
+        <div v-else>Sold</div>
       </div>
     </div>
   </div>
@@ -103,6 +92,7 @@ async function payWithStripe() {
 
 <style scoped>
 .artworkContainer {
+  width: 100%;
   position: relative;
   padding: 0.5rem;
   background-color: var(--theme-white);
@@ -123,9 +113,35 @@ async function payWithStripe() {
 }
 
 .artDetails {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   line-height: 1rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
+
+.price {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.artTitle {
+  width: 5rem;
+  min-width: 0;
+  flex-shrink: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.cutoffTxtSm {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .soldArtwork {
   opacity: 0.4;
   filter: grayscale(70%);
@@ -175,6 +191,14 @@ async function payWithStripe() {
 @media (min-width: 1024px) {
   .artworksGrid {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .artDetails {
+    font-size: 0.9rem;
+  }
+
+  .artTitle {
+    width: 100%;
   }
 }
 </style>

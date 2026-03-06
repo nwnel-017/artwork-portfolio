@@ -1,33 +1,26 @@
-export function validateImageFile(file: File | File[] | null | undefined) {
-  // Normalize arrays (e.g., FormData entries can be File[] or empty arrays)
-  if (Array.isArray(file)) {
-    file = file[0];
-  }
+import type { UploadInput } from "~~/server/services/storage.service";
 
+export function validateImageFile(file?: UploadInput | null) {
   if (!file) {
-    throw new Error("No file provided.");
+    return false;
   }
 
-  // Runtime guard in case a non-File sneaks through
-  if (!(file instanceof File)) {
-    throw new Error("Invalid file input.");
-  }
-
+  // Check for valid content type
   const validImageTypes = [
     "image/jpeg",
     "image/png",
     "image/gif",
     "image/webp",
   ];
-  const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+  if (!validImageTypes.includes(file?.contentType || "")) {
+    return false;
+  }
 
-  if (!validImageTypes.includes(file.type)) {
-    throw new Error(
-      "Invalid image type. Allowed types are JPEG, PNG, GIF, and WEBP."
-    );
+  // Check file size
+  const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+  if (file?.size && file.size > maxSizeInBytes) {
+    return false;
   }
-  if (file.size > maxSizeInBytes) {
-    throw new Error("Image size exceeds the maximum limit of 5MB.");
-  }
+
   return true;
 }

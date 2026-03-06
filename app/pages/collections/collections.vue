@@ -12,9 +12,14 @@ const { data: collections, pending, error } = await getCollections();
 
 const imagesLoaded = ref(0);
 
+const collectionWithImages = computed<CollectionCard[]>(() => {
+  return collections.value?.filter((collection) => collection.image_path) ?? [];
+});
+
 const allImagesLoaded = computed(() => {
   return (
-    imagesLoaded.value > 0 && imagesLoaded.value === collections.value?.length
+    imagesLoaded.value > 0 &&
+    imagesLoaded.value === collectionWithImages.value?.length
   );
 });
 

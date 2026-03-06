@@ -232,7 +232,7 @@ import { Toaster } from "vue-sonner";
 } */
 
 .border {
-  border: 2px solid black;
+  border: 1px solid black;
 }
 
 .largeWidth {
@@ -280,6 +280,7 @@ import { Toaster } from "vue-sonner";
     0 2px 6px rgba(0, 0, 0, 0.04);
   border-radius: 8px;
   display: flex;
+  max-width: 100%;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
@@ -303,8 +304,10 @@ import { Toaster } from "vue-sonner";
   display: grid;
   width: 100%;
   max-width: 100%;
-  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
+  align-items: stretch;
 }
 
 .collectionsGrid {

@@ -30,7 +30,6 @@ const artworkId = computed(() => route.params.id as string);
 const { data: artwork, pending, error } = await getArtwork(artworkId.value);
 
 const editedArtwork = ref<ArtworkData>({
-  // id: "",
   title: "",
   description: "",
   dimensions: "",
@@ -80,9 +79,9 @@ async function save() {
   const newDesc = editedArtwork.value.description;
   const newPrice = editedArtwork.value.price;
   const newDimensions = editedArtwork.value.dimensions;
-  const newImage = image.value;
+  const newImage = image?.value;
 
-  if (!newTitle || !newDesc || !newPrice || !newImage || !newDimensions) {
+  if (!newTitle || !newDesc || !newPrice || !newDimensions) {
     console.log("new title: " + newTitle);
     console.log("new desc: " + newDesc);
     console.log("new price: " + newPrice);
@@ -106,7 +105,7 @@ async function save() {
   form.append("description", newDesc);
   form.append("dimensions", newDimensions);
   form.append("price", newPrice);
-  form.append("image", newImage);
+  if (newImage) form.append("image", newImage);
 
   try {
     startLoading();

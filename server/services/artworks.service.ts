@@ -97,9 +97,9 @@ async function updateArtwork(
   supabase: SupabaseClient<Database>,
   id: string,
   artwork: ArtworkData,
-  image: UploadInput,
+  image?: UploadInput,
 ) {
-  if (!id || !artwork || !supabase || !image) {
+  if (!id || !artwork || !supabase) {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal Error",
@@ -147,20 +147,37 @@ async function updateArtwork(
     throw new Error("No existing image path found for artist");
   }
 
-  try {
+  let imagePath;
+  if (image && imagePath != existingImagePath) {
     await deleteFile(supabase, existingImagePath, "artwork_images");
-    const imagePath = await uploadFile(supabase, image, "artwork_images");
-    console.log("image uploaded with public url:", imagePath.publicUrl);
-    await supabase
-      .from("artworks")
-      .update({
-        title: artwork.title,
-        description: artwork.description,
-        price: parsedPrice,
-        image_path: imagePath.path,
-        dimensions: artwork.dimensions,
-      })
-      .eq("id", id);
+    imagePath = await uploadFile(supabase, image, "artwork_images");
+  }
+  try {
+    // await deleteFile(supabase, existingImagePath, "artwork_images");
+    // const imagePath = await uploadFile(supabase, image, "artwork_images");
+    // console.log("image uploaded with public url:", imagePath.publicUrl);
+    if (imagePath) {
+      await supabase
+        .from("artworks")
+        .update({
+          title: artwork.title,
+          description: artwork.description,
+          price: parsedPrice,
+          image_path: imagePath.path,
+          dimensions: artwork.dimensions,
+        })
+        .eq("id", id);
+    } else {
+      await supabase
+        .from("artworks")
+        .update({
+          title: artwork.title,
+          description: artwork.description,
+          price: parsedPrice,
+          dimensions: artwork.dimensions,
+        })
+        .eq("id", id);
+    }
   } catch (err) {
     console.log("failed to update artist:", err);
     throw createError({
