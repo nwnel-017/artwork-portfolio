@@ -1,8 +1,12 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import { fileURLToPath } from "url";
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  app: {
+    head: {
+      meta: [{ name: "color-scheme", content: "light" }],
+    },
+  },
   css: ["~/assets/styles/main.css"],
   modules: ["@nuxtjs/supabase", "nuxt-lottie", "@nuxt/image", "nuxt-svgo"],
   lottie: {

@@ -13,7 +13,7 @@ body {
   color: var(--text-color);
   background-color: var(--theme-off-white);
 
-  color-scheme: light dark;
+  color-scheme: light;
   --theme-white: rgba(255, 255, 255, 0.87);
   --theme-off-white: rgba(239, 229, 229, 0.267);
   --theme-grey: #9c9393;
