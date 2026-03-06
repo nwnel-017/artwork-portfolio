@@ -61,7 +61,6 @@ const closeNav = () => {
 .navHeader {
   font-weight: bold;
   font-size: 1.5rem;
-  /* margin-bottom: 0.75rem; */
 }
 
 .navBar {
@@ -90,7 +89,7 @@ const closeNav = () => {
   border-radius: 8px;
   z-index: 999;
   width: 50%;
-  min-height: 70vh;
+  min-height: 70dvh;
   padding: 2rem;
 }
 

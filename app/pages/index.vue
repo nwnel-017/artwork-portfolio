@@ -52,7 +52,7 @@ const {
 
 .lndPadImgContainer {
   width: 100%;
-  height: 6rem;
+  height: 8rem;
   overflow: hidden;
 }
 

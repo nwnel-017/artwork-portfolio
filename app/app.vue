@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import "vue-sonner/style.css";
 import { Toaster } from "vue-sonner";
-// import "vue-sonner/dist/style.css";
 </script>
 <template>
-  <!-- <div> -->
   <NuxtLoadingIndicator color="var(--text-color)" :height="2" />
   <LoadingOverlay />
   <NuxtLayout>
@@ -13,13 +11,10 @@ import { Toaster } from "vue-sonner";
       position="top-center"
       :toastOptions="{
         class: 'toast',
-        // success: { className: 'toastSuccess' },
-        // fail: { className: 'toastFail' },
       }"
     />
     <NuxtPage />
   </NuxtLayout>
-  <!-- </div> -->
 </template>
 
 <style>
@@ -31,10 +26,9 @@ import { Toaster } from "vue-sonner";
 
 .page {
   width: 100vw;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  /* padding: 1rem; */
 }
 
 .spaceBetween {
@@ -76,7 +70,6 @@ import { Toaster } from "vue-sonner";
 .verticalContent {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
 }
 
@@ -105,7 +98,8 @@ import { Toaster } from "vue-sonner";
 }
 
 .fillPage {
-  width: 100vw;
+  width: 100dvw;
+  /* min-height: 100dvh; */
 }
 
 .submissionForm {
