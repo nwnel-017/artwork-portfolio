@@ -1,11 +1,16 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { iso } from "zod";
 
 const isOpen = ref(false);
 
 const toggleNav = () => {
   isOpen.value = !isOpen.value;
   console.log("Toggled nav to:", isOpen.value);
+};
+
+const closeNav = () => {
+  isOpen.value = false;
 };
 </script>
 
@@ -15,20 +20,20 @@ const toggleNav = () => {
       <div class="navHeader">JAMIE NELSON ART</div>
       <div class="linkItems" :class="{ expanded: isOpen }">
         <div class="verticalSpaced">
-          <NuxtLink to="/" class="dashLink" @click="toggleNav">HOME</NuxtLink>
+          <NuxtLink to="/" class="dashLink" @click="closeNav">HOME</NuxtLink>
           <NuxtLink
             to="/collections/collections"
-            @click="toggleNav"
+            @click="closeNav"
             class="dashLink"
             >AVAILABLE ARTWORKS</NuxtLink
           >
-          <NuxtLink to="/artworks/gallery" class="dashLink" @click="toggleNav"
+          <NuxtLink to="/artworks/gallery" class="dashLink" @click="closeNav"
             >PORTFOLIO</NuxtLink
           >
-          <NuxtLink to="/about" class="dashLink" @click="toggleNav"
+          <NuxtLink to="/about" class="dashLink" @click="closeNav"
             >ABOUT THE ARTIST</NuxtLink
           >
-          <NuxtLink to="/contact" class="dashLink" @click="toggleNav"
+          <NuxtLink to="/contact" class="dashLink" @click="closeNav"
             >CONTACT</NuxtLink
           >
         </div>
