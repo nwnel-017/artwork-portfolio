@@ -8,18 +8,6 @@ definePageMeta({
   middleware: "admin",
 });
 
-// TO DO: fix backend - getting error "invalid form"
-
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later;
-type EditedArtwork = {
-  id: string;
-  title: string;
-  description: string;
-  dimensions: string;
-  price: string;
-  image: File | null;
-};
-
 const { startLoading, stopLoading } = useLoading();
 const { getArtwork, updateArtwork, removeArtwork } = useArtworks();
 
@@ -71,12 +59,6 @@ function stopEdit() {
   image.value = null;
 }
 
-function handleImageChange(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const file = target?.files ? target.files[0] : null;
-  image.value = file || null;
-}
-
 // To Do: move to useArtworks composable
 async function save() {
   console.log("saving!");
@@ -89,10 +71,6 @@ async function save() {
   const newNote = editedArtwork.value.artwork_note || "";
   const newCoverImageValue = editedArtwork.value.cover_image;
   if (!newTitle || !newDesc || !newPrice || !newDimensions || !newCollection) {
-    console.log("new title: " + newTitle);
-    console.log("new desc: " + newDesc);
-    console.log("new price: " + newPrice);
-    console.log("new dimensions: " + newDimensions);
     toast.error("Please change at least one field to update the artwork");
     return;
   }

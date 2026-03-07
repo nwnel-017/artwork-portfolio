@@ -1,17 +1,19 @@
 <script lang="ts" setup>
+import type { Artwork } from "~~/types/artworks/artworks";
+
 definePageMeta({
   layout: "default",
 });
 
-type Artwork = {
-  id: string;
-  title: string;
-  description: string;
-  image_path: string;
-  sold: boolean;
-  price: number;
-  created_at: string;
-};
+// type Artwork = {
+//   id: string;
+//   title: string;
+//   description: string;
+//   image_path: string;
+//   sold: boolean;
+//   price: number;
+//   created_at: string;
+// };
 
 const {
   data: artworks,
@@ -32,6 +34,7 @@ const {
           alt="Artwork"
           class="artworkLg"
         />
+        <!-- <ImgCarousal v-else :artworks="artworks" /> -->
       </div>
       <div class="landingText">
         <h1>WELCOME</h1>
@@ -52,7 +55,7 @@ const {
 
 .lndPadImgContainer {
   width: 100%;
-  height: 8rem;
+  height: 10rem;
   overflow: hidden;
 }
 

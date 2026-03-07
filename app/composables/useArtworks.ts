@@ -103,48 +103,11 @@ export function useArtworks() {
   };
 
   const addArtworkImages = async (artworkId: string, form: FormData) => {
-    // Validation
-    // if (!artworkId || !form) {
-    //   return {
-    //     success: false,
-    //     message: "Artwork ID and images are required!",
-    //   };
-    // }
-
-    // Create FormData
-    // const formData = new FormData();
-    // formData.append("artworkId", artworkId);
-    // images.forEach((image, index) => {
-    //   formData.append(`image`, image);
-    // });
-
-    // try {
     console.log("Submitting artwork images...");
     return await $fetch("/api/artworks/gallery/gallery", {
       method: "POST",
       body: form,
     });
-
-    // if (!result.ok) {
-    //   return {
-    //     success: false,
-    //     message: result?.message || "Something went wrong!",
-    //   };
-    // }
-
-    // return {
-    //   success: true,
-    //   message: result.message || "Successfully submitted photos!",
-    // };
-    // } catch (err) {
-    //   console.error(err);
-    //   return {
-    //     success: false,
-    //     message: "An error occurred while uploading images! Please try again!",
-    //   };
-    // } finally {
-    //   stopLoading();
-    // }
   };
 
   return {

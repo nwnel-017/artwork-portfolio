@@ -1,16 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "#types/supabase/database";
-import { MultiPartData } from "h3";
-import {
-  type ArtworkForm,
-  type ExistingArtworkForm,
-  GalleryForm,
-} from "@utils/validation/form";
 import type { ArtworkData } from "#types/artworks/artworks";
 import type { UploadInput } from "./storage.service";
-import { validateImageFile } from "@utils/validation/image";
 import { uploadFile, deleteFile } from "./storage.service";
-import { de } from "zod/locales";
 
 // To Do:
 // add form validation
@@ -125,42 +117,7 @@ async function updateArtwork(
     console.log("Error parsing price: " + err);
     throw new Error("Invalid price value!");
   }
-
-  // const { data, error } = await supabase
-  //   .from("artworks")
-  //   .select("image_path")
-  //   .eq("id", id)
-  //   .single();
-  // if (error || !data) {
-  //   console.error("Error fetching existing artist data:", error);
-  //   throw new Error("Failed to fetch existing artist data");
-  // }
-  // const existingImagePath = data.image_path;
-  // if (!existingImagePath) {
-  //   throw new Error("No existing image path found for artist");
-  // }
-
-  // let imagePath;
-  // if (image && imagePath != existingImagePath) {
-  //   await deleteFile(supabase, existingImagePath, "artwork_images");
-  //   imagePath = await uploadFile(supabase, image, "artwork_images");
-  // }
   try {
-    // await deleteFile(supabase, existingImagePath, "artwork_images");
-    // const imagePath = await uploadFile(supabase, image, "artwork_images");
-    // console.log("image uploaded with public url:", imagePath.publicUrl);
-    // if (imagePath) {
-    //   await supabase
-    //     .from("artworks")
-    //     .update({
-    //       title: artwork.title,
-    //       description: artwork.description,
-    //       price: parsedPrice,
-    //       image_path: imagePath.path,
-    //       dimensions: artwork.dimensions,
-    //     })
-    //     .eq("id", id);
-    // } else {
     await supabase
       .from("artworks")
       .update({
@@ -172,7 +129,6 @@ async function updateArtwork(
         cover_image: artwork.cover_image || false,
       })
       .eq("id", id);
-    // }
   } catch (err) {
     console.log("failed to update artist:", err);
     throw createError({
@@ -440,7 +396,7 @@ async function getLatestArtwork(supabase: SupabaseClient<Database>) {
     .eq("sold", false)
     .eq("cover_image", true)
     .order("created_at", { ascending: false })
-    .limit(3);
+    .limit(12);
 
   if (error || !artworks || artworks.length === 0) {
     throw createError({
