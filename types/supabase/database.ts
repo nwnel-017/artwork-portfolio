@@ -16,7 +16,9 @@ export type Database = {
     Tables: {
       artworks: {
         Row: {
+          artwork_note: string | null
           collection_id: string
+          cover_image: boolean
           created_at: string
           description: string | null
           dimensions: string | null
@@ -29,7 +31,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          artwork_note?: string | null
           collection_id?: string
+          cover_image?: boolean
           created_at?: string
           description?: string | null
           dimensions?: string | null
@@ -42,7 +46,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          artwork_note?: string | null
           collection_id?: string
+          cover_image?: boolean
           created_at?: string
           description?: string | null
           dimensions?: string | null

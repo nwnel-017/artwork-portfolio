@@ -59,6 +59,7 @@ async function addArtwork(
         price: parsedPrice,
         dimensions: artwork.dimensions,
         collection_id: artwork.collection,
+        artwork_note: artwork.artwork_note || "",
         image_path: imageUrl,
         cover_image: artwork.cover_image || false,
       })

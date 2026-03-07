@@ -41,6 +41,7 @@ export const artworkFormSchema = z
     description: z.string().min(1, { message: "Description is required" }),
     price: priceSchema,
     dimensions: z.string().min(1, { message: "Dimensions are required" }),
+    artwork_note: z.string().optional(),
     collection: z.string().min(1, { message: "Collection is required" }),
   })
   .strict()
