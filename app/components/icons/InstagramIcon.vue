@@ -4,14 +4,15 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-    <Instagram class="igIcon clickable" />
+    <Instagram
+      class="igIcon clickable"
+      :class="{ [`size-${props.size || 'md'}`]: props.size }"
+    />
   </a>
 </template>
 
 <style scoped>
 .igIcon {
-  width: 12px;
-  height: 12px;
   color: var(--text-color);
 }
 
@@ -20,21 +21,39 @@ a {
   color: inherit;
 }
 
+.size-sm {
+  width: 12px;
+  height: 12px;
+}
+
+.size-lg {
+  width: 24px;
+  height: 24px;
+}
+
 @media (min-width: 768px) {
-  .igIcon {
+  .size-sm {
     width: 16px;
     height: 16px;
   }
 }
 
 @media (min-width: 1024px) {
-  .igIcon {
+  .size-sm {
     width: 20px;
     height: 20px;
+  }
+  .size-lg {
+    width: 32px;
+    height: 32px;
   }
 }
 </style>
 
-<script setup>
+<script setup lang="ts">
 import Instagram from "~/assets/icons/instagram.svg";
+
+const props = defineProps<{
+  size?: "sm" | "md" | "lg";
+}>();
 </script>

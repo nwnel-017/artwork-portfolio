@@ -7,15 +7,22 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="verticalContent">
-    <h1>Please feel free to reach out to me at any time!</h1>
-    <div class="contactInfo">
-      <div class="contactItem">
-        <h2>Email</h2>
-        <p>jamiestambolie@gmail.com</p>
-        <span>Click here to follow me on Instagram!</span>
-        <InstagramIcon />
-      </div>
-    </div>
+  <div class="verticalContent center fillPage fillVertical">
+    <h4>Email: jamiestambolie@gmail.com</h4>
+    <div><InstagramIcon size="lg" /></div>
   </div>
 </template>
+
+<style scoped>
+.fillVertical {
+  min-height: 70dvh;
+}
+
+.center {
+  justify-content: center;
+}
+
+.contactTxt {
+  font-size: 1.25rem;
+}
+</style>

@@ -4,7 +4,6 @@ type Variant = "primary" | "secondary" | "danger" | "ghost";
 
 const props = defineProps<{
   variant?: Variant;
-  // size?: Size;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
 }>();

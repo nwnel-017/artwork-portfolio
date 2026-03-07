@@ -16,7 +16,7 @@ import InstagramIcon from "./icons/InstagramIcon.vue";
       <div>CONTACT</div>
       <div>
         jamiestambolie@gmail.com |
-        <InstagramIcon />
+        <InstagramIcon size="sm" />
       </div>
     </div>
   </div>

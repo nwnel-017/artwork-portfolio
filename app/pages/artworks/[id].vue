@@ -107,11 +107,10 @@ async function payWithStripe() {
         <div>${{ artwork?.price }}</div>
         <div>{{ artwork?.dimensions }}</div>
         <div><strong>About:</strong> {{ artwork?.description }}</div>
-        <div>
-          <strong>Created On:</strong>
-          {{ formatDateShort(artwork?.created_at) }}
-        </div>
-        <Button class="buttonCol" @click="payWithStripe">Buy Now</Button>
+        <Button v-if="!artwork.sold" class="buttonCol" @click="payWithStripe"
+          >Buy Now</Button
+        >
+        <Button v-else disabled class="buttonCol">Sold</Button>
       </div>
     </div>
   </div>

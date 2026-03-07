@@ -304,6 +304,10 @@ import { Toaster } from "vue-sonner";
   align-items: stretch;
 }
 
+.gap {
+  gap: 1rem;
+}
+
 .collectionsGrid {
   display: grid;
   justify-items: center;
