@@ -35,6 +35,8 @@ const editedArtwork = ref<ArtworkData>({
   dimensions: "",
   price: "",
   collection: artwork.value?.collection_id || "",
+  artwork_note: "",
+  cover_image: false,
 });
 
 const image = ref<File | null>(null);
@@ -49,6 +51,8 @@ function startEdit() {
     dimensions: artwork.value?.dimensions || "",
     price: artwork.value?.price?.toString() || "",
     collection: artwork.value?.collection_id || "",
+    artwork_note: artwork.value?.artwork_note || "",
+    cover_image: artwork.value?.cover_image || false,
   };
   image.value = null;
 }
@@ -61,6 +65,8 @@ function stopEdit() {
     dimensions: "",
     price: "",
     collection: artwork.value?.collection_id || "",
+    artwork_note: "",
+    cover_image: false,
   };
   image.value = null;
 }
@@ -79,13 +85,15 @@ async function save() {
   const newDesc = editedArtwork.value.description;
   const newPrice = editedArtwork.value.price;
   const newDimensions = editedArtwork.value.dimensions;
-  const newImage = image?.value;
-
-  if (!newTitle || !newDesc || !newPrice || !newDimensions) {
+  const newCollection = editedArtwork.value.collection;
+  const newNote = editedArtwork.value.artwork_note || "";
+  const newCoverImageValue = editedArtwork.value.cover_image;
+  if (!newTitle || !newDesc || !newPrice || !newDimensions || !newCollection) {
     console.log("new title: " + newTitle);
     console.log("new desc: " + newDesc);
     console.log("new price: " + newPrice);
     console.log("new dimensions: " + newDimensions);
+    toast.error("Please change at least one field to update the artwork");
     return;
   }
 
@@ -93,7 +101,10 @@ async function save() {
     newTitle === artwork.value?.title &&
     newDesc === artwork.value?.description &&
     newPrice === artwork.value?.price?.toString() &&
-    newDimensions === artwork.value?.dimensions
+    newDimensions === artwork.value?.dimensions &&
+    newCollection === artwork.value?.collection_id &&
+    newNote === artwork.value?.artwork_note &&
+    newCoverImageValue === artwork.value?.cover_image
   ) {
     toast.error("No changes have been made!");
     return;
@@ -104,8 +115,10 @@ async function save() {
   form.append("title", newTitle);
   form.append("description", newDesc);
   form.append("dimensions", newDimensions);
+  form.append("collection", newCollection);
+  form.append("artwork_note", newNote);
+  form.append("cover_image", newCoverImageValue?.toString() || "false");
   form.append("price", newPrice);
-  if (newImage) form.append("image", newImage);
 
   try {
     startLoading();
@@ -191,16 +204,14 @@ async function deleteArtwork() {
           <textarea v-model="editedArtwork.price" type="text"></textarea>
           <label for="dimensions">Size:</label>
           <textarea v-model="editedArtwork.dimensions" type="text"></textarea>
-          <label for="image">Artwork</label>
+          <label for="artwork_note">Artwork Note (Optional):</label>
+          <textarea v-model="editedArtwork.artwork_note" type="text"></textarea>
+          <label for="cover_image">Cover Image</label>
           <input
-            type="file"
-            id="fileInput"
-            class="hiddenInput"
-            @change="handleImageChange"
+            type="checkbox"
+            id="cover_image"
+            v-model="editedArtwork.cover_image"
           />
-          <label for="fileInput" class="fileInput">{{
-            image?.name || "Change image"
-          }}</label>
           <Button variant="primary" size="lg" @click="save"
             >Save Changes</Button
           >

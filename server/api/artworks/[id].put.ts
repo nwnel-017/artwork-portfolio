@@ -41,18 +41,17 @@ export default defineEventHandler(async (event) => {
     dimensions:
       form.find((field) => field.name === "dimensions")?.data?.toString() || "",
     price: form.find((field) => field.name === "price")?.data?.toString() || "",
+    collection:
+      form.find((field) => field.name === "collection")?.data?.toString() || "",
+    artwork_note:
+      form.find((field) => field.name === "artwork_note")?.data?.toString() ||
+      "",
+    cover_image:
+      form.find((field) => field.name === "cover_image")?.data?.toString() ===
+        "true" || false,
   };
 
-  const imageField = form.find((field) => field.name === "image");
-  const image: UploadInput = {
-    filename: imageField?.filename || "",
-    buffer: imageField?.data || Buffer.from([]),
-    size: imageField?.data ? imageField.data.length : 0,
-    contentType: imageField?.type || "application/octet-stream",
-  };
-
-  // validate artwork
-  const validatedForm = await validateNewArtworkForm(artworkForm); // expects object
+  const validatedForm = await validateNewArtworkForm(artworkForm);
   if (!validatedForm.success) {
     // invalid form
     console.log("Invalid form!");
@@ -64,22 +63,8 @@ export default defineEventHandler(async (event) => {
       },
     });
   }
-
-  // image validation
-  if (!validateImageFile(image)) {
-    console.log("Invalid image file!");
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Bad Request",
-      data: {
-        message: "Invalid image file!",
-      },
-    });
-  }
-  console.log("image validation passed");
-
   try {
-    await updateArtwork(supabase, id, artworkForm, image);
+    await updateArtwork(supabase, id, artworkForm);
     return { success: true };
   } catch (err) {
     console.log("error updating artwork: " + err);

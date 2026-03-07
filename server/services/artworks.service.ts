@@ -98,7 +98,6 @@ async function updateArtwork(
   supabase: SupabaseClient<Database>,
   id: string,
   artwork: ArtworkData,
-  image?: UploadInput,
 ) {
   if (!id || !artwork || !supabase) {
     throw createError({
@@ -119,13 +118,6 @@ async function updateArtwork(
     throw new Error("Missing artwork fields!");
   }
 
-  // const image: File | null = artwork.image;
-
-  // to do - use artist id to find image path
-  // delete old image from storage - using delete file function
-  // upload new image
-  // to do - check if image actually needs to be updated first
-
   let parsedPrice: number;
   try {
     parsedPrice = Number(artwork.price);
@@ -134,51 +126,53 @@ async function updateArtwork(
     throw new Error("Invalid price value!");
   }
 
-  const { data, error } = await supabase
-    .from("artworks")
-    .select("image_path")
-    .eq("id", id)
-    .single();
-  if (error || !data) {
-    console.error("Error fetching existing artist data:", error);
-    throw new Error("Failed to fetch existing artist data");
-  }
-  const existingImagePath = data.image_path;
-  if (!existingImagePath) {
-    throw new Error("No existing image path found for artist");
-  }
+  // const { data, error } = await supabase
+  //   .from("artworks")
+  //   .select("image_path")
+  //   .eq("id", id)
+  //   .single();
+  // if (error || !data) {
+  //   console.error("Error fetching existing artist data:", error);
+  //   throw new Error("Failed to fetch existing artist data");
+  // }
+  // const existingImagePath = data.image_path;
+  // if (!existingImagePath) {
+  //   throw new Error("No existing image path found for artist");
+  // }
 
-  let imagePath;
-  if (image && imagePath != existingImagePath) {
-    await deleteFile(supabase, existingImagePath, "artwork_images");
-    imagePath = await uploadFile(supabase, image, "artwork_images");
-  }
+  // let imagePath;
+  // if (image && imagePath != existingImagePath) {
+  //   await deleteFile(supabase, existingImagePath, "artwork_images");
+  //   imagePath = await uploadFile(supabase, image, "artwork_images");
+  // }
   try {
     // await deleteFile(supabase, existingImagePath, "artwork_images");
     // const imagePath = await uploadFile(supabase, image, "artwork_images");
     // console.log("image uploaded with public url:", imagePath.publicUrl);
-    if (imagePath) {
-      await supabase
-        .from("artworks")
-        .update({
-          title: artwork.title,
-          description: artwork.description,
-          price: parsedPrice,
-          image_path: imagePath.path,
-          dimensions: artwork.dimensions,
-        })
-        .eq("id", id);
-    } else {
-      await supabase
-        .from("artworks")
-        .update({
-          title: artwork.title,
-          description: artwork.description,
-          price: parsedPrice,
-          dimensions: artwork.dimensions,
-        })
-        .eq("id", id);
-    }
+    // if (imagePath) {
+    //   await supabase
+    //     .from("artworks")
+    //     .update({
+    //       title: artwork.title,
+    //       description: artwork.description,
+    //       price: parsedPrice,
+    //       image_path: imagePath.path,
+    //       dimensions: artwork.dimensions,
+    //     })
+    //     .eq("id", id);
+    // } else {
+    await supabase
+      .from("artworks")
+      .update({
+        title: artwork.title,
+        description: artwork.description,
+        price: parsedPrice,
+        dimensions: artwork.dimensions,
+        artwork_note: artwork.artwork_note || "",
+        cover_image: artwork.cover_image || false,
+      })
+      .eq("id", id);
+    // }
   } catch (err) {
     console.log("failed to update artist:", err);
     throw createError({

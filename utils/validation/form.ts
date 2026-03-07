@@ -43,6 +43,7 @@ export const artworkFormSchema = z
     dimensions: z.string().min(1, { message: "Dimensions are required" }),
     artwork_note: z.string().optional(),
     collection: z.string().min(1, { message: "Collection is required" }),
+    cover_image: z.boolean().optional(),
   })
   .strict()
   .strip();
@@ -78,12 +79,12 @@ export type ArtworkForm = z.infer<typeof artworkFormSchema>;
 export type ExistingArtworkForm = z.infer<typeof existingArtworkFormSchema>;
 
 export const validateNewArtworkForm = async (form: ArtworkData) => {
-  console.log("safe parsing artwork form...");
-
   if (!form) {
     console.log("No form data received!");
     return { success: false, message: "No form data received" };
   }
+
+  console.log(JSON.stringify(form));
 
   const parsed = artworkFormSchema.safeParse(form);
 
