@@ -4,7 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.svg" },
+        {
+          rel: "apple-touch-icon",
+          sizes: "180x180",
+          href: "/apple-touch-icon.png",
+        },
+      ],
       meta: [{ name: "color-scheme", content: "light" }],
     },
   },
