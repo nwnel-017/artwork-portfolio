@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
+import type { CollectionDetails } from "~~/types/collections/collection";
 type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
 
 const props = defineProps<{
   artworks: ArtworkRow[];
+  collection?: CollectionDetails;
 }>();
 
 const displayArtworkPopup = ref(false);
@@ -30,34 +32,14 @@ async function viewArtwork(id: string, sold: boolean) {
   // Doing a full page reload - preference for a clean UX
   await navigateTo(`/artworks/${id}`);
 }
-
-// async function payWithStripe() {
-//   try {
-//     const { url } = await $fetch<{ url: string }>(
-//       "/api/stripe/create-checkout-session",
-//       {
-//         method: "POST",
-//         body: {
-//           artworkId: selectedArtwork.value?.id,
-//         },
-//       },
-//     );
-
-//     if (url) {
-//       window.location.href = url;
-//     }
-//   } catch (err) {
-//     console.log(
-//       "There was an error retrieving Stripe checkout session: " + err,
-//     );
-//     throw new Error("Failed to retrieve stripe checkout session");
-//   }
-// }
 </script>
 
 <template>
   <div class="textBlock">
-    <h1>Artworks</h1>
+    <h1>{{ props.collection?.collection_name || "All Artworks" }}</h1>
+  </div>
+  <div v-if="props.collection" class="colDescription">
+    <p>{{ props.collection.desc }}</p>
   </div>
   <div class="artworksGrid">
     <div
@@ -91,6 +73,20 @@ async function viewArtwork(id: string, sold: boolean) {
 </template>
 
 <style scoped>
+.colDescription {
+  font-size: 0.9rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.colDescription p {
+  max-width: 90%;
+  text-align: center;
+  font-style: italic;
+}
+
 .artworkContainer {
   width: 100%;
   position: relative;
@@ -185,6 +181,9 @@ async function viewArtwork(id: string, sold: boolean) {
 @media (min-width: 768px) {
   .artworksGrid {
     width: 80%;
+  }
+  .colDescription p {
+    max-width: 80%;
   }
 }
 

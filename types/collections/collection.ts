@@ -7,3 +7,8 @@ export type CollectionCard = {
   collection_name: string;
   image_path: string;
 };
+
+export type CollectionDetails = {
+  collection_name: string;
+  desc: string;
+};

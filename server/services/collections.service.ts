@@ -103,4 +103,31 @@ async function deleteCollection(
   }
 }
 
-export { getCollections, createCollection, deleteCollection };
+async function getCollectionDetails(
+  supabase: SupabaseClient<Database>,
+  id: string,
+) {
+  if (!supabase || !id) {
+    console.log("Missing parameters");
+    throw new Error("Missing parameters!");
+  }
+  const { data, error } = await supabase
+    .from("collections")
+    .select("desc,collection_name")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    console.log("Failed to fetch collection description: " + error?.message);
+    throw new Error("Failed to fetch collection description");
+  }
+
+  return data;
+}
+
+export {
+  getCollections,
+  createCollection,
+  deleteCollection,
+  getCollectionDetails,
+};

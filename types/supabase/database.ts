@@ -74,16 +74,19 @@ export type Database = {
         Row: {
           collection_name: string
           created_at: string
+          desc: string | null
           id: string
         }
         Insert: {
           collection_name: string
           created_at?: string
+          desc?: string | null
           id?: string
         }
         Update: {
           collection_name?: string
           created_at?: string
+          desc?: string | null
           id?: string
         }
         Relationships: []
