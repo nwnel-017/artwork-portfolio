@@ -63,7 +63,7 @@ const reversed = computed<CoverImageRow[]>(() => {
   transform: translate(-50%, -50%);
   display: flex;
   justify-content: space-evenly;
-  width: 50%;
+  width: 80%;
 }
 
 .landingText span {
@@ -74,7 +74,7 @@ const reversed = computed<CoverImageRow[]>(() => {
 .heroCarousel {
   position: relative;
   overflow: hidden;
-  height: 90dvh;
+  height: 85dvh;
   width: 100dvw;
 }
 
@@ -84,7 +84,7 @@ const reversed = computed<CoverImageRow[]>(() => {
 }
 
 .row2 {
-  bottom: 0dvh;
+  bottom: 5dvh;
   animation: scrollRight 45s linear infinite;
 }
 
@@ -92,7 +92,10 @@ const reversed = computed<CoverImageRow[]>(() => {
   position: absolute;
   display: flex;
   flex-direction: row;
-  height: 35dvh;
+  align-items: center;
+  gap: 1rem;
+  /* width: 100%; */
+  /* height: 35dvh; */
   /* border: 4px solid white; */
 }
 
@@ -101,17 +104,21 @@ const reversed = computed<CoverImageRow[]>(() => {
   height: 40dvh;
 }
 
-.square {
-  width: 20dvh;
-  aspect-ratio: 1 / 1;
-}
-
 .imgSquare {
   /* height: 100%; */
-  /* aspect-ratio: 1 / 1; */
-  width: 20dvw;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  /* width: 33.333vw; */
+  width: 35vw;
   height: 100%;
-  /* border: 10px solid white; */
+  /* border: 2px solid white; */
+}
+
+.square {
+  /* width: 20dvh; */
+  width: 35vw;
+  aspect-ratio: 1 / 1;
+  /* border: 4px solid white; */
 }
 
 .carouselImg {
@@ -125,8 +132,28 @@ const reversed = computed<CoverImageRow[]>(() => {
   /* .row1 {
     top: 5dvh;
   } */
+  .row2 {
+    bottom: 0;
+  }
+
   .square {
     width: 30dvh;
+  }
+
+  .imgSquare {
+    width: 20vw;
+  }
+
+  .landingText {
+    width: 50%;
+  }
+
+  .heroCarousel {
+    height: 90dvh;
+  }
+
+  .landingText span {
+    font-size: 2rem;
   }
 }
 
