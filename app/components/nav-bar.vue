@@ -28,7 +28,7 @@ const closeNav = () => {
             >AVAILABLE ARTWORKS</NuxtLink
           >
           <NuxtLink to="/artworks/gallery" class="dashLink" @click="closeNav"
-            >PORTFOLIO</NuxtLink
+            >GALLERY</NuxtLink
           >
           <NuxtLink to="/about" class="dashLink" @click="closeNav"
             >ABOUT THE ARTIST</NuxtLink

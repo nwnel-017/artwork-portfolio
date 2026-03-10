@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import type { CoverImageRow } from "~~/types/supabase/tables";
+import { toast } from "vue-sonner";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "admin",
 });
+
+const { removeCoverImage } = useArtworks();
+const { startLoading, stopLoading } = useLoading();
 
 const {
   data: coverImages,
@@ -17,7 +21,15 @@ async function addImage() {
 }
 
 async function removeImage(id: number) {
-  return;
+  try {
+    startLoading();
+    await removeCoverImage(id);
+    toast.success("Image has been removed!");
+  } catch (err) {
+    toast.error("Something went wrong");
+  } finally {
+    stopLoading();
+  }
 }
 </script>
 

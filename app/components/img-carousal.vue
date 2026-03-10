@@ -7,18 +7,6 @@ const props = defineProps<{
   artworks?: CoverImageRow[];
 }>();
 
-// const firstRow = computed(() => {
-//   if (props.artworks && props.artworks.length > 0) {
-//     return props.artworks?.slice(0, 2);
-//   }
-// });
-
-// const secondRow = computed(() => {
-//   if (props.artworks && props.artworks.length > 0) {
-//     return props.artworks?.slice(3, 5);
-//   }
-// });
-
 const reversed = computed<CoverImageRow[]>(() => {
   if (props.artworks && props.artworks.length > 0) {
     return [...props.artworks].reverse();
@@ -36,11 +24,13 @@ const reversed = computed<CoverImageRow[]>(() => {
         :key="artwork.id + 'a'"
         class="imgSquare"
       >
-        <NuxtImg
-          :src="artwork.image_path"
-          alt="Artwork Image"
-          class="carouselImg"
-        />
+        <div class="square">
+          <NuxtImg
+            :src="artwork.image_path"
+            alt="Artwork Image"
+            class="carouselImg"
+          />
+        </div>
       </div>
     </div>
     <div class="landingText">
@@ -53,11 +43,13 @@ const reversed = computed<CoverImageRow[]>(() => {
         :key="artwork.id"
         class="imgSquare"
       >
-        <NuxtImg
-          :src="artwork.image_path"
-          alt="Artwork Image"
-          class="carouselImg"
-        />
+        <div class="square">
+          <NuxtImg
+            :src="artwork.image_path"
+            alt="Artwork Image"
+            class="carouselImg"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -72,8 +64,6 @@ const reversed = computed<CoverImageRow[]>(() => {
   display: flex;
   justify-content: space-evenly;
   width: 50%;
-  /* height: 30dvh; */
-  /* color: white; */
 }
 
 .landingText span {
@@ -85,10 +75,11 @@ const reversed = computed<CoverImageRow[]>(() => {
   position: relative;
   overflow: hidden;
   height: 90dvh;
+  width: 100dvw;
 }
 
 .row1 {
-  top: 0dvh;
+  top: 5dvh;
   animation: scrollLeft 45s linear infinite;
 }
 
@@ -102,7 +93,7 @@ const reversed = computed<CoverImageRow[]>(() => {
   display: flex;
   flex-direction: row;
   height: 35dvh;
-  border: 4px solid white;
+  /* border: 4px solid white; */
 }
 
 .carouselSquareContainer {
@@ -110,16 +101,33 @@ const reversed = computed<CoverImageRow[]>(() => {
   height: 40dvh;
 }
 
+.square {
+  width: 20dvh;
+  aspect-ratio: 1 / 1;
+}
+
 .imgSquare {
+  /* height: 100%; */
+  /* aspect-ratio: 1 / 1; */
+  width: 20dvw;
   height: 100%;
-  width: 30dvw;
-  border: 7px solid white;
+  /* border: 10px solid white; */
 }
 
 .carouselImg {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  /* height: 100%; */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  /* .row1 {
+    top: 5dvh;
+  } */
+  .square {
+    width: 30dvh;
+  }
 }
 
 @keyframes scrollLeft {

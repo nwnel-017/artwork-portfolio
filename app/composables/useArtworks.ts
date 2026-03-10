@@ -118,6 +118,12 @@ export function useArtworks() {
     });
   };
 
+  const removeCoverImage = async (id: number) => {
+    return await $fetch(`/api/artworks/coverImages/${id}`, {
+      method: "DELETE",
+    });
+  };
+
   return {
     getArtworks,
     getArtwork,
@@ -126,5 +132,6 @@ export function useArtworks() {
     removeArtwork,
     addArtworkImages,
     addCoverImage,
+    removeCoverImage,
   };
 }

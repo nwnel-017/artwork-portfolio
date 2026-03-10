@@ -646,6 +646,44 @@ async function deleteGalleryImage(
   }
 }
 
+// new helper for cover images
+async function deleteCoverImage(
+  supabase: SupabaseClient<Database>,
+  id: string,
+) {
+  if (!supabase || !id) {
+    throw new Error("Missing parameters!");
+  }
+
+  // Verify cover image exists
+  const { data: existingImage, error } = await supabase
+    .from("cover_images")
+    .select("id, image_path")
+    .eq("id", parseInt(id)) // TO DO: delete later - we need ID to be string in supabase
+    .single();
+
+  if (
+    error ||
+    !existingImage ||
+    !existingImage.image_path ||
+    !existingImage.id
+  ) {
+    console.log("Error - cover image doesnt exist");
+    throw new Error("Cover image doesn't exist!");
+  }
+
+  const imagePath = existingImage.image_path;
+
+  try {
+    await deleteFile(supabase, imagePath, "cover_images");
+    console.log("Cover file deleted!");
+    await supabase.from("cover_images").delete().eq("id", existingImage.id);
+  } catch (err) {
+    console.log("Failed to delete cover file: " + err);
+    throw new Error("Failed to delete the cover image!");
+  }
+}
+
 async function deleteGalleryImagesForArtwork(
   supabase: SupabaseClient<Database>,
   artworkId: string,
@@ -831,6 +869,7 @@ export {
   getGalleryImages,
   addGalleryImages,
   deleteGalleryImage,
+  deleteCoverImage,
   deleteGalleryImagesForArtwork,
   getArtworkForCollection,
   getCollectionArtworks,
