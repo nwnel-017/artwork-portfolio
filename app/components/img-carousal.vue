@@ -22,15 +22,15 @@ const reversed = computed<CoverImageRow[]>(() => {
       <div
         v-for="artwork in [...props.artworks, ...props.artworks]"
         :key="artwork.id + 'a'"
-        class="imgSquare"
+        class="imgSquare border"
       >
-        <div class="square">
-          <NuxtImg
-            :src="artwork.image_path"
-            alt="Artwork Image"
-            class="carouselImg"
-          />
-        </div>
+        <!-- <div class="square"> -->
+        <NuxtImg
+          :src="artwork.image_path"
+          alt="Artwork Image"
+          class="carouselImg"
+        />
+        <!-- </div> -->
       </div>
     </div>
     <div class="landingText">
@@ -43,13 +43,13 @@ const reversed = computed<CoverImageRow[]>(() => {
         :key="artwork.id"
         class="imgSquare"
       >
-        <div class="square">
-          <NuxtImg
-            :src="artwork.image_path"
-            alt="Artwork Image"
-            class="carouselImg"
-          />
-        </div>
+        <!-- <div class="square"> -->
+        <NuxtImg
+          :src="artwork.image_path"
+          alt="Artwork Image"
+          class="carouselImg"
+        />
+        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -79,12 +79,12 @@ const reversed = computed<CoverImageRow[]>(() => {
 }
 
 .row1 {
-  top: 5dvh;
+  top: 3dvh;
   animation: scrollLeft 45s linear infinite;
 }
 
 .row2 {
-  bottom: 5dvh;
+  bottom: 3dvh;
   animation: scrollRight 45s linear infinite;
 }
 
@@ -99,27 +99,26 @@ const reversed = computed<CoverImageRow[]>(() => {
   /* border: 4px solid white; */
 }
 
-.carouselSquareContainer {
+/* .carouselSquareContainer {
   width: 100%;
   height: 40dvh;
-}
+} */
 
 .imgSquare {
   /* height: 100%; */
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
   /* width: 33.333vw; */
-  width: 35vw;
+  /* width: 35vw; */
+  width: 40vw;
   height: 100%;
   /* border: 2px solid white; */
 }
 
-.square {
-  /* width: 20dvh; */
+/* .square {
   width: 35vw;
   aspect-ratio: 1 / 1;
-  /* border: 4px solid white; */
-}
+} */
 
 .carouselImg {
   width: 100%;
