@@ -51,6 +51,9 @@ const logout = async () => {
         @click="toggleNav"
         >Collections</NuxtLink
       >
+      <NuxtLink to="/admin/coverImages" class="dashLink" @click="toggleNav"
+        >Cover Images</NuxtLink
+      >
       <NuxtLink to="/admin/settings" class="dashLink" @click="toggleNav"
         >Settings</NuxtLink
       >

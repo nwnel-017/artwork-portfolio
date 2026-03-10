@@ -26,10 +26,6 @@ const {
   `/api/collections/details/${collectionId.value}`,
 );
 
-// const description = computed(() => {
-//   return collectionDescription.value ?? "";
-// });
-
 const availableArtworks = computed(
   () => artworks.value?.filter((artwork) => !artwork.sold) || [],
 );

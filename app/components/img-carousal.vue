@@ -1,67 +1,108 @@
 <script setup lang="ts">
 import type { ArtworkRow } from "#types/supabase/tables";
 import type { Artwork } from "~~/types/artworks/artworks";
+import type { CoverImageRow } from "#types/supabase/tables";
 
 const props = defineProps<{
-  artworks?: Artwork[];
+  artworks?: CoverImageRow[];
 }>();
 
-const firstRow = computed(() => {
-  if (props.artworks && props.artworks.length > 0) {
-    return props.artworks?.slice(0, 2);
-  }
-});
+// const firstRow = computed(() => {
+//   if (props.artworks && props.artworks.length > 0) {
+//     return props.artworks?.slice(0, 2);
+//   }
+// });
 
-const secondRow = computed(() => {
+// const secondRow = computed(() => {
+//   if (props.artworks && props.artworks.length > 0) {
+//     return props.artworks?.slice(3, 5);
+//   }
+// });
+
+const reversed = computed<CoverImageRow[]>(() => {
   if (props.artworks && props.artworks.length > 0) {
-    return props.artworks?.slice(3, 5);
+    return [...props.artworks].reverse();
+  } else {
+    return [];
   }
 });
 </script>
 
 <template>
   <div v-if="props.artworks" class="heroCarousel">
-    <div class="row1">
-      <div class="carouselStrip">
-        <div class="carouselSquareContainer border">
-          <div v-for="artwork in firstRow" :key="artwork.id" class="imgSquare">
-            <NuxtImg
-              :src="artwork.image_path"
-              alt="Artwork Image"
-              class="carouselImg"
-            />
-          </div>
-        </div>
+    <div class="carouselStrip row1">
+      <div
+        v-for="artwork in [...props.artworks, ...props.artworks]"
+        :key="artwork.id + 'a'"
+        class="imgSquare"
+      >
+        <NuxtImg
+          :src="artwork.image_path"
+          alt="Artwork Image"
+          class="carouselImg"
+        />
+      </div>
+    </div>
+    <div class="landingText">
+      <span>W</span><span>E</span><span>L</span><span>C</span><span>O</span
+      ><span>M</span><span>E</span>
+    </div>
+    <div class="carouselStrip row2">
+      <div
+        v-for="artwork in [...reversed, ...reversed]"
+        :key="artwork.id"
+        class="imgSquare"
+      >
+        <NuxtImg
+          :src="artwork.image_path"
+          alt="Artwork Image"
+          class="carouselImg"
+        />
       </div>
     </div>
   </div>
-  <!-- <div class="landingText">
-    <h1>WELCOME</h1>
-  </div> -->
 </template>
 
 <style scoped>
+.landingText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
+  /* height: 30dvh; */
+  /* color: white; */
+}
+
+.landingText span {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
 .heroCarousel {
   position: relative;
   overflow: hidden;
-  height: 80dvh;
+  height: 90dvh;
 }
 
 .row1 {
-  top: 10%;
-  animation: scrollLeft 30s linear infinite;
+  top: 0dvh;
+  animation: scrollLeft 45s linear infinite;
 }
 
 .row2 {
-  bottom: 10%;
-  animation: scrollRight 30s linear infinite;
+  bottom: 0dvh;
+  animation: scrollRight 45s linear infinite;
 }
 
 .carouselStrip {
   position: absolute;
-  width: 600%;
   display: flex;
-  overflow: hidden;
+  flex-direction: row;
+  height: 35dvh;
+  border: 4px solid white;
 }
 
 .carouselSquareContainer {
@@ -72,11 +113,30 @@ const secondRow = computed(() => {
 .imgSquare {
   height: 100%;
   width: 30dvw;
+  border: 7px solid white;
 }
 
 .carouselImg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 </style>

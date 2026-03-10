@@ -78,7 +78,7 @@ async function viewArtwork(id: string, sold: boolean) {
   display: flex;
   width: 100%;
   justify-content: center;
-  margin: 1rem;
+  margin: 0 1rem 1rem 1rem;
 }
 
 .colDescription p {

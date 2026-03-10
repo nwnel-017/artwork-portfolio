@@ -110,6 +110,14 @@ export function useArtworks() {
     });
   };
 
+  const addCoverImage = async (form: FormData) => {
+    console.log("Submitting artwork images...");
+    return await $fetch("/api/artworks/coverImages/coverImage", {
+      method: "POST",
+      body: form,
+    });
+  };
+
   return {
     getArtworks,
     getArtwork,
@@ -117,5 +125,6 @@ export function useArtworks() {
     addArtwork,
     removeArtwork,
     addArtworkImages,
+    addCoverImage,
   };
 }

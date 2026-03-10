@@ -91,6 +91,24 @@ export type Database = {
         }
         Relationships: []
       }
+      cover_images: {
+        Row: {
+          created_at: string
+          id: number
+          image_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_path?: string
+        }
+        Relationships: []
+      }
       gallery_images: {
         Row: {
           artwork_id: string

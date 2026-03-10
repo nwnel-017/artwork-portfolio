@@ -1,25 +1,16 @@
 <script lang="ts" setup>
 import type { Artwork } from "~~/types/artworks/artworks";
+import type { CoverImageRow } from "~~/types/supabase/tables";
 
 definePageMeta({
   layout: "default",
 });
 
-// type Artwork = {
-//   id: string;
-//   title: string;
-//   description: string;
-//   image_path: string;
-//   sold: boolean;
-//   price: number;
-//   created_at: string;
-// };
-
 const {
   data: artworks,
   pending,
   error,
-} = await useFetch<Artwork[]>("/api/artworks/latest-artwork");
+} = await useFetch<CoverImageRow[]>("/api/artworks/coverImages/coverImages");
 </script>
 
 <template>
@@ -28,17 +19,17 @@ const {
       <div class="lndPadImgContainer">
         <div v-if="pending">Loading...</div>
         <div v-else-if="error">Failed to load content</div>
-        <NuxtImg
+        <!-- <NuxtImg
           v-else-if="artworks && artworks?.length > 0"
           :src="artworks[0]?.image_path ?? undefined"
           alt="Artwork"
           class="artworkLg"
-        />
-        <!-- <ImgCarousal v-else :artworks="artworks" /> -->
+        /> -->
+        <ImgCarousal v-else :artworks="artworks" />
       </div>
-      <div class="landingText">
+      <!-- <div class="landingText">
         <h1>WELCOME</h1>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

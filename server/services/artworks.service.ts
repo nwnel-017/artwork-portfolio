@@ -394,9 +394,9 @@ async function getLatestArtwork(supabase: SupabaseClient<Database>) {
     .from("artworks")
     .select("*")
     .eq("sold", false)
-    .eq("cover_image", true)
+    // .eq("cover_image", true)
     .order("created_at", { ascending: false })
-    .limit(12);
+    .limit(6);
 
   if (error || !artworks || artworks.length === 0) {
     throw createError({
@@ -426,6 +426,79 @@ async function getLatestArtwork(supabase: SupabaseClient<Database>) {
   }
 
   return artworks;
+}
+
+async function getCoverImages(supabase: SupabaseClient<Database>) {
+  if (!supabase) {
+    throw new Error("Missing supabase client!");
+  }
+
+  const { data: artworks, error } = await supabase
+    .from("cover_images")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(6);
+
+  if (error || !artworks || artworks.length === 0) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Error",
+      data: {
+        message: "Failed to fetch latest artwork",
+        details: error?.message,
+      },
+    });
+  }
+
+  // const artwork = artworks[0];
+  for (const artwork of artworks) {
+    // Get public URL for the image
+    if (artwork.image_path) {
+      const { data: publicData } = supabase.storage
+        .from("cover_images")
+        .getPublicUrl(artwork.image_path);
+      artwork.image_path = publicData?.publicUrl;
+
+      if (!publicData) {
+        console.log("Error fetching public URL: ");
+        throw new Error("Failed to fetch public URL for artwork image!");
+      }
+    }
+  }
+
+  return artworks;
+}
+
+async function addCoverImage(
+  supabase: SupabaseClient<Database>,
+  image: UploadInput,
+) {
+  console.log("Adding gallery images...");
+
+  if (!supabase || !image) {
+    throw new Error("Missing parameters!");
+  }
+
+  try {
+    const imagePath = await uploadFile(supabase, image, "cover_images");
+
+    // 3.) insert each gallery image record with path into gallery_images table
+    if (!imagePath) {
+      throw new Error("Failed to get image path for gallery image!");
+    }
+    const { error } = await supabase.from("cover_images").insert({
+      image_path: imagePath.path,
+    });
+
+    if (error) {
+      throw new Error(
+        `Failed to insert gallery image record: ${error.message}`,
+      );
+    }
+  } catch (err) {
+    console.log("Failed to upload gallery image:", err);
+    throw new Error("Failed to upload gallery image!");
+  }
 }
 
 async function getArtworkForCollection(
@@ -761,4 +834,6 @@ export {
   deleteGalleryImagesForArtwork,
   getArtworkForCollection,
   getCollectionArtworks,
+  getCoverImages,
+  addCoverImage,
 };
