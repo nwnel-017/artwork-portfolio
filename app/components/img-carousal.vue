@@ -24,13 +24,11 @@ const reversed = computed<CoverImageRow[]>(() => {
         :key="artwork.id + 'a'"
         class="imgSquare border"
       >
-        <!-- <div class="square"> -->
         <NuxtImg
           :src="artwork.image_path"
           alt="Artwork Image"
           class="carouselImg"
         />
-        <!-- </div> -->
       </div>
     </div>
     <div class="landingText">
@@ -41,15 +39,13 @@ const reversed = computed<CoverImageRow[]>(() => {
       <div
         v-for="artwork in [...reversed, ...reversed]"
         :key="artwork.id"
-        class="imgSquare"
+        class="imgSquare border"
       >
-        <!-- <div class="square"> -->
         <NuxtImg
           :src="artwork.image_path"
           alt="Artwork Image"
           class="carouselImg"
         />
-        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -94,53 +90,34 @@ const reversed = computed<CoverImageRow[]>(() => {
   flex-direction: row;
   align-items: center;
   gap: 1rem;
-  /* width: 100%; */
-  /* height: 35dvh; */
-  /* border: 4px solid white; */
 }
-
-/* .carouselSquareContainer {
-  width: 100%;
-  height: 40dvh;
-} */
 
 .imgSquare {
-  /* height: 100%; */
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
-  /* width: 33.333vw; */
-  /* width: 35vw; */
   width: 40vw;
   height: 100%;
-  /* border: 2px solid white; */
 }
-
-/* .square {
-  width: 35vw;
-  aspect-ratio: 1 / 1;
-} */
 
 .carouselImg {
   width: 100%;
-  /* height: 100%; */
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
 
-@media (min-width: 1024px) {
-  /* .row1 {
-    top: 5dvh;
-  } */
-  .row2 {
-    bottom: 0;
+@media (min-width: 768px) {
+  .imgSquare {
+    width: 30vh;
   }
+}
 
-  .square {
-    width: 30dvh;
+@media (min-width: 1024px) {
+  .carouselStrip {
+    gap: 2rem;
   }
 
   .imgSquare {
-    width: 20vw;
+    width: 15vw;
   }
 
   .landingText {
