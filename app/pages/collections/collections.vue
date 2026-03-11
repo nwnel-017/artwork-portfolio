@@ -76,6 +76,10 @@ async function viewCollection(collectionId: string) {
   position: relative;
   width: 100%;
   height: 100%;
+  /* min-width: 100%;
+  min-height: 100%; */
+  /* aspect-ratio: 16 / 9; */
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;

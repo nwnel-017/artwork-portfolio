@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
+import VueEasyLightbox from "vue-easy-lightbox";
 
 type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later;
 type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
@@ -37,6 +38,10 @@ const currentImage = computed<GalleryRow | null>(() => {
   return galleryImages.value[currentIndex.value] ?? null;
 });
 
+const viewerImage = computed<string[]>(() => {
+  const path = currentImage.value?.image_path;
+  return path ? [path] : [];
+});
 const nextImage = () => {
   const images = galleryImages.value;
   if (!images?.length || images?.length < 2) return;
@@ -62,6 +67,16 @@ const imageLoaded = ref(false);
 function loadImage() {
   imageLoaded.value = true;
 }
+
+const lightboxVisible = ref(false);
+
+const viewLightBox = () => {
+  lightboxVisible.value = true;
+};
+
+const closeLightBox = () => {
+  lightboxVisible.value = false;
+};
 
 async function payWithStripe() {
   try {
@@ -90,6 +105,12 @@ async function payWithStripe() {
 <template>
   <div>
     <div v-if="artwork" class="verticalContent">
+      <ClientOnly>
+        <VueEasyLightbox
+          :visible="lightboxVisible"
+          @hide="closeLightBox"
+          :imgs="viewerImage"
+      /></ClientOnly>
       <div class="imgContainer">
         <ArrowButton direction="left" @click="prevImage" />
         <NuxtImg
@@ -98,6 +119,7 @@ async function payWithStripe() {
           class="imgLarge clickable"
           :class="{ visible: imageLoaded }"
           @load="loadImage"
+          @click="viewLightBox"
         />
         <Lottie v-if="!imageLoaded" name="img-placeholder" class="imgOverlay" />
         <ArrowButton @click="nextImage" />
