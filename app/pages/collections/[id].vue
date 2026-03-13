@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
+import type { ArtworkRow } from "~~/types/supabase/tables";
 import type { CollectionDetails } from "~~/types/collections/collection";
 
 definePageMeta({
   layout: "default",
 });
-
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
 
 const route = useRoute();
 

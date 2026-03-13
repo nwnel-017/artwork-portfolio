@@ -726,10 +726,6 @@ async function addGalleryImages(
     throw new Error("Missing parameters!");
   }
 
-  // const artworkId = galleryForm.artworkId;
-  // const images: File[] | null = galleryForm.images; // To Do: figure out this type error
-  console.log("artwork id: " + artworkId);
-
   if (!artworkId || !images || images.length === 0) {
     throw new Error("Invalid gallery form data!");
   }
@@ -749,13 +745,8 @@ async function addGalleryImages(
 
   // 2.) upload each image to get the path
   for (const image of images) {
-    // RLS error here
     try {
-      const imagePath = await uploadFile(
-        supabase,
-        image, // how to change to file?
-        "gallery_images",
-      );
+      const imagePath = await uploadFile(supabase, image, "gallery_images");
       const { data: lastImage } = await supabase
         .from("gallery_images")
         .select("order")

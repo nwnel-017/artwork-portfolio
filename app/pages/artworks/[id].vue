@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import type { Database } from "#types/supabase/database";
+import type { ArtworkRow } from "~~/types/supabase/tables";
+import type { GalleryRow } from "~~/types/supabase/tables";
 import VueEasyLightbox from "vue-easy-lightbox";
-
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later;
-type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
 
 const route = useRoute();
 const id = computed(() => route.params.id as string);

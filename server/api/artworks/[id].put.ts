@@ -2,7 +2,6 @@ import { requireAdmin } from "@server/utils/auth/requireAdmin";
 import { updateArtwork } from "@server/services/artworks.service";
 import { serverSupabaseClient } from "#supabase/server";
 import { validateNewArtworkForm } from "@utils/validation/form";
-import { validateImageFile } from "~~/utils/validation/image";
 import type { ArtworkData } from "#types/artworks/artworks";
 import type { UploadInput } from "#types/files/files";
 import { extractArtworkFormData } from "~~/server/utils/form/artworkForm";
@@ -53,7 +52,6 @@ export default defineEventHandler(async (event) => {
 
   const validatedForm = await validateNewArtworkForm(artworkForm);
   if (!validatedForm.success) {
-    // invalid form
     console.log("Invalid form!");
     throw createError({
       statusCode: 400,

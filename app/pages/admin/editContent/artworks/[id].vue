@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
 import type { ArtworkData } from "#types/artworks/artworks";
 import { toast } from "vue-sonner";
 

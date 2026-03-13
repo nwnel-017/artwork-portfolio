@@ -1,12 +1,8 @@
-import { validateGalleryImages } from "@utils/validation/form";
 import { addGalleryImages } from "@server/services/artworks.service";
 import { serverSupabaseClient } from "#supabase/server";
 import { UploadInput } from "@server/services/storage.service";
-// To Do:
-// 1.) Extract file fields into UploadInput[] object
-// 2.) Call validation on UploadInput[] object and verify success
-// 3.) Call validateImage on each object in the array
-// 4.) Pass UploadInput[] array to service layer
+import { validateImageFile } from "~~/utils/validation/image";
+import { validateUUID } from "@utils/validation/other";
 
 export default defineEventHandler(async (event) => {
   console.log("Received request to upload gallery images!");
@@ -35,18 +31,42 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const validatedUUID = validateUUID(artworkId);
+  if (!validatedUUID.success) {
+    console.log("Invalid artworkId UUID");
+    throw createError({
+      statusCode: 400,
+      message: "Bad Request",
+      data: {
+        message: "Invalid artwork ID format",
+      },
+    });
+  }
+
   const images: UploadInput[] = [];
 
   for (let img of imageField) {
-    images.push({
+    const image: UploadInput = {
       filename: img?.filename || "",
       buffer: img?.data || Buffer.from([]),
       size: img?.data ? img.data.length : 0,
       contentType: img?.type || "application/octet-stream",
-    });
+    };
+
+    if (await !validateImageFile(image)) {
+      console.log("Invalid gallery image");
+      throw createError({
+        statusCode: 400,
+        message: "Bad Request",
+        data: {
+          message: "Invalid image file!",
+        },
+      });
+    }
+
+    images.push(image);
   }
 
-  // change - we shouldnt throw 500 error for validation issues
   try {
     const supabase = await serverSupabaseClient(event);
 

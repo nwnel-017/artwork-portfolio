@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
 import { toast } from "vue-sonner";
-type CollectionRow = Database["public"]["Tables"]["collections"]["Row"]; // look for cleaner way later;
 type Collection = {
   id: string;
   collection_name: string;

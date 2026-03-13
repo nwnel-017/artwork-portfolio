@@ -1,7 +1,5 @@
-import type { Database } from "#types/supabase/database";
+import type { ArtworkRow } from "~~/types/supabase/tables";
 // import { useLoadingStore } from "~/stores/loading";
-
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"];
 
 const { startLoading, stopLoading } = useLoading();
 

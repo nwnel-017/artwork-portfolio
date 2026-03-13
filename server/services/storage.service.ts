@@ -1,25 +1,19 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "#types/supabase/database";
 
-// To Do - use validateImage instead of validating here
-// To Do - retrieve relative file path - not full public URL
-// first check - what does path return?
 export type UploadInput = {
   filename: string;
   buffer: Buffer;
-  // filename: string;
   size?: number;
   contentType?: string;
 };
 
 async function uploadFile(
   supabase: SupabaseClient<Database>,
-  // file: File,
   input: UploadInput,
   bucket: string,
 ) {
   console.log("uploading file!");
-  // RLS error here
 
   if (!supabase || !input || !bucket) {
     throw createError({
@@ -40,18 +34,6 @@ async function uploadFile(
   const blob = new Blob([new Uint8Array(buffer)], {
     type: contentType || "application/octet-stream",
   });
-
-  // const ext = (input.filename && input.filename.split(".").pop()) || "png";
-  // const fileName = input.filename;
-
-  // const fileBuffer = input.buffer;
-
-  // const { data, error } = await supabase.storage
-  //   .from(bucket)
-  //   .upload(fileName, fileBuffer, {
-  //     contentType: input.contentType,
-  //     upsert: false,
-  //   });
 
   console.log("uploading image into bucket: " + bucket);
   const { data, error } = await supabase.storage
@@ -86,9 +68,6 @@ async function deleteFile(
     throw new Error("Missing parameters for deleteFile");
   }
 
-  // const { data, error: listError } = await supabase.storage.listBuckets();
-  // console.log("listing public buckets: " + data);
-
   console.log("deleting file:", filePath + " from bucket:", bucket);
   const { error, data: deleted } = await supabase.storage
     .from(bucket)
@@ -97,7 +76,7 @@ async function deleteFile(
     console.error("Supabase storage delete error:", error);
     throw error;
   }
-  console.log("file deleted successfully: " + deleted); // no data returned on delete
+  console.log("file deleted successfully: " + deleted);
 }
 
 export { uploadFile, deleteFile };

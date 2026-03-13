@@ -1,6 +1,7 @@
 import { requireAdmin } from "#imports";
 import { serverSupabaseClient } from "#supabase/server";
 import { createCollection } from "@server/services/collections.service";
+import { validateCollectionName } from "~~/utils/validation/other";
 
 export default defineEventHandler(async (event) => {
   const isAdmin = await requireAdmin(event);
@@ -18,10 +19,19 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // To Do: create the collection
+  const validateName = validateCollectionName(name);
+  if (!validateName.success) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      data: {
+        message: "Invalid collection name!",
+      },
+    });
+  }
   try {
     const supabase = await serverSupabaseClient(event);
-    await createCollection(supabase, name);
+    await createCollection(supabase, validateName.data);
     return { success: true, message: "Collection created" };
   } catch (err) {
     console.log("Internal Error: " + err);

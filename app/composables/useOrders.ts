@@ -1,6 +1,4 @@
-import type { Database } from "#types/supabase/database";
-
-type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
+import type { OrderRow } from "~~/types/supabase/tables";
 
 export function useOrders() {
   const getOrders = () => {

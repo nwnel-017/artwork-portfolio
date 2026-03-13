@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     contentType: imageField?.type || "application/octet-stream",
   };
 
-  if (!validateImageFile(image)) {
+  if (await !validateImageFile(image)) {
     throw createError({
       statusCode: 400,
       statusMessage: "Bad Request",

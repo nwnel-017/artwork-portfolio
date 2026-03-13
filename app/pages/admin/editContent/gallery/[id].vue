@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
+import type { GalleryRow } from "~~/types/supabase/tables";
 import { toast } from "vue-sonner";
 
 // To Do: implement edit gallery functionality
@@ -9,8 +9,6 @@ definePageMeta({
   layout: "dashboard",
   middleware: "admin",
 });
-
-type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
 
 const route = useRoute();
 

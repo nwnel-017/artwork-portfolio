@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
+import type { ArtworkRow } from "~~/types/supabase/tables";
 
 definePageMeta({
   layout: "default",
 });
-
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
 
 const {
   data: artworks,

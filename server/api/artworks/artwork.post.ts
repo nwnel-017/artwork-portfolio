@@ -12,10 +12,8 @@ import { validateImageFile } from "~~/utils/validation/image";
 
 export default defineEventHandler(async (event) => {
   const adminUser = await requireAdmin(event);
-  console.log("Adding new artwork via API");
   const form = await readMultipartFormData(event); // MultiPartData[]
 
-  // passed
   if (!form) {
     throw createError({
       statusCode: 400,
@@ -63,7 +61,7 @@ export default defineEventHandler(async (event) => {
   };
 
   // validate image
-  if (!validateImageFile(image)) {
+  if (await !validateImageFile(image)) {
     console.log("Invalid image file!");
     throw createError({
       statusCode: 400,

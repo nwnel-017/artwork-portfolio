@@ -1,15 +1,10 @@
 <script lang="ts" setup>
-import type { Collection } from "#types/collections/collection";
 import { toast } from "vue-sonner";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "admin",
 });
-
-// const collection = reactive<Collection>({
-//   title: "",
-// });
 
 const newCollection = ref("");
 

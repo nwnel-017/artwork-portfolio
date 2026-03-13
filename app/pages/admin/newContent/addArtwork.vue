@@ -1,12 +1,7 @@
 <script lang="ts" setup>
-// import DropDown from "~/components/drop-down.vue";
-// import type { Artist } from "#types/artists.ts";
 import type { ArtworkData } from "#types/artworks/artworks.ts";
-import type { Database } from "#types/supabase/database";
 import type { DropDown } from "#types/dropdown/dropdown";
 import { toast } from "vue-sonner";
-
-type CollectionRow = Database["public"]["Tables"]["collections"]["Row"];
 
 definePageMeta({
   layout: "dashboard",

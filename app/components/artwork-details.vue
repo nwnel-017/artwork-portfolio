@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import type { Database } from "#types/supabase/database";
+import type { ArtworkRow } from "~~/types/supabase/tables";
 import { formatDateShort } from "~/utils/date";
 import { computed } from "vue";
-
-type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"]; // look for cleaner way later
 
 const { artwork } = defineProps<{
   artwork: ArtworkRow;

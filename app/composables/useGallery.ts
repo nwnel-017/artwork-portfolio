@@ -1,9 +1,8 @@
-import type { Database } from "#types/supabase/database";
+import type { GalleryRow } from "~~/types/supabase/tables";
 import { success } from "zod";
 import { toast } from "vue-sonner";
 
 export function useGallery() {
-  type GalleryRow = Database["public"]["Tables"]["gallery_images"]["Row"];
   const { startLoading, stopLoading } = useLoading();
 
   const deleteImage = async (id: string) => {

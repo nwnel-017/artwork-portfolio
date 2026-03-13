@@ -17,6 +17,7 @@
     "@nuxtjs/supabase": "^2.0.3",
     "@stripe/stripe-js": "^8.6.1",
     "@supabase/supabase-js": "^2.90.1",
+    "file-type": "^21.3.2",
     "lottie-web": "^5.13.0",
     "nuxt": "^4.2.2",
     "nuxt-lottie": "^1.0.8",

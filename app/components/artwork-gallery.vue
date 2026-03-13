@@ -27,9 +27,8 @@ function closePopup() {
   displayArtworkPopup.value = false;
 }
 
-async function viewArtwork(id: string, sold: boolean) {
-  if (sold) return;
-  // Doing a full page reload - preference for a clean UX
+async function viewArtwork(id: string) {
+  // if (sold) return;
   await navigateTo(`/artworks/${id}`);
 }
 </script>
@@ -45,9 +44,8 @@ async function viewArtwork(id: string, sold: boolean) {
     <div
       v-for="artwork in props.artworks"
       :key="artwork.id"
-      @click="viewArtwork(artwork.id, artwork.sold)"
-      class="artworkContainer"
-      :class="{ clickable: !artwork.sold }"
+      @click="viewArtwork(artwork.id)"
+      class="artworkContainer clickable"
     >
       <div class="imageWrapper">
         <NuxtImg
