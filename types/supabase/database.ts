@@ -148,6 +148,7 @@ export type Database = {
           amount: number | null
           artwork_id: string | null
           buyer_email: string
+          buyer_name: string
           city: string | null
           country: string | null
           created_at: string
@@ -165,6 +166,7 @@ export type Database = {
           amount?: number | null
           artwork_id?: string | null
           buyer_email: string
+          buyer_name: string
           city?: string | null
           country?: string | null
           created_at?: string
@@ -182,6 +184,7 @@ export type Database = {
           amount?: number | null
           artwork_id?: string | null
           buyer_email?: string
+          buyer_name?: string
           city?: string | null
           country?: string | null
           created_at?: string

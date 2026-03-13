@@ -161,6 +161,7 @@ async function payWithStripe() {
   border: 1px solid var(--text-color);
   opacity: 0;
   transition: opacity 0.3s ease;
+  cursor: zoom-in;
 }
 
 .imgLarge.visible {

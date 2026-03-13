@@ -13,7 +13,7 @@ export async function getOrders(supabase: SupabaseClient<Database>) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "id, artwork_id, amount, status, created_at, updated_at, address_line_1, buyer_email",
+      "id, artwork_id, amount, status, created_at, updated_at, address_line_1, buyer_email, buyer_name",
     );
 
   if (error || !data) {
@@ -47,6 +47,7 @@ export async function createOrder(
   supabase: SupabaseClient<Database>,
   artworkId: string,
   userEmail: string,
+  name: string,
   price: string,
   address: ShippingDetail,
   paymentIntentId: string,
@@ -58,6 +59,7 @@ export async function createOrder(
     !artworkId ||
     !price ||
     !userEmail ||
+    !name ||
     !paymentIntentId ||
     !checkoutSessionId
   ) {
@@ -98,17 +100,13 @@ export async function createOrder(
     throw new Error("Invalid price: not a number");
   }
 
-  console.log("artwork id: " + artworkId); //artwork Id is email - this is why
-  console.log("email: " + userEmail); // this is the artwork id????
-  console.log("price: " + numericPrice);
-  console.log("payment intent id: " + paymentIntentId);
   // To Do: verify order does not exist before inserting
-  // try {
   const { error } = await supabase.from("orders").insert({
     address_line_1: shippingLine1,
     address_line_2: address?.line2 || "",
     artwork_id: artworkId,
-    buyer_email: userEmail, // invalid syntax type for uuid
+    buyer_email: userEmail,
+    buyer_name: name,
     city: shippingCity,
     country: shippingCountry,
     amount: numericPrice,
@@ -120,7 +118,6 @@ export async function createOrder(
 
   if (error) {
     console.log("Failed to create order: " + error?.message);
-    throw new Error("Failed to create order!");
   }
 
   try {

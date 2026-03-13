@@ -19,6 +19,6 @@ export const validateShippingAddress = (address: unknown) => {
     console.log("Failed to validate stripe address object!");
     throw new Error("Failed to validate given stripe address!");
   }
-
+  console.log("shipping address was validated successfully");
   return parsed.data;
 };

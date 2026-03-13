@@ -106,7 +106,7 @@ watch(isLoading, (loading) => {
             class="artworkCard"
           >
             <p class="cutoffText">${{ order?.amount }}</p>
-            <p class="cutoffText">{{ order?.status }}</p>
+            <p class="cutoffText">{{ order?.buyer_name }}</p>
           </div>
         </div>
         <div v-else class="noArtworks">No orders yet</div>

@@ -44,6 +44,7 @@ async function updateOrderStatus(item: string) {
     showOrderOptions.value = false;
     // window.location.reload();
     stopLoading();
+    window.location.reload();
   }
 }
 
@@ -72,37 +73,42 @@ function viewOrder(id: string) {
       @select="updateOrderStatus"
       :items="['PAID', 'SHIPPED', 'DELIVERED']"
     />
+    <OrderPopup
+      v-if="showOrderDetails"
+      :order="orders?.find((o) => o.id === selectedOrder)"
+      @cancel="cancelViewOrder"
+    />
     <h1>Orders</h1>
     <div v-if="pending">Loading orders</div>
     <div v-else-if="error">Something went wrong</div>
     <div v-else>
       <div v-if="orders">
-        <div class="contentCard">
+        <div class="contentCard clickable">
           <div class="orderGrid">
-            <span class="header">Status</span>
+            <span class="header">Buyer Name</span>
             <span class="header">Amount</span>
-            <span class="header email">Buyer's Email</span>
+            <span class="header email">Status</span>
             <span class="header">Address</span>
             <span class="header date">Date Created</span>
             <span></span>
-            <template
-              v-for="order in orders"
-              :key="order.id"
-              @click="viewOrder(order.id)"
-            >
-              <span class="clickable">{{ order?.status }}</span>
+            <span></span>
+            <template v-for="order in orders" :key="order.id">
+              <span class="clickable">{{ order?.buyer_name }}</span>
               <span class="clickable">${{ order?.amount }}</span>
-              <span class="email clickable">{{ order?.buyer_email }}</span>
+              <span class="email clickable">{{ order?.status }}</span>
               <span class="cutoffText clickable">{{
                 order?.address_line_1
               }}</span>
               <span class="date clickable">{{
                 formatDateShort(order?.created_at) ?? ""
               }}</span>
-              <Button @click="changeOrderStatus(order.id)"
+              <Button @click.stop="changeOrderStatus(order.id)"
                 >Change Status</Button
-              ></template
-            >
+              >
+              <Button variant="secondary" @click.stop="viewOrder(order.id)"
+                >View Details</Button
+              >
+            </template>
           </div>
         </div>
       </div>
@@ -131,14 +137,7 @@ function viewOrder(id: string) {
   display: none;
 }
 
-/* h1 {
-  font-size: 1em;
-} */
-
 @media (min-width: 768px) {
-  /* h1 {
-    font-size: 2em;
-  } */
 }
 
 @media (min-width: 1024px) {
@@ -151,7 +150,7 @@ function viewOrder(id: string) {
   }
 
   .orderGrid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
   }
 }
 </style>

@@ -1,6 +1,7 @@
 import { stripe } from "@server/utils/stripe/stripe";
 import { Stripe } from "stripe";
 import { serverSupabaseClient } from "#supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import {
   createOrder,
   updateOrderStatusById,
@@ -35,13 +36,14 @@ export default defineEventHandler(async (event) => {
     console.log("An error occured reading the event: " + err);
     throw new Error("Failed to retrieve event!");
   }
-
+  // try {
   switch (stripeEvent.type) {
     case "checkout.session.completed":
       console.log("processed payment event detected");
       const session = stripeEvent.data.object as Stripe.Checkout.Session;
 
       const artworkId = session.metadata?.artworkId;
+      const name = session?.customer_details?.name;
       const userEmail = session.customer_details?.email;
       const shipping = session.customer_details?.address;
       const price = session.metadata?.price;
@@ -50,14 +52,14 @@ export default defineEventHandler(async (event) => {
       const checkoutSessionId = session.id;
       // const chargeId = paymentIntentId.charges.data[0].id
 
-      console.log("Payment intent object: " + JSON.stringify(paymentIntentId));
-
+      console.log("name retrieved from stipe: " + name);
       const validatedShippingAddress: ShippingDetail =
         validateShippingAddress(shipping);
 
       if (
         !artworkId ||
         !userEmail ||
+        !name ||
         !shipping ||
         !price ||
         !paymentIntentId ||
@@ -68,11 +70,15 @@ export default defineEventHandler(async (event) => {
 
       // To Do: insert order details into orders table
       try {
-        const supabase = await serverSupabaseClient(event);
+        const supabase = createClient(
+          config.public.supabaseUrl,
+          config.supabaseServiceKey,
+        );
         await createOrder(
           supabase,
           artworkId,
           userEmail,
+          name,
           price,
           validatedShippingAddress,
           paymentIntentId,
@@ -88,7 +94,11 @@ export default defineEventHandler(async (event) => {
       console.log("Refund event received:", stripeEvent.type);
 
       try {
-        const supabase = await serverSupabaseClient(event);
+        // const supabase = await serverSupabaseClient(event);
+        const supabase = createClient(
+          config.public.supabaseUrl,
+          config.supabaseServiceKey,
+        );
 
         let paymentIntentId: string | null = null;
 
