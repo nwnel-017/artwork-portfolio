@@ -16,20 +16,9 @@ const {
 <template>
   <div class="verticalContent fillPage">
     <div class="landingPad">
-      <!-- <div class="lndPadImgContainer"> -->
       <div v-if="pending">Loading...</div>
       <div v-else-if="error">Failed to load content</div>
-      <!-- <NuxtImg
-          v-else-if="artworks && artworks?.length > 0"
-          :src="artworks[0]?.image_path ?? undefined"
-          alt="Artwork"
-          class="artworkLg"
-        /> -->
       <ImgCarousal v-else :artworks="artworks" />
-      <!-- </div> -->
-      <!-- <div class="landingText">
-        <h1>WELCOME</h1>
-      </div> -->
     </div>
   </div>
 </template>

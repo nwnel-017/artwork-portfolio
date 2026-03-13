@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
+      title: "Jamie Nelson Art",
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicon.svg" },
         {
@@ -12,7 +13,14 @@ export default defineNuxtConfig({
           href: "/apple-touch-icon.png",
         },
       ],
-      meta: [{ name: "color-scheme", content: "light" }],
+      meta: [
+        { name: "color-scheme", content: "light" },
+        {
+          name: "description",
+          content:
+            "Discover unique artworks by Jamie Nelson. Shop original mixed media artworks to inspire your home",
+        },
+      ],
     },
   },
   css: ["~/assets/styles/main.css"],
