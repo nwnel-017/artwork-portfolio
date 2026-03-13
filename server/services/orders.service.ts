@@ -13,7 +13,7 @@ export async function getOrders(supabase: SupabaseClient<Database>) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "id, artwork_id, amount, status, created_at, updated_at, address_line_1, buyer_email, buyer_name",
+      "id, artwork_id, amount, status, created_at, updated_at, address_line_1, buyer_email, buyer_name, shipping_cost",
     );
 
   if (error || !data) {
@@ -49,6 +49,7 @@ export async function createOrder(
   userEmail: string,
   name: string,
   price: string,
+  shippingCost: number,
   address: ShippingDetail,
   paymentIntentId: string,
   checkoutSessionId: string,
@@ -58,6 +59,7 @@ export async function createOrder(
     !address ||
     !artworkId ||
     !price ||
+    !shippingCost ||
     !userEmail ||
     !name ||
     !paymentIntentId ||
@@ -110,6 +112,7 @@ export async function createOrder(
     city: shippingCity,
     country: shippingCountry,
     amount: numericPrice,
+    shipping_cost: shippingCost,
     state: shippingState,
     postal_code: zip,
     stripe_payment_intent_id: paymentIntentId,

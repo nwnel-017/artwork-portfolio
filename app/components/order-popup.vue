@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { OrderRow } from "~~/types/supabase/tables";
+import { formatFunds } from "#imports";
 const props = defineProps<{ order?: OrderRow }>();
 
 const emit = defineEmits<{
@@ -18,6 +19,7 @@ const emit = defineEmits<{
         <div v-if="order.address_line_2">
           Line 2: {{ order.address_line_2 }}
         </div>
+        <div>Shipping amount paid: {{ formatFunds(order.shipping_cost) }}</div>
       </div>
     </div>
   </div>

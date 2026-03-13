@@ -48,11 +48,13 @@ export default defineEventHandler(async (event) => {
       const shipping = session.customer_details?.address;
       const price = session.metadata?.price;
       const paymentIntentId = session.payment_intent as string;
+      const shippingCost = session.shipping_cost?.amount_total;
 
       const checkoutSessionId = session.id;
       // const chargeId = paymentIntentId.charges.data[0].id
 
       console.log("name retrieved from stipe: " + name);
+      console.log("shipping cost: " + shippingCost);
       const validatedShippingAddress: ShippingDetail =
         validateShippingAddress(shipping);
 
@@ -63,7 +65,8 @@ export default defineEventHandler(async (event) => {
         !shipping ||
         !price ||
         !paymentIntentId ||
-        !checkoutSessionId
+        !checkoutSessionId ||
+        !shippingCost
       ) {
         throw new Error("Missing required parameters!");
       }
@@ -80,6 +83,7 @@ export default defineEventHandler(async (event) => {
           userEmail,
           name,
           price,
+          shippingCost,
           validatedShippingAddress,
           paymentIntentId,
           checkoutSessionId,

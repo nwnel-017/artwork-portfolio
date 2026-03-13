@@ -154,6 +154,7 @@ export type Database = {
           created_at: string
           id: string
           postal_code: string | null
+          shipping_cost: number
           state: string | null
           status: string
           stripe_checkout_session_id: string | null
@@ -172,6 +173,7 @@ export type Database = {
           created_at?: string
           id?: string
           postal_code?: string | null
+          shipping_cost: number
           state?: string | null
           status?: string
           stripe_checkout_session_id?: string | null
@@ -190,6 +192,7 @@ export type Database = {
           created_at?: string
           id?: string
           postal_code?: string | null
+          shipping_cost?: number
           state?: string | null
           status?: string
           stripe_checkout_session_id?: string | null
