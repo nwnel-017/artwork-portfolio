@@ -32,7 +32,7 @@ const availableArtworks = computed(
 <template>
   <div class="verticalContent fullWidth">
     <ArtworkGallery
-      :artworks="availableArtworks"
+      :artworks="artworks ?? []"
       :collection="collectionDetails"
     />
   </div>
