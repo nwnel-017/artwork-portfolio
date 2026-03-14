@@ -448,6 +448,10 @@ import { Toaster } from "vue-sonner";
     max-height: 80%;
     /* border: 2px solid black; */
   }
+
+  .clmGap {
+    width: 70%;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -470,6 +474,10 @@ import { Toaster } from "vue-sonner";
 
   .collectionsGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .clmGap {
+    width: 50%;
   }
 
   /* .largeWidth {

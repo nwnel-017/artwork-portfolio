@@ -63,8 +63,8 @@ async function viewArtwork(id: string) {
       </div>
       <div class="artDetails">
         <div class="artTitle">{{ artwork?.title }}</div>
-        <div v-if="!artwork?.sold" class="price">${{ artwork?.price }}</div>
-        <div v-else>Sold</div>
+        <div v-if="!artwork?.sold" class="center">${{ artwork?.price }}</div>
+        <div v-else class="center">Sold</div>
       </div>
     </div>
   </div>
@@ -114,7 +114,7 @@ async function viewArtwork(id: string) {
   overflow: hidden;
 }
 
-.price {
+.center {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -196,6 +196,10 @@ async function viewArtwork(id: string) {
 
   .artTitle {
     width: 100%;
+  }
+
+  .colDescription {
+    max-width: 50%;
   }
 }
 </style>

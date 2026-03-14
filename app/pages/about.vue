@@ -57,4 +57,10 @@ definePageMeta({
   width: 90%;
   margin: 0 auto;
 }
+
+@media (min-width: 768px) {
+  .aboutText {
+    width: 50%;
+  }
+}
 </style>

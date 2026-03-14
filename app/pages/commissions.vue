@@ -46,7 +46,7 @@ definePageMeta({
 
 @media (min-width: 1024px) {
   .centerText {
-    max-width: 50%;
+    max-width: 30%;
   }
 }
 </style>
