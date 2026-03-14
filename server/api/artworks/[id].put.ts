@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
 
   const validatedForm = await validateNewArtworkForm(artworkForm);
   if (!validatedForm.success) {
-    console.log("Invalid form!");
+    console.log("Invalid form: " + JSON.stringify(validatedForm));
     throw createError({
       statusCode: 400,
       statusMessage: "Bad Request",
