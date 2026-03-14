@@ -11,8 +11,11 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event);
   const artworkId = body?.artworkId;
-  if (!artworkId) {
-    console.log("Missing artwork ID in the body");
+  const artworkName = body?.artworkName;
+
+  console.log(artworkName);
+  if (!artworkId || !artworkName) {
+    console.log("Missing artwork details in the body");
     throw createError({ statusCode: 400, statusMessage: "Bad Request," });
   }
 
@@ -28,7 +31,7 @@ export default defineEventHandler(async (event) => {
           price_data: {
             currency,
             product_data: {
-              name: "Nuxt 4 Stripe Payment",
+              name: `${artworkName}`,
             },
             unit_amount: amount,
           },

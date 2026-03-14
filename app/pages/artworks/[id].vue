@@ -85,6 +85,7 @@ async function payWithStripe() {
         method: "POST",
         body: {
           artworkId: id.value,
+          artworkName: artwork.value?.title,
         },
       },
     );

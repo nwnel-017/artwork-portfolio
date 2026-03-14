@@ -46,8 +46,6 @@ export default defineNuxtConfig({
       supabaseUrl: process.env.SUPABASE_URL,
       admin: process.env.ADMIN_EMAIL,
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
-      domesticShippingFee: process.env.STRIPE_DOMESTIC_FEE,
-      internationalShippingFee: process.env.STRIPE_INTERNATIONAL_FEE,
       stripeDomesticShippingId: process.env.STRIPE_SHIPPING_ID_DOMESTIC,
       stripeInternationalShippingId:
         process.env.STRIPE_SHIPPING_ID_INTERNATIONAL,
