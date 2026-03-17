@@ -77,6 +77,10 @@ const closeLightBox = () => {
   lightboxVisible.value = false;
 };
 
+async function confirmPayment() {
+  await navigateTo(`/payments/confirm/${id.value}`);
+}
+
 async function payWithStripe() {
   try {
     const { url } = await $fetch<{ url: string }>(
@@ -132,7 +136,7 @@ async function payWithStripe() {
         <div v-if="artwork?.artwork_note">
           <strong>*</strong> {{ artwork?.artwork_note }}
         </div>
-        <Button v-if="!artwork.sold" class="buttonCol" @click="payWithStripe"
+        <Button v-if="!artwork.sold" class="buttonCol" @click="confirmPayment"
           >Buy Now</Button
         >
         <Button v-else disabled class="buttonCol">Sold</Button>
