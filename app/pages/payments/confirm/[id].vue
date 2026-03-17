@@ -50,13 +50,13 @@ async function payWithStripe() {
         <div class="detail-container">
           <div class="underlined">
             <div>{{ artwork?.title }}</div>
-            <div>{{ formatFunds(artwork?.price || 0) }}</div>
+            <div>${{ artwork?.price }}</div>
           </div>
         </div>
       </div>
 
       <div class="order-total">
-        <h3>Order Total: {{ formatFunds(artwork?.price || 0) }}</h3>
+        <h3>Order Total: ${{ artwork?.price }}</h3>
       </div>
       <div class="flexCenter">
         <Button class="btn" @click="payWithStripe">Confirm</Button>
