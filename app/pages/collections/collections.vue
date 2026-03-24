@@ -36,7 +36,7 @@ async function viewCollection(collectionId: string) {
 </script>
 
 <template>
-  <div class="verticalContent">
+  <div class="verticalContent fullHeight">
     <div class="textBlock">
       <h1>Collections</h1>
     </div>

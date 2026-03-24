@@ -41,8 +41,13 @@ import { Toaster } from "vue-sonner";
   align-items: center;
 }
 
+.autoMargin {
+  margin: auto 0;
+}
+
 .textBlock {
   padding: 0;
+  text-align: center;
 }
 
 .textBlock h1 {
@@ -95,6 +100,10 @@ import { Toaster } from "vue-sonner";
 .fullWidth {
   width: 100%;
   /* width: 100vw; */
+}
+
+.fullHeight {
+  min-height: 85dvh;
 }
 
 .fillPage {
@@ -310,8 +319,11 @@ import { Toaster } from "vue-sonner";
 }
 
 .collectionsGrid {
+  margin: auto 0;
   display: grid;
   justify-items: center;
+  align-items: center;
+  min-height: 100%;
   width: 100%;
   grid-template-columns: repeat(1, 1fr);
   gap: 1.5rem;
@@ -472,16 +484,8 @@ import { Toaster } from "vue-sonner";
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .collectionsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .clmGap {
     width: 50%;
   }
-
-  /* .largeWidth {
-    width: 80%;
-  } */
 }
 </style>
