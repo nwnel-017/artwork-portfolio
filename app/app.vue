@@ -1,6 +1,23 @@
 <script lang="ts" setup>
 import "vue-sonner/style.css";
 import { Toaster } from "vue-sonner";
+
+useHead({
+  titleTemplate: (titleChunk) =>
+    titleChunk ? `${titleChunk} | Jamie Nelson Art` : "Jamie Nelson Art",
+});
+
+if (import.meta.server) {
+  useSeoMeta({
+    applicationName: "Jamie Nelson Art",
+    author: "Jamie Nelson",
+    creator: "Jamie Nelson",
+    publisher: "Jamie Nelson Art",
+    ogSiteName: "Jamie Nelson Art",
+    ogLocale: "en_US",
+    twitterCard: "summary_large_image",
+  });
+}
 </script>
 <template>
   <NuxtLoadingIndicator color="var(--text-color)" :height="2" />

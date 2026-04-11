@@ -16,6 +16,11 @@ const artworkId = computed(() => route.params.id as string);
 
 const { data: artwork, pending, error } = await getArtwork(artworkId.value);
 
+useSeoMeta({
+  title: () => artwork.value?.title || "Edit Artwork",
+  robots: "noindex, nofollow",
+});
+
 const editedArtwork = ref<ArtworkData>({
   title: "",
   description: "",

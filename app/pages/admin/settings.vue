@@ -3,6 +3,11 @@ definePageMeta({
   layout: "dashboard",
   admin: "middleware",
 });
+
+useSeoMeta({
+  title: "Admin Settings",
+  robots: "noindex, nofollow",
+});
 </script>
 
 <template>

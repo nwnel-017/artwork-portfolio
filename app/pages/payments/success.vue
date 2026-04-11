@@ -1,6 +1,11 @@
-<script>
+<script lang="ts" setup>
 definePageMeta({
   layout: "default",
+});
+
+useSeoMeta({
+  title: "Payment Success",
+  robots: "noindex, nofollow",
 });
 </script>
 

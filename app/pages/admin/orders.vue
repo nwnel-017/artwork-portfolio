@@ -7,6 +7,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Admin Orders",
+  robots: "noindex, nofollow",
+});
+
 const { getOrders } = useOrders();
 const { startLoading, stopLoading } = useLoading();
 

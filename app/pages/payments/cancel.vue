@@ -2,6 +2,11 @@
 definePageMeta({
   layout: "default",
 });
+
+useSeoMeta({
+  title: "Payment Cancelled",
+  robots: "noindex, nofollow",
+});
 </script>
 
 <template>

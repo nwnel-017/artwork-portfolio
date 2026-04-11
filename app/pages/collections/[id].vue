@@ -24,6 +24,18 @@ const {
   `/api/collections/details/${collectionId.value}`,
 );
 
+useSeoMeta({
+  title: () => collectionDetails.value?.collection_name || "Collection",
+  description: () =>
+    collectionDetails.value?.description ||
+    `Explore artworks from the ${collectionDetails.value?.collection_name || "featured"} collection by Jamie Nelson.`,
+  ogTitle: () => collectionDetails.value?.collection_name || "Collection",
+  ogDescription: () =>
+    collectionDetails.value?.description ||
+    `Explore artworks from the ${collectionDetails.value?.collection_name || "featured"} collection by Jamie Nelson.`,
+  ogImage: () => collectionDetails.value?.image_path || undefined,
+});
+
 const availableArtworks = computed(
   () => artworks.value?.filter((artwork) => !artwork.sold) || [],
 );

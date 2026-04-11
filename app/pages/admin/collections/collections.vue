@@ -12,6 +12,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Admin Collections",
+  robots: "noindex, nofollow",
+});
+
 const { startLoading, stopLoading } = useLoading();
 const { deleteCollection } = useCollections();
 // To Do: collections text now doesnt overflow correctly - but width:100% makes it too big - make cells smalelr

@@ -6,6 +6,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Admin Artworks",
+  robots: "noindex, nofollow",
+});
+
 const { getArtworks } = useArtworks();
 const { startLoading, stopLoading } = useLoading();
 

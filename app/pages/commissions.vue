@@ -4,6 +4,15 @@ import InstagramIcon from "~/components/icons/InstagramIcon.vue";
 definePageMeta({
   layout: "default",
 });
+
+useSeoMeta({
+  title: "Commissions",
+  description:
+    "Contact Jamie Nelson about custom commission artwork and collaborative mixed media pieces.",
+  ogTitle: "Commission Artwork",
+  ogDescription:
+    "Contact Jamie Nelson about custom commission artwork and collaborative mixed media pieces.",
+});
 </script>
 
 <template>

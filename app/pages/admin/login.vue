@@ -5,6 +5,11 @@ definePageMeta({
   layout: false,
 });
 
+useSeoMeta({
+  title: "Admin Login",
+  robots: "noindex, nofollow",
+});
+
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();

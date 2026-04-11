@@ -3,6 +3,15 @@ definePageMeta({
   layout: "default",
 });
 
+useSeoMeta({
+  title: "Available Artwork",
+  description:
+    "Browse currently available original artworks by Jamie Nelson and view pieces that are ready for purchase.",
+  ogTitle: "Available Artwork",
+  ogDescription:
+    "Browse currently available original artworks by Jamie Nelson and view pieces that are ready for purchase.",
+});
+
 const { getArtworks } = useArtworks();
 const imagesLoaded = ref(false);
 

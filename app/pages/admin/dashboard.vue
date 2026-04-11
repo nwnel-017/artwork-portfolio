@@ -4,6 +4,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Admin Dashboard",
+  robots: "noindex, nofollow",
+});
+
 const { getStats } = useDashboard();
 const { getArtworks } = useArtworks();
 const { getOrders } = useOrders();

@@ -8,6 +8,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Add Artwork",
+  robots: "noindex, nofollow",
+});
+
 const { addArtwork } = useArtworks();
 const { getCollections } = useCollections();
 

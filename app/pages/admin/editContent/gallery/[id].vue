@@ -10,6 +10,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Edit Gallery",
+  robots: "noindex, nofollow",
+});
+
 const route = useRoute();
 
 // To Do: fix - id will be undefined on first render

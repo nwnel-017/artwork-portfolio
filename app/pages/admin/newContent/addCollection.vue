@@ -6,6 +6,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Add Collection",
+  robots: "noindex, nofollow",
+});
+
 const newCollection = ref("");
 
 async function submit() {

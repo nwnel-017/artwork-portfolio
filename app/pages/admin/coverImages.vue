@@ -7,6 +7,11 @@ definePageMeta({
   middleware: "admin",
 });
 
+useSeoMeta({
+  title: "Admin Cover Images",
+  robots: "noindex, nofollow",
+});
+
 const { removeCoverImage } = useArtworks();
 const { startLoading, stopLoading } = useLoading();
 

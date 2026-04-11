@@ -6,6 +6,15 @@ definePageMeta({
   layout: "default",
 });
 
+useSeoMeta({
+  title: "Collections",
+  description:
+    "Browse Jamie Nelson's artwork collections and explore bodies of work organized by theme and series.",
+  ogTitle: "Artwork Collections",
+  ogDescription:
+    "Browse Jamie Nelson's artwork collections and explore bodies of work organized by theme and series.",
+});
+
 const { getCollections } = useCollections();
 
 const { data: collections, pending, error } = await getCollections();

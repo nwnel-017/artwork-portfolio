@@ -2,6 +2,15 @@
 definePageMeta({
   layout: "default",
 });
+
+useSeoMeta({
+  title: "About Jamie Nelson",
+  description:
+    "Learn about Jamie Nelson, a Zimbabwean mixed media artist whose work explores beauty, resilience, memory, and hope.",
+  ogTitle: "About Jamie Nelson",
+  ogDescription:
+    "Learn about Jamie Nelson, a Zimbabwean mixed media artist whose work explores beauty, resilience, memory, and hope.",
+});
 </script>
 
 <template>

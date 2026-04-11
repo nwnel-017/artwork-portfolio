@@ -4,6 +4,15 @@ import InstagramIcon from "~/components/icons/InstagramIcon.vue";
 definePageMeta({
   layout: "default",
 });
+
+useSeoMeta({
+  title: "Contact",
+  description:
+    "Get in touch with Jamie Nelson for artwork questions, purchase inquiries, and general contact information.",
+  ogTitle: "Contact Jamie Nelson Art",
+  ogDescription:
+    "Get in touch with Jamie Nelson for artwork questions, purchase inquiries, and general contact information.",
+});
 </script>
 
 <template>

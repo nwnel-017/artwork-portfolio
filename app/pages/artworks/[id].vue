@@ -16,6 +16,18 @@ const {
   error,
 } = await useFetch<ArtworkRow>(`/api/artworks/${id.value}`);
 
+useSeoMeta({
+  title: () => artwork.value?.title || "Artwork",
+  description: () =>
+    artwork.value?.description ||
+    "View artwork details, pricing, and availability for this original piece by Jamie Nelson.",
+  ogTitle: () => artwork.value?.title || "Artwork",
+  ogDescription: () =>
+    artwork.value?.description ||
+    "View artwork details, pricing, and availability for this original piece by Jamie Nelson.",
+  ogImage: () => artwork.value?.image_path || undefined,
+});
+
 // To Do: research useAsyncData - best practice and why to use
 const { data: galleryImages, pending: pendingGallery } = await useAsyncData<
   GalleryRow[]

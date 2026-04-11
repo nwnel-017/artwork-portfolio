@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import type { ArtworkRow } from "~~/types/supabase/tables";
 
+useSeoMeta({
+  title: "Confirm Payment",
+  robots: "noindex, nofollow",
+});
+
 const route = useRoute();
 const id = computed(() => route.params.id as string);
 

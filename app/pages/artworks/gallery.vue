@@ -5,6 +5,15 @@ definePageMeta({
   layout: "default",
 });
 
+useSeoMeta({
+  title: "Artwork Gallery",
+  description:
+    "Explore the full artwork gallery of original mixed media pieces by Jamie Nelson.",
+  ogTitle: "Artwork Gallery",
+  ogDescription:
+    "Explore the full artwork gallery of original mixed media pieces by Jamie Nelson.",
+});
+
 const {
   data: artworks,
   pending,
